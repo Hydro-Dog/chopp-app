@@ -1,4 +1,3 @@
-import { useState, useTransition } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { View, StyleSheet } from "react-native";
@@ -21,7 +20,6 @@ const signInSchema = (t: TFunction<"translation", undefined>) =>
   });
 
 export default function SignInPage() {
-  
   const { t } = useTranslation();
   const {
     control,
@@ -37,7 +35,7 @@ export default function SignInPage() {
   const onSubmit: SubmitHandler<{ fio: string }> = (data) => console.log(data);
 
   return (
-    <ThemedView style={styles.container} >
+    <ThemedView style={styles.container}>
       <View style={styles.content}>
         <ThemedText type="subtitle">Регистрация</ThemedText>
 
@@ -88,25 +86,11 @@ export default function SignInPage() {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    // alignItems: "center",
-    // justifyContent: "center",
     display: "flex",
-    height: '100%'
+    height: "100%",
   },
   content: {
     width: "80%",
     margin: "auto",
   },
-  // field: {
-  //   flexDirection: "column",
-  //   justifyContent: "space-around",
-  //   padding: 20,
-  //   // width: "90%",
-  //   overflow: 'hidden'
-  // },
-  // error: {
-  //   height: 24,
-  //   overflow: 'hidden'
-  // },
 });

@@ -10,7 +10,7 @@ const resources = {
       description: "This is a simple localization example.",
       errors: {
         emptyText: "emptyText",
-        maxLength: "maxLength {{length}}",
+        maxLength: "Max length: {{count}}",
       },
     },
   },
@@ -21,13 +21,7 @@ const resources = {
       description: "Это простой пример локализации.",
       errors: {
         emptyText: "Введите текст",
-        // "maxLength_one": "item",
-        // "maxLength_other": "items",
-        maxLength_one: "Длина не должна превышать Длина не должна превышать {{count}} символ",
-        maxLength_two: "Длина не должна превышать Длина не должна превышать {{count}} символа",
-        maxLength_few: "Длина не должна превышать Длина не должна превышать {{count}} символа",
-        maxLength_other: "Длина не должна превышать Длина не должна превышать {{count}} символов",
-        maxLength_many: "Длина не должна превышать Длина не должна превышать {{count}} символов",
+        maxLength: "Превышен лимит символов: {{count}}",
       },
     },
   },
@@ -38,6 +32,7 @@ export const initI18n = () =>
     //   .use(languageDetector) // Detects language from device settings
     .use(initReactI18next) // Passes i18n down to react-i18next
     .init({
+      compatibilityJSON: 'v3',
       resources,
       fallbackLng: "ru",
       lng: "ru",
