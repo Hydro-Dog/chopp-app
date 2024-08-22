@@ -1,0 +1,124 @@
+import { createSlice } from "@reduxjs/toolkit";
+import { createUser } from "./actions";
+import { ErrorResponse, FETCH_STATUS } from "@/shared";
+
+export type UserState = {
+  // currentUser: User | null;
+  // currentUserStatus: FETCH_STATUS;
+  // currentUserError: ErrorResponse | null;
+  // updateCurrentUserStatus: FETCH_STATUS;
+  // updateCurrentUserError: ErrorResponse | null;
+  createUserStatus: FETCH_STATUS;
+  createUserError: ErrorResponse | null;
+  // logoutStatus: FETCH_STATUS;
+  // logoutError: ErrorResponse | null;
+  // loginStatus: FETCH_STATUS;
+  // loginError: ErrorResponse | null;
+};
+
+const initialState: UserState = {
+  // currentUser: null,
+  // currentUserStatus: FETCH_STATUS.IDLE,
+  // currentUserError: null,
+  // updateCurrentUserStatus: FETCH_STATUS.IDLE,
+  // updateCurrentUserError: null,
+  createUserStatus: FETCH_STATUS.IDLE,
+  createUserError: null,
+  // logoutStatus: FETCH_STATUS.IDLE,
+  // logoutError: null,
+  // loginStatus: FETCH_STATUS.IDLE,
+  // loginError: null,
+};
+
+export const userSlice = createSlice({
+  name: "user",
+  initialState,
+  reducers: {
+    // setLoginStatus: (state, action: PayloadAction<FETCH_STATUS>) => {
+    //   state.loginStatus = action.payload;
+    // },
+    // setLogoutStatus: (state, action: PayloadAction<FETCH_STATUS>) => {
+    //   state.logoutStatus = action.payload;
+    // },
+  },
+  extraReducers: (builder) => {
+    builder
+      // .addCase(fetchCurrentUser.pending, (state) => {
+      //   state.currentUserStatus = FETCH_STATUS.LOADING;
+      // })
+      // .addCase(
+      //   fetchCurrentUser.fulfilled,
+      //   (state, action: PayloadAction<User>) => {
+      //     state.currentUserStatus = FETCH_STATUS.SUCCESS;
+      //     state.currentUser = action.payload;
+      //   },
+      // )
+      // .addCase(fetchCurrentUser.rejected, (state, action) => {
+      //   state.currentUserStatus = FETCH_STATUS.ERROR;
+      //   state.currentUserError = action.payload ?? {
+      //     errorMessage: "Failed to fetch user information",
+      //   };
+      // })
+      // .addCase(updateCurrentUser.pending, (state) => {
+      //   state.updateCurrentUserStatus = FETCH_STATUS.LOADING;
+      // })
+      // .addCase(
+      //   updateCurrentUser.fulfilled,
+      //   (state, action: PayloadAction<User>) => {
+      //     state.updateCurrentUserStatus = FETCH_STATUS.SUCCESS;
+      //     state.currentUser = action.payload;
+      //     state.updateCurrentUserStatus = FETCH_STATUS.IDLE;
+      //   },
+      // )
+      // .addCase(updateCurrentUser.rejected, (state, action) => {
+      //   state.updateCurrentUserStatus = FETCH_STATUS.ERROR;
+      //   state.updateCurrentUserError = action.payload ?? {
+      //     errorMessage: "Failed to fetch user information",
+      //   };
+      //   state.updateCurrentUserStatus = FETCH_STATUS.IDLE;
+      // })
+      .addCase(createUser.pending, (state) => {
+        state.createUserStatus = FETCH_STATUS.LOADING;
+      })
+      .addCase(createUser.fulfilled, (state) => {
+        state.createUserStatus = FETCH_STATUS.SUCCESS;
+      })
+      .addCase(createUser.rejected, (state, action) => {
+        state.createUserStatus = FETCH_STATUS.ERROR;
+        // state.createUserStatus = action.payload ?? {
+        //   errorMessage: "Failed to register user",
+        // };
+      });
+    // .addCase(loginUser.pending, (state) => {
+    //   state.loginStatus = FETCH_STATUS.LOADING;
+    // })
+    // .addCase(
+    //   loginUser.fulfilled,
+    //   (state, action: PayloadAction<UserAuthorization>) => {
+    //     state.loginStatus = FETCH_STATUS.SUCCESS;
+    //     localStorage.setItem("token", action.payload.Authorization);
+    //   },
+    // )
+    // .addCase(loginUser.rejected, (state, action) => {
+    //   state.loginStatus = FETCH_STATUS.ERROR;
+    //   state.loginError = action.payload ?? {
+    //     errorMessage: "Failed to login user",
+    //   };
+    // })
+    // .addCase(logoutUser.pending, (state) => {
+    //   state.logoutStatus = FETCH_STATUS.LOADING;
+    // })
+    // .addCase(logoutUser.fulfilled, (state) => {
+    //   state.logoutStatus = FETCH_STATUS.SUCCESS;
+    //   localStorage.removeItem("token");
+    // })
+    // .addCase(logoutUser.rejected, (state, action) => {
+    //   state.logoutStatus = FETCH_STATUS.ERROR;
+    //   state.logoutError = action.payload ?? {
+    //     errorMessage: "Failed to logout user",
+    //   };
+    // });
+  },
+});
+
+// export const { setLoginStatus, setLogoutStatus } = userSlice.actions;

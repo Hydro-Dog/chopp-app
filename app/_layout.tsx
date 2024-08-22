@@ -1,19 +1,26 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
+import React, { useEffect } from "react";
+import { View } from "react-native";
+import { Provider as StoreProvider } from "react-redux";
+import { useTheme } from "@react-navigation/native";
+import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import "react-native-reanimated";
+import { initI18n } from "@/i18n";
+import { ChopThemeProvider } from "@/shared";
+import { store } from "@/store/store";
 
-import { useColorScheme } from '@/hooks/useColorScheme';
+initI18n();
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
+  const theme = useTheme();
   const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    Montserrat: require("../assets/fonts/Montserrat-VariableFont_wght.ttf"),
+    Nunito: require("../assets/fonts/Nunito-VariableFont_wght.ttf"),
   });
 
   useEffect(() => {
@@ -27,11 +34,17 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-    </ThemeProvider>
+    <StoreProvider store={store}>
+      <ChopThemeProvider>
+        <View style={{ backgroundColor: theme.colors.background, flex: 1 }}>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="sign-in" />
+            <Stack.Screen name="+not-found" />
+            <Stack.Screen name="+html" />
+          </Stack>
+        </View>
+      </ChopThemeProvider>
+    </StoreProvider>
   );
 }
