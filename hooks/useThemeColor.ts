@@ -4,7 +4,7 @@
  */
 
 import { useTheme } from "@react-navigation/native";
-import { Colors } from "@/constants/Colors";
+import { COLORS } from "@/constants/Colors";
 import { LIGHT_THEME } from "@/theme";
 
 export function useThemeColor(
@@ -17,6 +17,6 @@ export function useThemeColor(
   if (colorFromProps) {
     return colorFromProps;
   } else {
-    return Colors[theme][colorName];
+    return COLORS[theme][colorName];
   }
 }

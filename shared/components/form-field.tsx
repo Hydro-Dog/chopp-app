@@ -1,15 +1,23 @@
-import { PropsWithChildren, useEffect, useRef, useState } from "react";
+import {
+  PropsWithChildren,
+  ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { FieldError, Merge, FieldErrorsImpl } from "react-hook-form";
 import { View, StyleSheet, Animated, Dimensions } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 
 type Props = {
   errorMessage?: string | FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
+  icon?: ReactNode;
 };
 
 export const FormField = ({
   children,
   errorMessage,
+  icon,
 }: PropsWithChildren<Props>) => {
   const [textWidth, setTextWidth] = useState(0);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -55,12 +63,30 @@ export const FormField = ({
         setContainerWidth(nativeEvent.layout.width)
       }
     >
-      {children}
+      <View style={{ width: "auto", height: "auto" }}>
+        {children}
+        {icon && (
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: 'flex-end'
+            }}
+          >
+            <View style={{}}>{icon}</View>
+          </View>
+        )}
+      </View>
       <Animated.View style={[styles.error, { opacity: fadeAnim }]}>
         <Animated.Text
           style={{ transform: [{ translateX: moveAnim }] }}
           numberOfLines={1}
-          ellipsizeMode={undefined}
         >
           {errorMessage && (
             <ThemedText

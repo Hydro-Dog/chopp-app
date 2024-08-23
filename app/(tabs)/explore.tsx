@@ -1,13 +1,13 @@
 import { StyleSheet, Image, Platform } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
+import { useTheme } from "@react-navigation/native";
+import { Link } from "expo-router";
 import { Collapsible } from "@/components/Collapsible";
 import { ExternalLink } from "@/components/ExternalLink";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
-import { useTheme } from "@react-navigation/native";
-import { Link } from "expo-router";
 
 export default function TabTwoScreen() {
   const val = useTheme();
@@ -21,7 +21,7 @@ export default function TabTwoScreen() {
         <Ionicons size={310} name="code-slash" style={styles.headerImage} />
       }
     >
-      <Link href="/sign-in">
+      <Link href="/registration">
         <ThemedText type="link">Go to home screen!</ThemedText>
       </Link>
       <ThemedView style={styles.titleContainer}>
