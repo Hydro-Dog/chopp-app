@@ -6,9 +6,10 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
-import { initI18n } from "@/i18n";
 import { ChopThemeProvider } from "@/shared";
 import { store } from "@/store/store";
+import { ChopThemeType } from "@/theme/theme-type";
+import { initI18n } from "@/translation/i18n";
 
 initI18n();
 
@@ -16,12 +17,12 @@ initI18n();
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const theme = useTheme();
+  const theme = useTheme() as ChopThemeType;
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     Montserrat: require("../assets/fonts/Montserrat-VariableFont_wght.ttf"),
     Nunito: require("../assets/fonts/Nunito-VariableFont_wght.ttf"),
-    'Nunito-bold': require("../assets/fonts/Nunito-VariableFont_wght.ttf"),
+    "Nunito-bold": require("../assets/fonts/Nunito-VariableFont_wght.ttf"),
   });
 
   useEffect(() => {

@@ -6,18 +6,17 @@ import {
   useState,
 } from "react";
 import { FieldError, Merge, FieldErrorsImpl } from "react-hook-form";
-import { View, StyleSheet, Animated, Dimensions } from "react-native";
+import { View, StyleSheet, Animated } from "react-native";
 import { ThemedText } from "@/components/ThemedText";
 
 type Props = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   errorMessage?: string | FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
-  icon?: ReactNode;
 };
 
 export const FormField = ({
   children,
   errorMessage,
-  icon,
 }: PropsWithChildren<Props>) => {
   const [textWidth, setTextWidth] = useState(0);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -65,7 +64,7 @@ export const FormField = ({
     >
       <View style={{ width: "auto", height: "auto" }}>
         {children}
-        {icon && (
+        {/* {icon && (
           <View
             style={{
               position: "absolute",
@@ -81,7 +80,7 @@ export const FormField = ({
           >
             <View style={{}}>{icon}</View>
           </View>
-        )}
+        )} */}
       </View>
       <Animated.View style={[styles.error, { opacity: fadeAnim }]}>
         <Animated.Text
