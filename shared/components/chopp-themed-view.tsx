@@ -1,5 +1,4 @@
-import { ScrollView, View, type ViewProps } from "react-native";
-
+import { View, type ViewProps } from "react-native";
 import { useThemeColor } from "@/hooks/useThemeColor";
 
 export type ThemedViewProps = ViewProps & {
@@ -7,7 +6,7 @@ export type ThemedViewProps = ViewProps & {
   darkColor?: string;
 };
 
-export function ThemedView({
+export function ChoppThemedView({
   style,
   lightColor,
   darkColor,

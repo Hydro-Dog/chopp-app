@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { View, StyleSheet, Image } from "react-native";
@@ -8,10 +9,17 @@ import { useTheme } from "@react-navigation/native";
 import { TFunction } from "i18next";
 import { useBoolean } from "usehooks-ts";
 import { z } from "zod";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { formatPhoneNumber, FormField } from "@/shared";
+import LogoDark from "@/assets/logo-dark.png";
+import LogoLight from "@/assets/logo-light.png";
+import { ChoppDialog, ChoppThemedView } from "@/shared";
+import {
+  formatPhoneNumber,
+  ChoppFormField,
+  ChoppCheckbox,
+  ChoppThemedText,
+} from "@/shared";
 import { ChopThemeType } from "@/theme/theme-type";
+import { RegistrationForm } from "@/components/registration";
 
 const registrationSchema = (t: TFunction<"translation", undefined>) =>
   z.object({
@@ -33,6 +41,14 @@ const registrationSchema = (t: TFunction<"translation", undefined>) =>
       .string()
       .min(8, t("errors.minLength", { count: 8 }))
       .max(30, t("errors.maxLength", { count: 30 })),
+    isPersonalDataProcessingAccepted: z
+      .boolean()
+      .refine((val) => val === true, {
+        message: t("errors.mustAccept"),
+      }),
+    isOfferAgreementAccepted: z.boolean().refine((val) => val === true, {
+      message: t("errors.mustAccept"),
+    }),
   });
 
 type RegistrationFormType = z.infer<ReturnType<typeof registrationSchema>>;
@@ -54,98 +70,31 @@ export default function SignInPage() {
       phoneNumber: "",
       email: "",
       password: "",
+      isPersonalDataProcessingAccepted: false,
+      isOfferAgreementAccepted: false,
     },
   });
 
   const onSubmit: SubmitHandler<RegistrationFormType> = (data) =>
     console.log(data);
 
+  const {
+    value: isModalVisible,
+    setTrue: showModal,
+    setFalse: hideModal,
+  } = useBoolean();
+
+  const [modalData, setModalData] = useState<{ title: string; text: string }>();
+
   return (
     <KeyboardAwareScrollView>
-      <ThemedView style={styles.container}>
-        <Image style={styles.logo} source={require("../assets/logo.png")} />
+      <ChoppThemedView style={styles.container}>
+        <Image style={styles.logo} source={theme.dark ? LogoDark : LogoLight} />
         <View style={styles.content}>
-          <ThemedText type="subtitleBold">Регистрация</ThemedText>
-          <FormField errorMessage={errors.fullName?.message}>
-            <Controller
-              control={control}
-              name="fullName"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  mode="outlined"
-                  label="Фио"
-                  value={value}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  error={!!errors.fullName}
-                />
-              )}
-            />
-          </FormField>
-          <FormField errorMessage={errors.phoneNumber?.message}>
-            <Controller
-              control={control}
-              name="phoneNumber"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  mode="outlined"
-                  label="Телефон"
-                  value={value}
-                  onBlur={onBlur}
-                  onChangeText={(text) => onChange(formatPhoneNumber(text))}
-                  error={!!errors.phoneNumber}
-                />
-              )}
-            />
-          </FormField>
-          <FormField errorMessage={errors.email?.message}>
-            <Controller
-              control={control}
-              name="email"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  mode="outlined"
-                  label="Email"
-                  value={value}
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  error={!!errors.email}
-                />
-              )}
-            />
-          </FormField>
-          <FormField errorMessage={errors.password?.message}>
-            <Controller
-              control={control}
-              name="password"
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  mode="outlined"
-                  label="Пароль"
-                  secureTextEntry={!passwordVisible}
-                  value={value}
-                  right={
-                    <TextInput.Icon
-                      icon={passwordVisible ? "eye-off" : "eye"}
-                      color={theme.colors.secondary}
-                      size={20}
-                      forceTextInputFocus={false}
-                      onPress={togglePasswordVisibility}
-                    />
-                  }
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  error={!!errors.password}
-                />
-              )}
-            />
-          </FormField>
-
-          <Button mode="contained" onPress={handleSubmit(onSubmit)}>
-            Зарегистрироваться
-          </Button>
+          <ChoppThemedText type="subtitleBold">Регистрация</ChoppThemedText>
+          <RegistrationForm />
         </View>
-      </ThemedView>
+      </ChoppThemedView>
     </KeyboardAwareScrollView>
   );
 }
@@ -156,11 +105,11 @@ const styles = StyleSheet.create({
     height: "100%",
     flexDirection: "column",
     alignItems: "center",
-    margin: 24,
+    marginTop: 64,
   },
   logo: {
-    width: 256,
-    height: 256,
+    width: 128,
+    height: 128,
   },
   content: {
     width: "80%",

@@ -1,27 +1,15 @@
 import { useTranslation } from "react-i18next";
-import { Image, StyleSheet, Platform, View } from "react-native";
-
-import {
-  PaperProvider,
-  MD3LightTheme as DefaultTheme,
-  Button,
-  Switch,
-} from "react-native-paper";
-import { HelloWave } from "@/components/HelloWave";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-
-// const theme = {
-//   ...DefaultTheme,
-//   colors: lightColors.colors,
-// };
+import { Image, StyleSheet } from "react-native";
+import { useTheme } from "@react-navigation/native";
+import { ChoppParallaxScrollView } from "@/shared";
+import { ChopThemeType } from "@/theme";
 
 export default function HomeScreen() {
   const { t } = useTranslation();
+  const theme = useTheme() as ChopThemeType;
 
   return (
-    <ParallaxScrollView
+    <ChoppParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
       headerImage={
         <Image
@@ -64,7 +52,7 @@ export default function HomeScreen() {
           <ThemedText type="defaultSemiBold">app-example</ThemedText>.
         </ThemedText>
       </ThemedView> */}
-    </ParallaxScrollView>
+    </ChoppParallaxScrollView>
   );
 }
 

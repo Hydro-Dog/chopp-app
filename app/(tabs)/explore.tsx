@@ -1,115 +1,117 @@
 import { StyleSheet, Image, Platform } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Link } from "expo-router";
-import { Collapsible } from "@/components/Collapsible";
-import { ExternalLink } from "@/components/ExternalLink";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
+import { ChoppThemedText } from "@/shared";
+import { ChoppThemedView } from "@/shared";
+import {
+  ChoppCollapsible,
+  ChoppExternalLink,
+  ChoppParallaxScrollView,
+} from "@/shared";
 
 export default function TabTwoScreen() {
   return (
-    <ParallaxScrollView
+    <ChoppParallaxScrollView
       headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}
       headerImage={
         <Ionicons size={310} name="code-slash" style={styles.headerImage} />
       }
     >
       <Link href="/registration">
-        <ThemedText type="link">Go to home screen!</ThemedText>
+        <ChoppThemedText type="link">Go to home screen!</ChoppThemedText>
       </Link>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Explore</ThemedText>
-      </ThemedView>
-      <ThemedText>
+      <ChoppThemedView style={styles.titleContainer}>
+        <ChoppThemedText type="title">Explore</ChoppThemedText>
+      </ChoppThemedView>
+      <ChoppThemedText>
         This app includes example code to help you get started.
-      </ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
+      </ChoppThemedText>
+      <ChoppCollapsible title="File-based routing">
+        <ChoppThemedText>
           This app has two screens:{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText>{" "}
+          <ChoppThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ChoppThemedText>{" "}
           and{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
+          <ChoppThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ChoppThemedText>
+        </ChoppThemedText>
+        <ChoppThemedText>
           The layout file in{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{" "}
+          <ChoppThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ChoppThemedText>{" "}
           sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
+        </ChoppThemedText>
+        <ChoppExternalLink href="https://docs.expo.dev/router/introduction">
+          <ChoppThemedText type="link">Learn more</ChoppThemedText>
+        </ChoppExternalLink>
+      </ChoppCollapsible>
+      <ChoppCollapsible title="Android, iOS, and web support">
+        <ChoppThemedText>
           You can open this project on Android, iOS, and the web. To open the
-          web version, press <ThemedText type="defaultSemiBold">w</ThemedText>{" "}
+          web version, press <ChoppThemedText type="defaultSemiBold">w</ChoppThemedText>{" "}
           in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
+        </ChoppThemedText>
+      </ChoppCollapsible>
+      <ChoppCollapsible title="Images">
+        <ChoppThemedText>
           For static images, you can use the{" "}
-          <ThemedText type="defaultSemiBold">@2x</ThemedText> and{" "}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to
+          <ChoppThemedText type="defaultSemiBold">@2x</ChoppThemedText> and{" "}
+          <ChoppThemedText type="defaultSemiBold">@3x</ChoppThemedText> suffixes to
           provide files for different screen densities
-        </ThemedText>
+        </ChoppThemedText>
         <Image
           source={require("@/assets/images/react-logo.png")}
           style={{ alignSelf: "center" }}
         />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Custom fonts">
-        <ThemedText>
-          Open <ThemedText type="defaultSemiBold">app/_layout.tsx</ThemedText>{" "}
+        <ChoppExternalLink href="https://reactnative.dev/docs/images">
+          <ChoppThemedText type="link">Learn more</ChoppThemedText>
+        </ChoppExternalLink>
+      </ChoppCollapsible>
+      <ChoppCollapsible title="Custom fonts">
+        <ChoppThemedText>
+          Open <ChoppThemedText type="defaultSemiBold">app/_layout.tsx</ChoppThemedText>{" "}
           to see how to load{" "}
-          <ThemedText style={{ fontFamily: "SpaceMono" }}>
+          <ChoppThemedText style={{ fontFamily: "SpaceMono" }}>
             custom fonts such as this one.
-          </ThemedText>
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
+          </ChoppThemedText>
+        </ChoppThemedText>
+        <ChoppExternalLink href="https://docs.expo.dev/versions/latest/sdk/font">
+          <ChoppThemedText type="link">Learn more</ChoppThemedText>
+        </ChoppExternalLink>
+      </ChoppCollapsible>
+      <ChoppCollapsible title="Light and dark mode components">
+        <ChoppThemedText>
           This template has light and dark mode support. The{" "}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook
+          <ChoppThemedText type="defaultSemiBold">useColorScheme()</ChoppThemedText> hook
           lets you inspect what the user's current color scheme is, and so you
           can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
+        </ChoppThemedText>
+        <ChoppExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
+          <ChoppThemedText type="link">Learn more</ChoppThemedText>
+        </ChoppExternalLink>
+      </ChoppCollapsible>
+      <ChoppCollapsible title="Animations">
+        <ChoppThemedText>
           This template includes an example of an animated component. The{" "}
-          <ThemedText type="defaultSemiBold">
+          <ChoppThemedText type="defaultSemiBold">
             components/HelloWave.tsx
-          </ThemedText>{" "}
+          </ChoppThemedText>{" "}
           component uses the powerful{" "}
-          <ThemedText type="defaultSemiBold">
+          <ChoppThemedText type="defaultSemiBold">
             react-native-reanimated
-          </ThemedText>{" "}
+          </ChoppThemedText>{" "}
           library to create a waving hand animation.
-        </ThemedText>
+        </ChoppThemedText>
         {Platform.select({
           ios: (
-            <ThemedText>
+            <ChoppThemedText>
               The{" "}
-              <ThemedText type="defaultSemiBold">
+              <ChoppThemedText type="defaultSemiBold">
                 components/ParallaxScrollView.tsx
-              </ThemedText>{" "}
+              </ChoppThemedText>{" "}
               component provides a parallax effect for the header image.
-            </ThemedText>
+            </ChoppThemedText>
           ),
         })}
-      </Collapsible>
-    </ParallaxScrollView>
+      </ChoppCollapsible>
+    </ChoppParallaxScrollView>
   );
 }
 

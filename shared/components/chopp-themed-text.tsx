@@ -17,7 +17,7 @@ export type ThemedTextProps = TextProps & {
   variant?: keyof typeof LIGHT_THEME.colors;
 };
 
-export function ThemedText({
+export function ChoppThemedText({
   style,
   lightColor,
   darkColor,

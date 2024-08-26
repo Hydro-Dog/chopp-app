@@ -8,5 +8,6 @@ export const ru = {
     minLength: "Минимальная длина: {{count}}",
     invalidPhoneNumber: "Некорректный номер телефона",
     invalidEmail: "Некорректный email",
+    mustAccept: "Необходимо принять условия"
   },
 };
