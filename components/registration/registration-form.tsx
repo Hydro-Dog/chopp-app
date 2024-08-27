@@ -1,62 +1,32 @@
 import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { View, StyleSheet, Image } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Button, TextInput } from "react-native-paper";
+import { View, StyleSheet } from "react-native";
+import { Button, Snackbar, TextInput } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTheme } from "@react-navigation/native";
-import { TFunction } from "i18next";
+import { router } from "expo-router";
 import { useBoolean } from "usehooks-ts";
-import { z } from "zod";
-import LogoDark from "@/assets/logo-dark.png";
-import LogoLight from "@/assets/logo-light.png";
-import { ChoppDialog, ChoppThemedView } from "@/shared";
+import { RegistrationFormType, registrationSchema } from "./types";
+import { ChoppDialog, FETCH_STATUS } from "@/shared";
 import {
   formatPhoneNumber,
   ChoppFormField,
   ChoppCheckbox,
   ChoppThemedText,
 } from "@/shared";
+import { createUser } from "@/store/slices/user-slice";
+import { AppDispatch, RootState } from "@/store/store";
 import { ChopThemeType } from "@/theme/theme-type";
 
-const registrationSchema = (t: TFunction<"translation", undefined>) =>
-  z.object({
-    fullName: z
-      .string()
-      .min(1, t("errors.emptyText"))
-      .max(30, t("errors.maxLength", { count: 30 })),
-    phoneNumber: z
-      .string()
-      .regex(
-        /^[78]-(\d{3})-(\d{3})-(\d{2})-(\d{2})$/,
-        t("errors.invalidPhoneNumber")
-      ),
-    email: z
-      .string()
-      .email(t("errors.invalidEmail"))
-      .max(30, t("errors.maxLength", { count: 30 })),
-    password: z
-      .string()
-      .min(8, t("errors.minLength", { count: 8 }))
-      .max(30, t("errors.maxLength", { count: 30 })),
-    isPersonalDataProcessingAccepted: z
-      .boolean()
-      .refine((val) => val === true, {
-        message: t("errors.mustAccept"),
-      }),
-    isOfferAgreementAccepted: z.boolean().refine((val) => val === true, {
-      message: t("errors.mustAccept"),
-    }),
-  });
-
-type RegistrationFormType = z.infer<ReturnType<typeof registrationSchema>>;
-
 export const RegistrationForm = () => {
+  const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation();
   const theme = useTheme() as ChopThemeType;
   const { value: passwordVisible, toggle: togglePasswordVisibility } =
     useBoolean();
+  const { createUserStatus } = useSelector((state: RootState) => state.user);
 
   const {
     control,
@@ -74,8 +44,15 @@ export const RegistrationForm = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<RegistrationFormType> = (data) =>
-    console.log(data);
+  const onSubmit: SubmitHandler<RegistrationFormType> = (data) => {
+    dispatch(createUser(data))
+      .unwrap()
+      .then((res) => {
+        console.log("Redirect ", res);
+        // router.push("/");
+      })
+      .catch((err) => console.log("eeeeeeer: ", err));
+  };
 
   const {
     value: isModalVisible,
@@ -94,6 +71,7 @@ export const RegistrationForm = () => {
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               mode="outlined"
+              //   TODO: перевод
               label="Фио"
               value={value}
               onBlur={onBlur}
@@ -228,6 +206,8 @@ export const RegistrationForm = () => {
       <Button
         mode="outlined"
         style={styles.registerButton}
+        loading={createUserStatus === FETCH_STATUS.LOADING}
+        disabled={createUserStatus === FETCH_STATUS.LOADING}
         onPress={handleSubmit(onSubmit)}
       >
         {/* TODO: перевод */}
@@ -239,6 +219,7 @@ export const RegistrationForm = () => {
         onOk={hideModal}
         {...modalData}
       />
+
     </View>
   );
 };

@@ -46,9 +46,9 @@ export const createUser = createAsyncThunk<
   User,
   UserRegisterDTO,
   { rejectValue: ErrorResponse }
->("/createUserUser", async (userData, thunkAPI) => {
+>("/createUser", async (data, thunkAPI) => {
   try {
-    const response = await api.post<User>(`/register`, userData);
+    const response = await api.post<User>(`/user/create`, data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {

@@ -22,7 +22,7 @@ export const initI18n = () =>
       resources,
       fallbackLng: "ru",
       lng: "ru",
-      debug: true,
+      debug: false,
       interpolation: {
         escapeValue: false, // React is safe from XSS
       },

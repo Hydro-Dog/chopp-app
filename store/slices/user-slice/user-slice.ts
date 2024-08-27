@@ -9,7 +9,7 @@ export type UserState = {
   // updateCurrentUserStatus: FETCH_STATUS;
   // updateCurrentUserError: ErrorResponse | null;
   createUserStatus: FETCH_STATUS;
-  createUserError: ErrorResponse | null;
+  createUserError?: ErrorResponse;
   // logoutStatus: FETCH_STATUS;
   // logoutError: ErrorResponse | null;
   // loginStatus: FETCH_STATUS;
@@ -23,7 +23,7 @@ const initialState: UserState = {
   // updateCurrentUserStatus: FETCH_STATUS.IDLE,
   // updateCurrentUserError: null,
   createUserStatus: FETCH_STATUS.IDLE,
-  createUserError: null,
+  createUserError: undefined,
   // logoutStatus: FETCH_STATUS.IDLE,
   // logoutError: null,
   // loginStatus: FETCH_STATUS.IDLE,
@@ -85,9 +85,7 @@ export const userSlice = createSlice({
       })
       .addCase(createUser.rejected, (state, action) => {
         state.createUserStatus = FETCH_STATUS.ERROR;
-        // state.createUserStatus = action.payload ?? {
-        //   errorMessage: "Failed to register user",
-        // };
+        state.createUserError = action.payload;
       });
     // .addCase(loginUser.pending, (state) => {
     //   state.loginStatus = FETCH_STATUS.LOADING;
