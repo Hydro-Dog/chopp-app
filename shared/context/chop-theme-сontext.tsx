@@ -19,7 +19,7 @@ export const ChopThemeProvider = ({ children }: PropsWithChildren<object>) => {
       colors: isDarkTheme ? DARK_THEME.colors : LIGHT_THEME.colors,
       dark: isDarkTheme,
     }),
-    [isDarkTheme],
+    [isDarkTheme]
   );
 
   const deviceColorScheme = useColorScheme();
@@ -45,7 +45,7 @@ export const ChopThemeProvider = ({ children }: PropsWithChildren<object>) => {
 
   return (
     <ThemeProvider value={theme}>
-      <PaperProvider theme={theme} settings={{}}>
+      <PaperProvider theme={theme}>
         {children}
         <Switch value={isDarkTheme} onValueChange={toggleTheme} />
       </PaperProvider>

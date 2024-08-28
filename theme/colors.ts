@@ -16,6 +16,11 @@ export const LIGHT_THEME = {
     onError: "rgb(255, 255, 255)", // Белый
     errorContainer: "rgb(255, 205, 210)", // Светло-красный
     onErrorContainer: "rgb(121, 0, 0)", // Темно-красный
+    // Добавленный цвет
+    success: "rgb(67, 160, 71)", // Основной зелёный
+    onSuccess: "rgb(255, 255, 255)", // Белый для читаемости на зелёном
+    successContainer: "rgb(200, 230, 201)", // Светлый зелёный
+    onSuccessContainer: "rgb(27, 94, 32)", // Темно-зелёный
     onBackground: "rgb(33, 33, 33)", // Темный текст на фоне
     surface: "rgb(255, 255, 255)", // Белый
     onSurface: "rgb(33, 33, 33)", // Почти черный
@@ -67,6 +72,10 @@ export const DARK_THEME = {
     onError: "rgb(121, 0, 0)", // Темно-красный
     errorContainer: "rgb(211, 47, 47)", // Красный
     onErrorContainer: "rgb(255, 255, 255)", // Белый
+    success: "rgb(67, 160, 71)", // Основной зелёный
+    onSuccess: "rgb(255, 255, 255)", // Белый для читаемости на зелёном
+    successContainer: "rgb(200, 230, 201)", // Светлый зелёный
+    onSuccessContainer: "rgb(27, 94, 32)", // Темно-зелёный
     onBackground: "rgb(207, 216, 220)", // Светло-серый
     surface: "rgb(48, 48, 48)", // Темно-серый
     onSurface: "rgb(207, 216, 220)", // Светло-серый

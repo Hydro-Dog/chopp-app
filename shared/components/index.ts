@@ -7,3 +7,4 @@ export * from "./chopp-parallax-scroll-view";
 export * from "./chopp-themed-text";
 export * from "./chopp-themed-view";
 export * from "./chopp-dialog";
+export * from "./chopp-snackbar-stack";

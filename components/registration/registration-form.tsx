@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { View, StyleSheet } from "react-native";
@@ -9,7 +9,7 @@ import { useTheme } from "@react-navigation/native";
 import { router } from "expo-router";
 import { useBoolean } from "usehooks-ts";
 import { RegistrationFormType, registrationSchema } from "./types";
-import { ChoppDialog, FETCH_STATUS } from "@/shared";
+import { ChoppDialog, ChoppSnackbarContext, FETCH_STATUS } from "@/shared";
 import {
   formatPhoneNumber,
   ChoppFormField,
@@ -18,12 +18,15 @@ import {
 } from "@/shared";
 import { createUser } from "@/store/slices/user-slice";
 import { AppDispatch, RootState } from "@/store/store";
+import { useChoppTheme } from "@/theme";
 import { ChopThemeType } from "@/theme/theme-type";
 
 export const RegistrationForm = () => {
+  const theme = useChoppTheme();
+  console.log("theme: ", theme);
   const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation();
-  const theme = useTheme() as ChopThemeType;
+  // const theme = useTheme() as ChopThemeType;
   const { value: passwordVisible, toggle: togglePasswordVisibility } =
     useBoolean();
   const { createUserStatus } = useSelector((state: RootState) => state.user);
@@ -44,6 +47,8 @@ export const RegistrationForm = () => {
     },
   });
 
+  const {push} = useContext(ChoppSnackbarContext);
+
   const onSubmit: SubmitHandler<RegistrationFormType> = (data) => {
     dispatch(createUser(data))
       .unwrap()
@@ -51,7 +56,14 @@ export const RegistrationForm = () => {
         console.log("Redirect ", res);
         // router.push("/");
       })
-      .catch((err) => console.log("eeeeeeer: ", err));
+      .catch((err) => {
+        push({
+          id: String(Math.random()),
+          variant: 'error',
+          text: err.errorMessage,
+        })
+        console.log("eeeeeeer: ", err);
+      });
   };
 
   const {
@@ -219,7 +231,6 @@ export const RegistrationForm = () => {
         onOk={hideModal}
         {...modalData}
       />
-
     </View>
   );
 };

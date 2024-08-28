@@ -1,10 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import {
-  Animated,
-  TouchableWithoutFeedback,
-  View,
-  StyleSheet,
-} from "react-native";
+import { Animated, TouchableWithoutFeedback, View, StyleSheet } from "react-native";
 import Svg, { Path } from "react-native-svg";
 import { useTheme } from "@react-navigation/native";
 import { ChoppThemedText } from "./chopp-themed-text";
@@ -19,6 +14,7 @@ type Props = {
 export const ChoppCheckbox = ({ value, onChange, label }: Props) => {
   const theme = useTheme() as ChopThemeType;
   const animation = useRef(new Animated.Value(value ? 1 : 0)).current;
+  const scale = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     Animated.timing(animation, {
@@ -46,13 +42,37 @@ export const ChoppCheckbox = ({ value, onChange, label }: Props) => {
     opacity: opacityInterpolation,
   };
 
+  const animatedScaleStyle = {
+    transform: [{ scale }]
+  };
+
+  const handlePress = () => {
+    Animated.sequence([
+      Animated.timing(scale, {
+        toValue: 0.95,
+        duration: 100,
+        useNativeDriver: true
+      }),
+      Animated.timing(scale, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true
+      })
+    ]).start();
+
+    if (onChange) {
+      onChange(!value);
+    }
+  };
+
   return (
-    <TouchableWithoutFeedback onPress={() => onChange && onChange(!value)}>
+    <TouchableWithoutFeedback onPress={handlePress}>
       <View style={styles.container}>
         <Animated.View
           style={[
             styles.checkbox,
             animatedStyle,
+            animatedScaleStyle,
             {
               borderColor: value ? theme.colors.primary : theme.colors.outline,
               backgroundColor: theme.colors.onSecondary,

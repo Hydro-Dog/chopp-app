@@ -51,6 +51,7 @@ export const createUser = createAsyncThunk<
     const response = await api.post<User>(`/user/create`, data);
     return response.data;
   } catch (error) {
+    console.log('axios error: ', error)
     if (axios.isAxiosError(error) && error.response) {
       return thunkAPI.rejectWithValue(error.response.data as ErrorResponse);
     } else {
