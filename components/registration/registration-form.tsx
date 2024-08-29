@@ -1,15 +1,15 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { View, StyleSheet } from "react-native";
-import { Button, Snackbar, TextInput } from "react-native-paper";
+import { Button, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTheme } from "@react-navigation/native";
 import { router } from "expo-router";
 import { useBoolean } from "usehooks-ts";
 import { RegistrationFormType, registrationSchema } from "./types";
-import { ChoppDialog, ChoppSnackbarContext, FETCH_STATUS } from "@/shared";
+import { ChoppDialog, FETCH_STATUS, useChoppSnackbar } from "@/shared";
 import {
   formatPhoneNumber,
   ChoppFormField,
@@ -19,14 +19,12 @@ import {
 import { createUser } from "@/store/slices/user-slice";
 import { AppDispatch, RootState } from "@/store/store";
 import { useChoppTheme } from "@/theme";
-import { ChopThemeType } from "@/theme/theme-type";
+import { SNACKBAR_VARIANTS } from "@/shared/context/chopp-snackbar-context";
 
 export const RegistrationForm = () => {
   const theme = useChoppTheme();
-  console.log("theme: ", theme);
   const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation();
-  // const theme = useTheme() as ChopThemeType;
   const { value: passwordVisible, toggle: togglePasswordVisibility } =
     useBoolean();
   const { createUserStatus } = useSelector((state: RootState) => state.user);
@@ -47,7 +45,7 @@ export const RegistrationForm = () => {
     },
   });
 
-  const {push} = useContext(ChoppSnackbarContext);
+  const { push } = useChoppSnackbar();
 
   const onSubmit: SubmitHandler<RegistrationFormType> = (data) => {
     dispatch(createUser(data))
@@ -59,9 +57,10 @@ export const RegistrationForm = () => {
       .catch((err) => {
         push({
           id: String(Math.random()),
-          variant: 'error',
+          variant: SNACKBAR_VARIANTS.INFO,
           text: err.errorMessage,
-        })
+          actionLabel: "hyi",
+        });
         console.log("eeeeeeer: ", err);
       });
   };

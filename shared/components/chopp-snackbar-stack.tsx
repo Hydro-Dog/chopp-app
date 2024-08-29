@@ -1,4 +1,9 @@
-import React, { createContext, PropsWithChildren, useState } from "react";
+import React, {
+  createContext,
+  PropsWithChildren,
+  useContext,
+  useState,
+} from "react";
 import { View, Text } from "react-native";
 import { Button, Snackbar } from "react-native-paper";
 import { useChoppTheme } from "@/theme";
@@ -11,7 +16,7 @@ export const ChoppSnackbarContext = createContext<{
   },
 });
 
-enum VARIANTS {
+enum SNACKBAR_VARIANTS {
   INFO = "info",
   ERROR = "error",
   WARN = "warn",
@@ -19,20 +24,21 @@ enum VARIANTS {
   DEFAULT = "default",
 }
 
+export const useChoppSnackbar = () => useContext(ChoppSnackbarContext);
+
 type ChoppSnackbarProps = {
   id: string;
-  variant: VARIANTS;
+  variant: SNACKBAR_VARIANTS;
   text: string;
-  actionLabel: string;
-  onPress?: () => void;
+  actionLabel?: string;
+  duration?: number;
+  onActionPress?: (value: ChoppSnackbarProps) => void;
 };
+
+//TODO: Добиться плавного исчезновения снакбаров для нативности
 export const ChoppSnackbarStack = ({ children }: PropsWithChildren<object>) => {
   const theme = useChoppTheme();
-
   const [visible, setVisible] = useState(true);
-
-  const onToggleSnackBar = () => setVisible(!visible);
-
   const onDismissSnackBar = () => setVisible(false);
 
   const [snackbarMessages, setSnackbarMessages] = useState<
@@ -57,23 +63,23 @@ export const ChoppSnackbarStack = ({ children }: PropsWithChildren<object>) => {
 
   const snackbarColors: Record<string, { background: string; color: string }> =
     {
-      [VARIANTS.DEFAULT]: {
+      [SNACKBAR_VARIANTS.DEFAULT]: {
         background: theme.colors.primaryContainer,
         color: theme.colors.onPrimaryContainer,
       },
-      [VARIANTS.INFO]: {
+      [SNACKBAR_VARIANTS.INFO]: {
         background: theme.colors.secondaryContainer,
         color: theme.colors.onSecondaryContainer,
       },
-      [VARIANTS.ERROR]: {
+      [SNACKBAR_VARIANTS.ERROR]: {
         background: theme.colors.errorContainer,
         color: theme.colors.onErrorContainer,
       },
-      [VARIANTS.WARN]: {
+      [SNACKBAR_VARIANTS.WARN]: {
         background: theme.colors.tertiaryContainer,
         color: theme.colors.onTertiaryContainer,
       },
-      [VARIANTS.SUCCESS]: {
+      [SNACKBAR_VARIANTS.SUCCESS]: {
         background: theme.colors.successContainer,
         color: theme.colors.onSuccessContainer,
       },
@@ -87,9 +93,9 @@ export const ChoppSnackbarStack = ({ children }: PropsWithChildren<object>) => {
           onPress={() => {
             pushSnackbar({
               id: String(Math.random()),
-              variant: VARIANTS.DEFAULT,
+              variant: SNACKBAR_VARIANTS.DEFAULT,
               text: "jopa",
-              actionLabel: "hyi",
+              actionLabel: "hyi2",
             });
           }}
         >
@@ -98,6 +104,7 @@ export const ChoppSnackbarStack = ({ children }: PropsWithChildren<object>) => {
         {Object.values(snackbarMessages)?.map((item, index) => {
           return (
             <Snackbar
+              duration={item.duration || 3000}
               key={index}
               style={{
                 backgroundColor: snackbarColors[item.variant].background,
@@ -108,11 +115,14 @@ export const ChoppSnackbarStack = ({ children }: PropsWithChildren<object>) => {
               onDismiss={onDismissSnackBar}
               action={{
                 textColor: snackbarColors[item.variant].color,
-                label: "╳",
+                label: item?.actionLabel || "╳",
                 // icon: 'close',
                 onPress: () => {
-                  console.log("onPress: ", item.id);
-                  popSnackbar(item.id);
+                  if (item?.onActionPress) {
+                    item.onActionPress(item);
+                  } else {
+                    popSnackbar(item.id);
+                  }
                 },
               }}
             >
