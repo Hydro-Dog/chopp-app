@@ -1,1 +1,2 @@
-export * from "./chop-theme-сontext";
+export * from "./chopp-global-context";
+export * from "./chopp-theme-context";

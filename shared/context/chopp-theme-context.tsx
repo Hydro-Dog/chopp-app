@@ -1,12 +1,12 @@
 import { useState, useMemo, useEffect, PropsWithChildren } from "react";
-import { useColorScheme } from "react-native";
+import { useColorScheme, View } from "react-native";
 import { DefaultTheme, PaperProvider, Switch } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemeProvider } from "@react-navigation/native";
 import { THEME } from "../enums";
 import { DARK_THEME, LIGHT_THEME } from "@/theme";
 
-export const ChopThemeProvider = ({ children }: PropsWithChildren<object>) => {
+export const ChoppThemeProvider = ({ children }: PropsWithChildren<object>) => {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
 
   const toggleTheme = () => {
@@ -19,7 +19,7 @@ export const ChopThemeProvider = ({ children }: PropsWithChildren<object>) => {
       colors: isDarkTheme ? DARK_THEME.colors : LIGHT_THEME.colors,
       dark: isDarkTheme,
     }),
-    [isDarkTheme],
+    [isDarkTheme]
   );
 
   const deviceColorScheme = useColorScheme();
@@ -47,7 +47,16 @@ export const ChopThemeProvider = ({ children }: PropsWithChildren<object>) => {
     <ThemeProvider value={theme}>
       <PaperProvider theme={theme}>
         {children}
-        <Switch value={isDarkTheme} onValueChange={toggleTheme} />
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: 8,
+            alignItems: "center",
+          }}
+        >
+          <Switch value={isDarkTheme} onValueChange={toggleTheme} />
+        </View>
       </PaperProvider>
     </ThemeProvider>
   );

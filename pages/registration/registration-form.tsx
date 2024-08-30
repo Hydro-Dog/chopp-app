@@ -5,11 +5,14 @@ import { View, StyleSheet } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTheme } from "@react-navigation/native";
-import { router } from "expo-router";
 import { useBoolean } from "usehooks-ts";
 import { RegistrationFormType, registrationSchema } from "./types";
-import { ChoppDialog, FETCH_STATUS, useChoppSnackbar } from "@/shared";
+import {
+  ChoppDialog,
+  FETCH_STATUS,
+  SNACKBAR_VARIANTS,
+  useChoppSnackbar,
+} from "@/shared";
 import {
   formatPhoneNumber,
   ChoppFormField,
@@ -19,15 +22,14 @@ import {
 import { createUser } from "@/store/slices/user-slice";
 import { AppDispatch, RootState } from "@/store/store";
 import { useChoppTheme } from "@/theme";
-import { SNACKBAR_VARIANTS } from "@/shared/context/chopp-snackbar-context";
 
 export const RegistrationForm = () => {
-  const theme = useChoppTheme();
-  const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation();
+  const theme = useChoppTheme();
   const { value: passwordVisible, toggle: togglePasswordVisibility } =
     useBoolean();
   const { createUserStatus } = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch<AppDispatch>();
 
   const {
     control,
@@ -57,11 +59,9 @@ export const RegistrationForm = () => {
       .catch((err) => {
         push({
           id: String(Math.random()),
-          variant: SNACKBAR_VARIANTS.INFO,
+          variant: SNACKBAR_VARIANTS.ERROR,
           text: err.errorMessage,
-          actionLabel: "hyi",
         });
-        console.log("eeeeeeer: ", err);
       });
   };
 
@@ -82,8 +82,7 @@ export const RegistrationForm = () => {
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               mode="outlined"
-              //   TODO: перевод
-              label="Фио"
+              label={t("fullName")}
               value={value}
               onBlur={onBlur}
               onChangeText={onChange}
@@ -93,15 +92,15 @@ export const RegistrationForm = () => {
         />
       </ChoppFormField>
 
-      {/* TODO: открыть сразу циифровую клавиатуру */}
       <ChoppFormField errorMessage={errors.phoneNumber?.message}>
         <Controller
           control={control}
           name="phoneNumber"
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
+              keyboardType="number-pad"
               mode="outlined"
-              label="Телефон"
+              label={t("phoneNumber")}
               value={value}
               onBlur={onBlur}
               onChangeText={(text) => onChange(formatPhoneNumber(text))}
@@ -133,7 +132,7 @@ export const RegistrationForm = () => {
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               mode="outlined"
-              label="Пароль"
+              label={t("password")}
               secureTextEntry={!passwordVisible}
               value={value}
               right={
@@ -165,18 +164,28 @@ export const RegistrationForm = () => {
               onChange={onChange}
               label={
                 <>
-                  <ChoppThemedText>Согласен на </ChoppThemedText>
+                  <ChoppThemedText>
+                    {t(
+                      "registrationForm.acceptPersonalDataProcessingMessage_1"
+                    )}{" "}
+                  </ChoppThemedText>
                   <ChoppThemedText
                     variant="primary"
                     onPress={() => {
                       showModal();
                       setModalData({
-                        title: "Условия обработки персональных данных",
-                        text: "Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных Условия обработки персональных данных",
+                        title: t(
+                          "registrationForm.acceptPersonalDataProcessingTitle"
+                        ),
+                        text: t(
+                          "registrationForm.acceptPersonalDataProcessingText"
+                        ),
                       });
                     }}
                   >
-                    обработку персональных данных
+                    {t(
+                      "registrationForm.acceptPersonalDataProcessingMessage_2"
+                    )}
                   </ChoppThemedText>
                 </>
               }
@@ -194,18 +203,20 @@ export const RegistrationForm = () => {
               onChange={onChange}
               label={
                 <>
-                  <ChoppThemedText>Принимаю </ChoppThemedText>
+                  <ChoppThemedText>
+                    {t("registrationForm.acceptOfferDoc_1")}{" "}
+                  </ChoppThemedText>
                   <ChoppThemedText
                     variant="primary"
                     onPress={() => {
                       showModal();
                       setModalData({
-                        title: "Договор оферты",
-                        text: "Договор оферты",
+                        title: t("acceptOfferDoc_1"),
+                        text: t("acceptOfferDoc_2"),
                       });
                     }}
                   >
-                    договор оферты
+                    {t("registrationForm.acceptOfferDoc_2")}
                   </ChoppThemedText>
                 </>
               }
@@ -221,8 +232,7 @@ export const RegistrationForm = () => {
         disabled={createUserStatus === FETCH_STATUS.LOADING}
         onPress={handleSubmit(onSubmit)}
       >
-        {/* TODO: перевод */}
-        Зарегистрироваться
+        {t("actions.register")}
       </Button>
       <ChoppDialog
         visible={isModalVisible}

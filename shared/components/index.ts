@@ -8,3 +8,4 @@ export * from "./chopp-themed-text";
 export * from "./chopp-themed-view";
 export * from "./chopp-dialog";
 export * from "./chopp-snackbar-stack";
+export * from "./chopp-code-input";

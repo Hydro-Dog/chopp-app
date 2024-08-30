@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import React, {
   createContext,
   PropsWithChildren,
@@ -5,7 +6,7 @@ import React, {
   useState,
 } from "react";
 import { View, Text } from "react-native";
-import { Button, Snackbar } from "react-native-paper";
+import { Snackbar } from "react-native-paper";
 import { useChoppTheme } from "@/theme";
 
 export const ChoppSnackbarContext = createContext<{
@@ -16,7 +17,7 @@ export const ChoppSnackbarContext = createContext<{
   },
 });
 
-enum SNACKBAR_VARIANTS {
+export enum SNACKBAR_VARIANTS {
   INFO = "info",
   ERROR = "error",
   WARN = "warn",
@@ -38,27 +39,19 @@ type ChoppSnackbarProps = {
 //TODO: Добиться плавного исчезновения снакбаров для нативности
 export const ChoppSnackbarStack = ({ children }: PropsWithChildren<object>) => {
   const theme = useChoppTheme();
-  const [visible, setVisible] = useState(true);
-  const onDismissSnackBar = () => setVisible(false);
-
   const [snackbarMessages, setSnackbarMessages] = useState<
     Record<string, ChoppSnackbarProps>
   >({});
 
-  const [deletedSnackbars, setDeletedSnackbars] = useState(new Set());
-
   const pushSnackbar = (item: ChoppSnackbarProps) => {
     setSnackbarMessages((val) => ({ ...val, [item.id]: item }));
   };
-  const popSnackbar = (itemId: string) => {
-    setDeletedSnackbars(new Set([...deletedSnackbars, itemId]));
 
-    setTimeout(() => {
-      setSnackbarMessages((val) => {
-        delete val[itemId];
-        return val;
-      });
-    }, 1000);
+  const popSnackbar = (itemId: string) => {
+    setSnackbarMessages((val) => {
+      delete val[itemId];
+      return { ...val };
+    });
   };
 
   const snackbarColors: Record<string, { background: string; color: string }> =
@@ -85,22 +78,23 @@ export const ChoppSnackbarStack = ({ children }: PropsWithChildren<object>) => {
       },
     };
 
+  console.log("snackbarMessages: ", snackbarMessages);
+
   return (
     <ChoppSnackbarContext.Provider value={{ push: pushSnackbar }}>
       {children}
       <View>
-        <Button
+        {/* <Button
           onPress={() => {
             pushSnackbar({
               id: String(Math.random()),
               variant: SNACKBAR_VARIANTS.DEFAULT,
               text: "jopa",
-              actionLabel: "hyi2",
             });
           }}
         >
-          {visible ? "Hide" : "Show"}
-        </Button>
+          Show
+        </Button> */}
         {Object.values(snackbarMessages)?.map((item, index) => {
           return (
             <Snackbar
@@ -108,11 +102,11 @@ export const ChoppSnackbarStack = ({ children }: PropsWithChildren<object>) => {
               key={index}
               style={{
                 backgroundColor: snackbarColors[item.variant].background,
-                top: (index + 1) * -20,
+                top: (Object.values(snackbarMessages).length - index) * -30,
                 opacity: 0.95,
               }}
-              visible={!deletedSnackbars.has(item.id)}
-              onDismiss={onDismissSnackBar}
+              visible
+              onDismiss={() => {}}
               action={{
                 textColor: snackbarColors[item.variant].color,
                 label: item?.actionLabel || "╳",

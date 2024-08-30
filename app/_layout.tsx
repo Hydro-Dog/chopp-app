@@ -5,8 +5,7 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
-import { ChopThemeProvider } from "@/shared";
-import { ChoppSnackbarStack } from "@/shared/components";
+import { ChoppGlobalProvider } from "@/shared/context/chopp-global-context";
 import { store } from "@/store/store";
 import { useChoppTheme } from "@/theme";
 import { initI18n } from "@/translation/i18n";
@@ -15,12 +14,6 @@ initI18n();
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
-
-if (__DEV__) {
-  console.log("Development mode");
-} else {
-  console.log("Production mode");
-}
 
 export default function RootLayout() {
   const theme = useChoppTheme();
@@ -43,18 +36,17 @@ export default function RootLayout() {
 
   return (
     <StoreProvider store={store}>
-      <ChopThemeProvider>
-        <ChoppSnackbarStack>
-          <View style={{ backgroundColor: theme.colors.background, flex: 1 }}>
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="registration" />
-              <Stack.Screen name="+not-found" />
-              <Stack.Screen name="+html" />
-            </Stack>
-          </View>
-        </ChoppSnackbarStack>
-      </ChopThemeProvider>
+      <ChoppGlobalProvider>
+        <View style={{ backgroundColor: theme.colors.background, flex: 1 }}>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="registration" />
+            {/* <Stack.Screen name="dev" /> */}
+            <Stack.Screen name="+not-found" />
+            <Stack.Screen name="+html" />
+          </Stack>
+        </View>
+      </ChoppGlobalProvider>
     </StoreProvider>
   );
 }
