@@ -2,12 +2,15 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import {
   User,
+  UserAuthorization,
+  UserLoginDTO,
   UserRegisterDTO,
   //   UserAuthorization,
   //   UserLoginDTO,
   //   UserRegisterDTO,
 } from "./types";
-import { api } from "@/services";
+
+import { axiosDefault } from "@/services";
 import { ErrorResponse } from "@/shared";
 
 // export const fetchCurrentUser = createAsyncThunk<User, void, { rejectValue: ErrorResponse }>(
@@ -48,10 +51,10 @@ export const createUser = createAsyncThunk<
   { rejectValue: ErrorResponse }
 >("/createUser", async (data, thunkAPI) => {
   try {
-    const response = await api.post<User>(`/user/create`, data);
+    const response = await axiosDefault.post<User>(`/user/create`, data);
     return response.data;
   } catch (error) {
-    console.log('axios error: ', error)
+    console.log("axios error: ", error);
     if (axios.isAxiosError(error) && error.response) {
       return thunkAPI.rejectWithValue(error.response.data as ErrorResponse);
     } else {
@@ -62,22 +65,27 @@ export const createUser = createAsyncThunk<
   }
 });
 
-// export const loginUser = createAsyncThunk<
-//   UserAuthorization,
-//   UserLoginDTO,
-//   { rejectValue: ErrorResponse }
-// >('/loginUser', async (userData, thunkAPI) => {
-//   try {
-//     const response = await api.post<UserAuthorization>(`/login`, userData);
-//     return response.data;
-//   } catch (error) {
-//     if (axios.isAxiosError(error) && error.response) {
-//       return thunkAPI.rejectWithValue(error.response.data as ErrorResponse);
-//     } else {
-//       return thunkAPI.rejectWithValue({ errorMessage: 'An unknown error occurred' });
-//     }
-//   }
-// });
+export const login = createAsyncThunk<
+  UserAuthorization,
+  UserLoginDTO,
+  { rejectValue: ErrorResponse }
+>("/loginUser", async (userData, thunkAPI) => {
+  try {
+    const response = await axiosDefault.post<UserAuthorization>(
+      `/login`,
+      userData,
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return thunkAPI.rejectWithValue(error.response.data as ErrorResponse);
+    } else {
+      return thunkAPI.rejectWithValue({
+        errorMessage: "An unknown error occurred",
+      });
+    }
+  }
+});
 
 // export const logoutUser = createAsyncThunk<void, void, { rejectValue: ErrorResponse }>(
 //   '/logoutUser',

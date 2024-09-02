@@ -1,5 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { createUser } from "./actions";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createUser, login } from "./actions";
+import { UserAuthorization } from ".";
 import { ErrorResponse, FETCH_STATUS } from "@/shared";
 
 export type UserState = {
@@ -12,8 +13,8 @@ export type UserState = {
   createUserError?: ErrorResponse;
   // logoutStatus: FETCH_STATUS;
   // logoutError: ErrorResponse | null;
-  // loginStatus: FETCH_STATUS;
-  // loginError: ErrorResponse | null;
+  loginStatus: FETCH_STATUS;
+  loginError: ErrorResponse | null;
 };
 
 const initialState: UserState = {
@@ -26,8 +27,8 @@ const initialState: UserState = {
   createUserError: undefined,
   // logoutStatus: FETCH_STATUS.IDLE,
   // logoutError: null,
-  // loginStatus: FETCH_STATUS.IDLE,
-  // loginError: null,
+  loginStatus: FETCH_STATUS.IDLE,
+  loginError: null,
 };
 
 export const userSlice = createSlice({
@@ -86,23 +87,23 @@ export const userSlice = createSlice({
       .addCase(createUser.rejected, (state, action) => {
         state.createUserStatus = FETCH_STATUS.ERROR;
         state.createUserError = action.payload;
+      })
+      .addCase(login.pending, (state) => {
+        state.loginStatus = FETCH_STATUS.LOADING;
+      })
+      .addCase(
+        login.fulfilled,
+        (state, action: PayloadAction<UserAuthorization>) => {
+          state.loginStatus = FETCH_STATUS.SUCCESS;
+          localStorage.setItem("token", action.payload.Authorization);
+        },
+      )
+      .addCase(login.rejected, (state, action) => {
+        state.loginStatus = FETCH_STATUS.ERROR;
+        state.loginError = action.payload ?? {
+          errorMessage: "Failed to login user",
+        };
       });
-    // .addCase(loginUser.pending, (state) => {
-    //   state.loginStatus = FETCH_STATUS.LOADING;
-    // })
-    // .addCase(
-    //   loginUser.fulfilled,
-    //   (state, action: PayloadAction<UserAuthorization>) => {
-    //     state.loginStatus = FETCH_STATUS.SUCCESS;
-    //     localStorage.setItem("token", action.payload.Authorization);
-    //   },
-    // )
-    // .addCase(loginUser.rejected, (state, action) => {
-    //   state.loginStatus = FETCH_STATUS.ERROR;
-    //   state.loginError = action.payload ?? {
-    //     errorMessage: "Failed to login user",
-    //   };
-    // })
     // .addCase(logoutUser.pending, (state) => {
     //   state.logoutStatus = FETCH_STATUS.LOADING;
     // })

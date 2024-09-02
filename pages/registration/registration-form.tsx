@@ -226,7 +226,7 @@ export const RegistrationForm = () => {
       </ChoppFormField>
 
       <Button
-        mode="outlined"
+        mode="contained"
         style={styles.registerButton}
         loading={createUserStatus === FETCH_STATUS.LOADING}
         disabled={createUserStatus === FETCH_STATUS.LOADING}

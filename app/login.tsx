@@ -1,15 +1,15 @@
 import { useTranslation } from "react-i18next";
 import { View, StyleSheet, Image } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Button } from "react-native-paper";
 import { useRouter } from "expo-router";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
-import { RegistrationForm } from "@/pages/registration";
+import { LoginForm } from "@/pages/login/login-form";
 import { ChoppThemedText } from "@/shared";
 import { useChoppTheme } from "@/theme";
-import { Button } from "react-native-paper";
 
-export default function RegistrationPage() {
+export default function LoginPage() {
   const theme = useChoppTheme();
   const { t } = useTranslation();
   const router = useRouter();
@@ -22,13 +22,14 @@ export default function RegistrationPage() {
           <ChoppThemedText type="subtitleBold">
             {t("registration")}
           </ChoppThemedText>
-          <RegistrationForm />
+          <LoginForm />
+
           <Button
             mode="outlined"
-            style={styles.loginButton}
-            onPress={() => router.push("/login")}
+            style={styles.registerButton}
+            onPress={() => router.push("/registration")}
           >
-            {t("actions.login")}
+            {t("actions.register")}
           </Button>
         </View>
       </View>
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
   content: {
     width: "80%",
   },
-  loginButton: {
+  registerButton: {
     marginTop: 20,
     width: "100%",
   },

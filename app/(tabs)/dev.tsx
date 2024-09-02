@@ -16,9 +16,14 @@ export default function DevPage() {
         <ChoppThemedText type="link">/registration</ChoppThemedText>
       </Link>
 
+      <Link href="/login">
+        <ChoppThemedText type="link">/login</ChoppThemedText>
+      </Link>
+
       <Link href="/verification-code">
         <ChoppThemedText type="link">/verification-code</ChoppThemedText>
       </Link>
+
     </ChoppParallaxScrollView>
   );
 }

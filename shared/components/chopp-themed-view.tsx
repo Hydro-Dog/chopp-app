@@ -1,5 +1,5 @@
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { View, type ViewProps } from "react-native";
-import { useThemeColor } from "@/hooks/useThemeColor";
 
 export type ThemedViewProps = ViewProps & {
   lightColor?: string;
@@ -14,7 +14,7 @@ export function ChoppThemedView({
 }: ThemedViewProps) {
   const backgroundColor = useThemeColor(
     { light: lightColor, dark: darkColor },
-    "background",
+    "background"
   );
 
   return <View style={[{ backgroundColor }, style]} {...otherProps} />;

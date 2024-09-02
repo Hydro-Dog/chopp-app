@@ -9,9 +9,11 @@ import { View, Text } from "react-native";
 import { Snackbar } from "react-native-paper";
 import { useChoppTheme } from "@/theme";
 
-export const ChoppSnackbarContext = createContext<{
+type ChoppSnackbarContextType = {
   push: (item: ChoppSnackbarProps) => void;
-}>({
+};
+
+export const ChoppSnackbarContext = createContext<ChoppSnackbarContextType>({
   push: function (item: ChoppSnackbarProps): void {
     throw new Error("Function not implemented.");
   },

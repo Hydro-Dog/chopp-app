@@ -7,8 +7,10 @@ export const ru = {
   password: "Пароль",
   registration: "Регистрация",
   verificationCode: "Код подтверждения",
+  login: "Телефон или имейл",
   actions: {
     register: "Зарегистрироваться",
+    login: "Войти",
     submit: "Подтвердить",
   },
   ok: "Ок",

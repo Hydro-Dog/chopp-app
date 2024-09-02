@@ -2,16 +2,16 @@ import React from "react";
 import { Tabs } from "expo-router";
 
 import { TabBarIcon } from "@/pages/navigation/TabBarIcon";
-import { COLORS } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { COLORS } from "@/constants/colors";
+import { useChoppTheme } from "@/theme";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const theme = useChoppTheme();
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: COLORS[colorScheme ?? "light"].tint,
+        tabBarActiveTintColor: theme.colors.primary,
         headerShown: false,
       }}
     >

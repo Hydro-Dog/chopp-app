@@ -1,6 +1,6 @@
 import { useTheme } from "@react-navigation/native";
 import { ChopThemeType } from "./theme-type";
-import { COLORS } from "@/constants/Colors";
+import { COLORS } from "@/constants/colors";
 
 export const useChoppTheme = () => {
   const { dark } = useTheme() as ChopThemeType;

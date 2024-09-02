@@ -3,15 +3,14 @@
  * https://docs.expo.dev/guides/color-schemes/
  */
 
-import { useTheme } from "@react-navigation/native";
-import { COLORS } from "@/constants/Colors";
-import { LIGHT_THEME } from "@/theme";
+import { COLORS } from "@/constants/colors";
+import { LIGHT_THEME, useChoppTheme } from "@/theme";
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
   colorName: keyof typeof LIGHT_THEME.colors,
 ) {
-  const theme = useTheme().dark ? "dark" : "light";
+  const theme = useChoppTheme().dark ? "dark" : "light";
   const colorFromProps = props[theme];
 
   if (colorFromProps) {
