@@ -5,6 +5,7 @@ import { View, StyleSheet } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "expo-router";
 import { useBoolean } from "usehooks-ts";
 import { RegistrationFormType, registrationSchema } from "./types";
 import {
@@ -18,14 +19,13 @@ import {
   ChoppFormField,
   ChoppCheckbox,
   ChoppThemedText,
+  useChoppTheme,
 } from "@/shared";
 import { createUser } from "@/store/slices/user-slice";
 import { AppDispatch, RootState } from "@/store/store";
-import { useChoppTheme } from "@/theme";
-import { useRouter } from "expo-router";
 
 export const RegistrationForm = () => {
-  const theme = useChoppTheme();
+  const { theme } = useChoppTheme();
   const { t } = useTranslation();
   const router = useRouter();
   const { value: passwordVisible, toggle: togglePasswordVisibility } =
@@ -167,7 +167,7 @@ export const RegistrationForm = () => {
                 <>
                   <ChoppThemedText>
                     {t(
-                      "registrationForm.acceptPersonalDataProcessingMessage_1"
+                      "registrationForm.acceptPersonalDataProcessingMessage_1",
                     )}{" "}
                   </ChoppThemedText>
                   <ChoppThemedText
@@ -176,16 +176,16 @@ export const RegistrationForm = () => {
                       showModal();
                       setModalData({
                         title: t(
-                          "registrationForm.acceptPersonalDataProcessingTitle"
+                          "registrationForm.acceptPersonalDataProcessingTitle",
                         ),
                         text: t(
-                          "registrationForm.acceptPersonalDataProcessingText"
+                          "registrationForm.acceptPersonalDataProcessingText",
                         ),
                       });
                     }}
                   >
                     {t(
-                      "registrationForm.acceptPersonalDataProcessingMessage_2"
+                      "registrationForm.acceptPersonalDataProcessingMessage_2",
                     )}
                   </ChoppThemedText>
                 </>

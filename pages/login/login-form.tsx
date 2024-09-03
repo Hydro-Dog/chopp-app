@@ -13,13 +13,13 @@ import {
   FETCH_STATUS,
   storeData,
   useAuth,
+  useChoppTheme,
 } from "@/shared";
 import { login } from "@/store/slices/user-slice";
 import { RootState, AppDispatch } from "@/store/store";
-import { useChoppTheme } from "@/theme";
 
 export const LoginForm = () => {
-  const theme = useChoppTheme();
+  const { theme } = useChoppTheme();
   const { t } = useTranslation();
   const { setAuth } = useAuth();
   const { value: passwordVisible, toggle: togglePasswordVisibility } =
@@ -53,6 +53,7 @@ export const LoginForm = () => {
 
       //TODO: убрать any
     } catch (error: any) {
+        console.log('login error: ', error)
       push({
         id: String(Math.random()),
         variant: SNACKBAR_VARIANTS.ERROR,

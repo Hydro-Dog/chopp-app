@@ -5,9 +5,9 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
+import { useChoppTheme } from "@/shared";
 import { ChoppGlobalProvider } from "@/shared/context/chopp-global-context";
 import { store } from "@/store/store";
-import { useChoppTheme } from "@/theme";
 import { initI18n } from "@/translation/i18n";
 
 initI18n();
@@ -16,7 +16,7 @@ initI18n();
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const theme = useChoppTheme();
+  const { theme } = useChoppTheme();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     Montserrat: require("../assets/fonts/Montserrat-VariableFont_wght.ttf"),
@@ -37,7 +37,7 @@ export default function RootLayout() {
   return (
     <StoreProvider store={store}>
       <ChoppGlobalProvider>
-        <View style={{ backgroundColor: theme.colors.background, flex: 1 }}>
+        <View style={{ backgroundColor: theme.colors?.background, flex: 1 }}>
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="registration" />

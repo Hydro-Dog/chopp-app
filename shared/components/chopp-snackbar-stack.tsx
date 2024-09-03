@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { View, Text } from "react-native";
 import { Snackbar } from "react-native-paper";
-import { useChoppTheme } from "@/theme";
+import { useChoppTheme } from "../context";
 
 type ChoppSnackbarContextType = {
   push: (item: ChoppSnackbarProps) => void;
@@ -40,11 +40,12 @@ type ChoppSnackbarProps = {
 
 //TODO: Добиться плавного исчезновения снакбаров для нативности
 export const ChoppSnackbarStack = ({ children }: PropsWithChildren<object>) => {
-  const theme = useChoppTheme();
+  const { theme } = useChoppTheme();
   const [snackbarMessages, setSnackbarMessages] = useState<
     Record<string, ChoppSnackbarProps>
   >({});
 
+  //TODO: сделать дефолтный таймер на 3с
   const pushSnackbar = (item: ChoppSnackbarProps) => {
     setSnackbarMessages((val) => ({ ...val, [item.id]: item }));
   };

@@ -4,13 +4,15 @@
  */
 
 import { COLORS } from "@/constants/colors";
-import { LIGHT_THEME, useChoppTheme } from "@/theme";
+import { useChoppTheme } from "@/shared";
+import { LIGHT_THEME } from "@/theme";
 
+//TODO: отрефакторить, выяснить нужен ли вообще этот компонент
 export function useThemeColor(
   props: { light?: string; dark?: string },
-  colorName: keyof typeof LIGHT_THEME.colors,
+  colorName: keyof typeof LIGHT_THEME.colors
 ) {
-  const theme = useChoppTheme().dark ? "dark" : "light";
+  const theme = useChoppTheme().isDarkTheme ? "dark" : "light";
   const colorFromProps = props[theme];
 
   if (colorFromProps) {

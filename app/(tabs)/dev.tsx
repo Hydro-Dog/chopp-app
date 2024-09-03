@@ -3,8 +3,6 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { Link } from "expo-router";
 import { ChoppThemedText } from "@/shared";
 import { ChoppParallaxScrollView } from "@/shared";
-import { Button } from "react-native-paper";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function DevPage() {
   return (
@@ -25,14 +23,6 @@ export default function DevPage() {
       <Link href="/verification-code">
         <ChoppThemedText type="link">/verification-code</ChoppThemedText>
       </Link>
-
-      <Button
-        onPress={() => {
-          AsyncStorage.clear();
-        }}
-      >
-        reset async storage
-      </Button>
     </ChoppParallaxScrollView>
   );
 }

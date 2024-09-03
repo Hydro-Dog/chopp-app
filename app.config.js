@@ -33,7 +33,7 @@ export default ({ config }) => ({
       typedRoutes: true,
     },
     extra: {
-      fact: 'kittens are cool',
+      fact: "kittens are cool",
       apiUrl: process.env.API_URL || "https://default-api.example.com",
     },
   },

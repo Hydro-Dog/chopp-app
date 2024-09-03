@@ -6,11 +6,10 @@ import { useRouter } from "expo-router";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
 import { RegistrationForm } from "@/pages/registration";
-import { ChoppThemedText } from "@/shared";
-import { useChoppTheme } from "@/theme";
+import { ChoppThemedText, useChoppTheme } from "@/shared";
 
 export default function RegistrationPage() {
-  const theme = useChoppTheme();
+  const { theme } = useChoppTheme();
   const { t } = useTranslation();
   const router = useRouter();
 

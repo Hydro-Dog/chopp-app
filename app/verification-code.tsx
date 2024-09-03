@@ -5,11 +5,10 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { Button } from "react-native-paper";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
-import { ChoppCodeInput, ChoppThemedText } from "@/shared";
-import { useChoppTheme } from "@/theme";
+import { ChoppCodeInput, ChoppThemedText, useChoppTheme } from "@/shared";
 
 export default function VerificationCodePage() {
-  const theme = useChoppTheme();
+  const { theme } = useChoppTheme();
   const { t } = useTranslation();
   const [code, setCode] = useState(["", "", "", ""]);
 

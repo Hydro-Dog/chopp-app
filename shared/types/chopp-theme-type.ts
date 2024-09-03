@@ -1,4 +1,4 @@
-import { LIGHT_THEME } from "./colors";
+import { LIGHT_THEME } from "../../theme/colors";
 
 export type ChopThemeType = {
   dark: boolean;

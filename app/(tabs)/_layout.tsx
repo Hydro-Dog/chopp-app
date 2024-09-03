@@ -2,11 +2,10 @@ import React from "react";
 import { Tabs } from "expo-router";
 
 import { TabBarIcon } from "@/pages/navigation/TabBarIcon";
-import { COLORS } from "@/constants/colors";
-import { useChoppTheme } from "@/theme";
+import { useChoppTheme } from "@/shared";
 
 export default function TabLayout() {
-  const theme = useChoppTheme();
+  const { theme } = useChoppTheme();
 
   return (
     <Tabs

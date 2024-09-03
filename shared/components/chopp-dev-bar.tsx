@@ -1,7 +1,6 @@
-
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { View } from "react-native";
 import { Button, Switch } from "react-native-paper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useChoppTheme } from "../context";
 
 export const ChoppDevBar = () => {
@@ -16,7 +15,16 @@ export const ChoppDevBar = () => {
 
     const res = await Promise.all(promises); // Дождитесь завершения всех промисов
 
-    console.log("Stored data:", JSON.stringify(res, null, 2));
+    console.log(
+      "Stored data:\n\n" +
+        res
+          .map(([key, val]) => {
+            // Применяем стиль для ключей
+            return `%c${key}: %c${val}`;
+          })
+          .join("\n"),
+      ...res.flatMap(([key, val]) => ["color: #ffe59e", "color: #ffffff"])
+    );
   };
 
   const clearStorage = async () => {

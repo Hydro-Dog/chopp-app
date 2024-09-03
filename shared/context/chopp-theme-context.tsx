@@ -11,13 +11,13 @@ import {
 import { useColorScheme } from "react-native";
 import { DefaultTheme, PaperProvider } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Theme, ThemeProvider } from "@react-navigation/native";
+import { ThemeProvider } from "@react-navigation/native";
 import { ChoppDevBar } from "../components";
 import { THEME } from "../enums";
-import { DARK_THEME, LIGHT_THEME } from "@/theme";
+import { ChopThemeType, DARK_THEME, LIGHT_THEME } from "@/theme";
 
 const ChoppThemeContext = createContext<{
-  theme: Theme;
+  theme: ChopThemeType;
   isDarkTheme: boolean;
   setIsDarkTheme: Dispatch<SetStateAction<boolean>>;
   toggleTheme: () => void;
@@ -25,10 +25,13 @@ const ChoppThemeContext = createContext<{
   setIsDarkTheme: function (value: SetStateAction<boolean>): void {
     throw new Error("setIsDarkTheme Function not implemented.");
   },
-  toggleTheme: function (value: SetStateAction<boolean>): void {
+  toggleTheme: function (): void {
     throw new Error("toggleTheme Function not implemented.");
   },
-  theme: {},
+  theme: {
+    dark: false,
+    colors: LIGHT_THEME.colors,
+  },
   isDarkTheme: false,
 });
 
@@ -47,7 +50,7 @@ export const ChoppThemeProvider = ({ children }: PropsWithChildren<object>) => {
       colors: isDarkTheme ? DARK_THEME.colors : LIGHT_THEME.colors,
       dark: isDarkTheme,
     }),
-    [isDarkTheme],
+    [isDarkTheme]
   );
 
   const deviceColorScheme = useColorScheme();
@@ -79,18 +82,6 @@ export const ChoppThemeProvider = ({ children }: PropsWithChildren<object>) => {
         <PaperProvider theme={theme}>
           {children}
           <ChoppDevBar />
-          {/* <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            gap: 8,
-            alignItems: "center",
-          }}
-        >
-          <Switch value={isDarkTheme} onValueChange={toggleTheme} />
-          <Button onPress={showStorage}>show</Button>
-          <Button onPress={clearStorage}>x</Button>
-        </View> */}
         </PaperProvider>
       </ThemeProvider>
     </ChoppThemeContext.Provider>

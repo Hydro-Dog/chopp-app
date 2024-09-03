@@ -95,7 +95,7 @@ export const userSlice = createSlice({
         login.fulfilled,
         (state, action: PayloadAction<UserAuthorization>) => {
           state.loginStatus = FETCH_STATUS.SUCCESS;
-          localStorage.setItem("token", action.payload.Authorization);
+          // localStorage.setItem("token", action.payload.Authorization);
         },
       )
       .addCase(login.rejected, (state, action) => {
