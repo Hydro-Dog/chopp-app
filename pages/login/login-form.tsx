@@ -11,14 +11,17 @@ import {
   SNACKBAR_VARIANTS,
   ChoppFormField,
   FETCH_STATUS,
+  storeData,
+  useAuth,
 } from "@/shared";
 import { login } from "@/store/slices/user-slice";
 import { RootState, AppDispatch } from "@/store/store";
 import { useChoppTheme } from "@/theme";
 
 export const LoginForm = () => {
-  const { t } = useTranslation();
   const theme = useChoppTheme();
+  const { t } = useTranslation();
+  const { setAuth } = useAuth();
   const { value: passwordVisible, toggle: togglePasswordVisibility } =
     useBoolean();
   const { loginStatus } = useSelector((state: RootState) => state.user);
@@ -38,20 +41,24 @@ export const LoginForm = () => {
 
   const { push } = useChoppSnackbar();
 
-  const onSubmit: SubmitHandler<LoginFormType> = (data) => {
-    dispatch(login(data))
-      .unwrap()
-      .then((res) => {
-        console.log("Redirect ", res);
-        // router.push("/");
-      })
-      .catch((err) => {
-        push({
-          id: String(Math.random()),
-          variant: SNACKBAR_VARIANTS.ERROR,
-          text: err.errorMessage,
-        });
+  const onSubmit: SubmitHandler<LoginFormType> = async (data) => {
+    try {
+      const res = await dispatch(login(data)).unwrap();
+      console.log("Redirect ", res);
+      //TODO: вынести в функцию
+      setAuth(res);
+      storeData("accessToken", res.accessToken);
+      storeData("refreshToken", res.refreshToken);
+      // router.push("/");
+
+      //TODO: убрать any
+    } catch (error: any) {
+      push({
+        id: String(Math.random()),
+        variant: SNACKBAR_VARIANTS.ERROR,
+        text: error.errorMessage,
       });
+    }
   };
 
   return (

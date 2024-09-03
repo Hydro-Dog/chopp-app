@@ -1,13 +1,13 @@
 import { useTranslation } from "react-i18next";
 import { View, StyleSheet, Image } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { Button } from "react-native-paper";
 import { useRouter } from "expo-router";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
 import { RegistrationForm } from "@/pages/registration";
 import { ChoppThemedText } from "@/shared";
 import { useChoppTheme } from "@/theme";
-import { Button } from "react-native-paper";
 
 export default function RegistrationPage() {
   const theme = useChoppTheme();

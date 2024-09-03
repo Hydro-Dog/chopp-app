@@ -22,10 +22,12 @@ import {
 import { createUser } from "@/store/slices/user-slice";
 import { AppDispatch, RootState } from "@/store/store";
 import { useChoppTheme } from "@/theme";
+import { useRouter } from "expo-router";
 
 export const RegistrationForm = () => {
-  const { t } = useTranslation();
   const theme = useChoppTheme();
+  const { t } = useTranslation();
+  const router = useRouter();
   const { value: passwordVisible, toggle: togglePasswordVisibility } =
     useBoolean();
   const { createUserStatus } = useSelector((state: RootState) => state.user);
@@ -49,20 +51,19 @@ export const RegistrationForm = () => {
 
   const { push } = useChoppSnackbar();
 
-  const onSubmit: SubmitHandler<RegistrationFormType> = (data) => {
-    dispatch(createUser(data))
-      .unwrap()
-      .then((res) => {
-        console.log("Redirect ", res);
-        // router.push("/");
-      })
-      .catch((err) => {
-        push({
-          id: String(Math.random()),
-          variant: SNACKBAR_VARIANTS.ERROR,
-          text: err.errorMessage,
-        });
+  const onSubmit: SubmitHandler<RegistrationFormType> = async (data) => {
+    try {
+      const res = await dispatch(createUser(data)).unwrap();
+      console.log("Redirect ", res);
+      router.push("/login");
+      //TODO: убрать any
+    } catch (error: any) {
+      push({
+        id: String(Math.random()),
+        variant: SNACKBAR_VARIANTS.ERROR,
+        text: error.errorMessage,
       });
+    }
   };
 
   const {

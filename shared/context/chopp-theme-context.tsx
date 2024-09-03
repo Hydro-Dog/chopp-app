@@ -1,10 +1,38 @@
-import { useState, useMemo, useEffect, PropsWithChildren } from "react";
-import { useColorScheme, View } from "react-native";
-import { DefaultTheme, PaperProvider, Switch } from "react-native-paper";
+import {
+  useState,
+  useMemo,
+  useEffect,
+  PropsWithChildren,
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useContext,
+} from "react";
+import { useColorScheme } from "react-native";
+import { DefaultTheme, PaperProvider } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ThemeProvider } from "@react-navigation/native";
+import { Theme, ThemeProvider } from "@react-navigation/native";
+import { ChoppDevBar } from "../components";
 import { THEME } from "../enums";
 import { DARK_THEME, LIGHT_THEME } from "@/theme";
+
+const ChoppThemeContext = createContext<{
+  theme: Theme;
+  isDarkTheme: boolean;
+  setIsDarkTheme: Dispatch<SetStateAction<boolean>>;
+  toggleTheme: () => void;
+}>({
+  setIsDarkTheme: function (value: SetStateAction<boolean>): void {
+    throw new Error("setIsDarkTheme Function not implemented.");
+  },
+  toggleTheme: function (value: SetStateAction<boolean>): void {
+    throw new Error("toggleTheme Function not implemented.");
+  },
+  theme: {},
+  isDarkTheme: false,
+});
+
+export const useChoppTheme = () => useContext(ChoppThemeContext);
 
 export const ChoppThemeProvider = ({ children }: PropsWithChildren<object>) => {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
@@ -19,7 +47,7 @@ export const ChoppThemeProvider = ({ children }: PropsWithChildren<object>) => {
       colors: isDarkTheme ? DARK_THEME.colors : LIGHT_THEME.colors,
       dark: isDarkTheme,
     }),
-    [isDarkTheme]
+    [isDarkTheme],
   );
 
   const deviceColorScheme = useColorScheme();
@@ -44,10 +72,14 @@ export const ChoppThemeProvider = ({ children }: PropsWithChildren<object>) => {
   }, [deviceColorScheme]);
 
   return (
-    <ThemeProvider value={theme}>
-      <PaperProvider theme={theme}>
-        {children}
-        <View
+    <ChoppThemeContext.Provider
+      value={{ setIsDarkTheme, isDarkTheme, theme, toggleTheme }}
+    >
+      <ThemeProvider value={{ ...theme }}>
+        <PaperProvider theme={theme}>
+          {children}
+          <ChoppDevBar />
+          {/* <View
           style={{
             display: "flex",
             flexDirection: "row",
@@ -56,8 +88,11 @@ export const ChoppThemeProvider = ({ children }: PropsWithChildren<object>) => {
           }}
         >
           <Switch value={isDarkTheme} onValueChange={toggleTheme} />
-        </View>
-      </PaperProvider>
-    </ThemeProvider>
+          <Button onPress={showStorage}>show</Button>
+          <Button onPress={clearStorage}>x</Button>
+        </View> */}
+        </PaperProvider>
+      </ThemeProvider>
+    </ChoppThemeContext.Provider>
   );
 };
