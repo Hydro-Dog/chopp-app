@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import { View } from "react-native";
+import { Platform, StatusBar, View } from "react-native";
 import { Provider as StoreProvider } from "react-redux";
 import { useFonts } from "expo-font";
-import { Stack } from "expo-router";
+import { Slot, Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
 import { useChoppTheme } from "@/shared";
@@ -16,7 +16,7 @@ initI18n();
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const { theme } = useChoppTheme();
+  // const { theme } = useChoppTheme();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     Montserrat: require("../assets/fonts/Montserrat-VariableFont_wght.ttf"),
@@ -33,20 +33,22 @@ export default function RootLayout() {
   if (!loaded) {
     return null;
   }
+  // console.log("RootLayout theme.dark: ", theme.dark, theme.colors?.background);
 
   return (
     <StoreProvider store={store}>
       <ChoppGlobalProvider>
-        <View style={{ backgroundColor: theme.colors?.background, flex: 1 }}>
-          <Stack screenOptions={{ headerShown: false }}>
+        <Slot />
+        {/* TODO: Сделать, чтобы на светлой теме статус бар на айфоне не сливался с фоном*/}
+        {/* <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} /> */}
+
+        {/* <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="registration" />
             <Stack.Screen name="login" />
-            {/* <Stack.Screen name="dev" /> */}
             <Stack.Screen name="+not-found" />
             <Stack.Screen name="+html" />
-          </Stack>
-        </View>
+          </Stack> */}
       </ChoppGlobalProvider>
     </StoreProvider>
   );

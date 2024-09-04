@@ -7,6 +7,8 @@ import { useChoppTheme } from "@/shared";
 export default function TabLayout() {
   const { theme } = useChoppTheme();
 
+  console.log('TabLayout theme.dark: ', theme.dark, theme.colors?.background)
+
   return (
     <Tabs
       screenOptions={{

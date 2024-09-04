@@ -16,14 +16,17 @@ export const ChoppDevBar = () => {
     const res = await Promise.all(promises); // Дождитесь завершения всех промисов
 
     console.log(
-      "Stored data:\n\n" +
+      "Stored data:\n" +
         res
           .map(([key, val]) => {
             // Применяем стиль для ключей
             return `%c${key}: %c${val}`;
           })
           .join("\n"),
-      ...res.flatMap(([key, val]) => ["color: #ffe59e", "color: #ffffff"])
+      ...res.flatMap(([key, val]) => [
+        "color: blue; font-weight: bold",
+        "color: black",
+      ])
     );
   };
 

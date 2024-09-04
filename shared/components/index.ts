@@ -10,3 +10,4 @@ export * from "./chopp-dialog";
 export * from "./chopp-snackbar-stack";
 export * from "./chopp-code-input";
 export * from "./chopp-dev-bar";
+export * from "./chopp-protected-route";

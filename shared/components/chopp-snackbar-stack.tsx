@@ -81,23 +81,10 @@ export const ChoppSnackbarStack = ({ children }: PropsWithChildren<object>) => {
       },
     };
 
-  console.log("snackbarMessages: ", snackbarMessages);
-
   return (
     <ChoppSnackbarContext.Provider value={{ push: pushSnackbar }}>
       {children}
       <View>
-        {/* <Button
-          onPress={() => {
-            pushSnackbar({
-              id: String(Math.random()),
-              variant: SNACKBAR_VARIANTS.DEFAULT,
-              text: "jopa",
-            });
-          }}
-        >
-          Show
-        </Button> */}
         {Object.values(snackbarMessages)?.map((item, index) => {
           return (
             <Snackbar

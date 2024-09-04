@@ -4,6 +4,7 @@ import { StyleSheet, View } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { useSelector, useDispatch } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "expo-router";
 import { useBoolean } from "usehooks-ts";
 import { LoginFormType, loginSchema } from ".";
 import {
@@ -11,7 +12,7 @@ import {
   SNACKBAR_VARIANTS,
   ChoppFormField,
   FETCH_STATUS,
-  storeData,
+  addToStorage,
   useAuth,
   useChoppTheme,
 } from "@/shared";
@@ -22,6 +23,7 @@ export const LoginForm = () => {
   const { theme } = useChoppTheme();
   const { t } = useTranslation();
   const { setAuth } = useAuth();
+  const router = useRouter();
   const { value: passwordVisible, toggle: togglePasswordVisibility } =
     useBoolean();
   const { loginStatus } = useSelector((state: RootState) => state.user);
@@ -47,13 +49,13 @@ export const LoginForm = () => {
       console.log("Redirect ", res);
       //TODO: вынести в функцию
       setAuth(res);
-      storeData("accessToken", res.accessToken);
-      storeData("refreshToken", res.refreshToken);
-      // router.push("/");
+      addToStorage("accessToken", res.accessToken);
+      addToStorage("refreshToken", res.refreshToken);
+      router.push("/");
 
       //TODO: убрать any
     } catch (error: any) {
-        console.log('login error: ', error)
+      console.log("login error: ", error);
       push({
         id: String(Math.random()),
         variant: SNACKBAR_VARIANTS.ERROR,
