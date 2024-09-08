@@ -9,9 +9,9 @@ export const ChoppGlobalProvider = ({
   return (
     <AuthProvider>
       <ChoppThemeProvider>
-      <ChoppProtectedRoute>
-        <ChoppSnackbarStack>{children}</ChoppSnackbarStack>
-      </ChoppProtectedRoute>
+        <ChoppProtectedRoute>
+          <ChoppSnackbarStack>{children}</ChoppSnackbarStack>
+        </ChoppProtectedRoute>
       </ChoppThemeProvider>
     </AuthProvider>
   );

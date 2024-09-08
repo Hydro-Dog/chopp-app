@@ -9,7 +9,7 @@ import {
   ChoppParallaxScrollView,
 } from "@/shared";
 
-export default function TabTwoScreen() {
+ function TabTwoScreen() {
   return (
     <ChoppParallaxScrollView
       headerBackgroundColor={{ light: "#D0D0D0", dark: "#353636" }}

@@ -16,7 +16,6 @@ initI18n();
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  // const { theme } = useChoppTheme();
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
     Montserrat: require("../assets/fonts/Montserrat-VariableFont_wght.ttf"),
@@ -33,7 +32,6 @@ export default function RootLayout() {
   if (!loaded) {
     return null;
   }
-  // console.log("RootLayout theme.dark: ", theme.dark, theme.colors?.background);
 
   return (
     <StoreProvider store={store}>

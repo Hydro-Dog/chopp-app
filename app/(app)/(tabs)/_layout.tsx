@@ -7,8 +7,6 @@ import { useChoppTheme } from "@/shared";
 export default function TabLayout() {
   const { theme } = useChoppTheme();
 
-  console.log('TabLayout theme.dark: ', theme.dark, theme.colors?.background)
-
   return (
     <Tabs
       screenOptions={{
@@ -19,7 +17,8 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          //TODO: перевод
+          title: "Main",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "cafe" : "cafe-outline"}
@@ -29,9 +28,36 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="chat"
         options={{
-          title: "Explore",
+          //TODO: перевод
+          title: "Chat",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "chatbox-ellipses" : "chatbox-ellipses-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          //TODO: перевод
+          title: "Profile",
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "settings" : "settings-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="dev"
+        options={{
+          //TODO: перевод
+          title: "Dev",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "code-slash" : "code-slash-outline"}
