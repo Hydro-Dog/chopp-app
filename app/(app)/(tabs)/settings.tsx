@@ -1,17 +1,19 @@
 import React from "react";
 import { StyleSheet, View, Image } from "react-native";
-import { Avatar, Button, Card, Text } from "react-native-paper";
+import { Avatar, Button, Card, Chip, Text } from "react-native-paper";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { t } from "i18next";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
 import { ChoppIcon, ChoppThemedText, useChoppTheme } from "@/shared";
 import { ICON_SIZE } from "@/shared/enums";
+import { Stack, useRouter } from "expo-router";
 
 const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
 
-export default function TabProfileScreen() {
+export default function TabSettingsScreen() {
   const { theme } = useChoppTheme();
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
@@ -27,11 +29,26 @@ export default function TabProfileScreen() {
               <ChoppIcon
                 size={ICON_SIZE.l}
                 style={styles.cardIcon}
-                name="power-outline"
+                name="flower-outline"
+                // name="lock-closed-outline"
               />
-              <ChoppThemedText type="bold">Кнопка</ChoppThemedText>
-              <ChoppThemedText>Пополните баланс</ChoppThemedText>
-              {/* активна */}
+              <ChoppThemedText type="bold">Стаус</ChoppThemedText>
+              <Card.Actions>
+                <Chip
+                  style={{
+                    backgroundColor: theme.colors.successContainer,
+                    ...styles.cardStatusChip,
+                    ...styles.cardAction,
+                  }}
+                  onPress={() => console.log("Pressed")}
+                >
+                  <ChoppThemedText
+                    style={{ fontSize: 14, color: theme.colors.success }}
+                  >
+                    Кнопка активна
+                  </ChoppThemedText>
+                </Chip>
+              </Card.Actions>
             </Card.Content>
           </Card>
           <Card style={styles.card}>
@@ -44,7 +61,7 @@ export default function TabProfileScreen() {
               <ChoppThemedText type="bold">История событий</ChoppThemedText>
             </Card.Content>
             <Card.Actions>
-              <Button style={styles.cardButton}>Просмотр</Button>
+              <Button style={styles.cardAction}>Просмотр</Button>
             </Card.Actions>
           </Card>
         </View>
@@ -57,12 +74,18 @@ export default function TabProfileScreen() {
                 name="wallet-outline"
               />
               <View style={{ display: "flex", flexDirection: "row", gap: 4 }}>
-                <ChoppThemedText type="bold">Кошелек:</ChoppThemedText>
+                <ChoppThemedText
+                  // variant="notification"
+                  type="bold"
+                >
+                  Баланс:
+                </ChoppThemedText>
                 <ChoppThemedText>1990р </ChoppThemedText>
+                {/* <ChoppThemedText>0р </ChoppThemedText> */}
               </View>
             </Card.Content>
             <Card.Actions>
-              <Button style={styles.cardButton}>Пополнить</Button>
+              <Button style={styles.cardAction}>Пополнить</Button>
             </Card.Actions>
           </Card>
           <Card style={styles.card}>
@@ -75,11 +98,19 @@ export default function TabProfileScreen() {
               <ChoppThemedText type="bold">Профиль</ChoppThemedText>
             </Card.Content>
             <Card.Actions>
-              <Button style={styles.cardButton}>Настроить</Button>
+              <Button
+                style={styles.cardAction}
+                onPress={console.log}
+              >
+                Настроить
+              </Button>
             </Card.Actions>
           </Card>
         </View>
       </View>
+      
+      {/* <Stack.Screen name="/settings/profile" /> */}
+      
     </View>
   );
 }
@@ -96,6 +127,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
+  },
+  cardStatusChip: {
+    borderRadius: 50,
   },
   cardsContainer: {
     padding: 12,
@@ -114,8 +148,8 @@ const styles = StyleSheet.create({
   cardIcon: {
     marginBottom: 8,
   },
-  cardButton: {
-    marginTop: 8
+  cardAction: {
+    marginTop: 8,
   },
   walletTitle: {
     display: "flex",

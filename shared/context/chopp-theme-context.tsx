@@ -14,14 +14,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemeProvider } from "@react-navigation/native";
 import { ChoppDevBar } from "../components";
 import { THEME } from "../enums";
-import { ChopThemeType, DARK_THEME, LIGHT_THEME } from "@/theme";
+import { ChopThemeType } from "../types";
+import { DARK_THEME, LIGHT_THEME } from "@/theme";
 
-const ChoppThemeContext = createContext<{
+type ChoppThemeContextType = {
   theme: ChopThemeType;
   isDarkTheme: boolean;
   setIsDarkTheme: Dispatch<SetStateAction<boolean>>;
   toggleTheme: () => void;
-}>({
+};
+
+const ChoppThemeContext = createContext<ChoppThemeContextType>({
   setIsDarkTheme: function (value: SetStateAction<boolean>): void {
     throw new Error("setIsDarkTheme Function not implemented.");
   },
@@ -50,7 +53,7 @@ export const ChoppThemeProvider = ({ children }: PropsWithChildren<object>) => {
       colors: isDarkTheme ? DARK_THEME.colors : LIGHT_THEME.colors,
       dark: isDarkTheme,
     }),
-    [isDarkTheme]
+    [isDarkTheme],
   );
 
   const deviceColorScheme = useColorScheme();
