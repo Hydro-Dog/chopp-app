@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { createUser, fetchCurrentUser, login } from "./actions";
+import {
+  createUser,
+  fetchCurrentUser,
+  login,
+  updateCurrentUser,
+} from "./actions";
 import { User, UserAuthorization } from ".";
 import { ErrorResponse, FETCH_STATUS } from "@/shared";
 
@@ -7,8 +12,8 @@ export type UserState = {
   currentUser?: User;
   currentUserStatus: FETCH_STATUS;
   currentUserError: ErrorResponse | null;
-  // updateCurrentUserStatus: FETCH_STATUS;
-  // updateCurrentUserError: ErrorResponse | null;
+  updateCurrentUserStatus: FETCH_STATUS;
+  updateCurrentUserError: ErrorResponse | null;
   createUserStatus: FETCH_STATUS;
   createUserError?: ErrorResponse;
   // logoutStatus: FETCH_STATUS;
@@ -21,8 +26,8 @@ const initialState: UserState = {
   currentUser: undefined,
   currentUserStatus: FETCH_STATUS.IDLE,
   currentUserError: null,
-  // updateCurrentUserStatus: FETCH_STATUS.IDLE,
-  // updateCurrentUserError: null,
+  updateCurrentUserStatus: FETCH_STATUS.IDLE,
+  updateCurrentUserError: null,
   createUserStatus: FETCH_STATUS.IDLE,
   createUserError: undefined,
   // logoutStatus: FETCH_STATUS.IDLE,
@@ -60,24 +65,24 @@ export const userSlice = createSlice({
           errorMessage: "Failed to fetch user information",
         };
       })
-      // .addCase(updateCurrentUser.pending, (state) => {
-      //   state.updateCurrentUserStatus = FETCH_STATUS.LOADING;
-      // })
-      // .addCase(
-      //   updateCurrentUser.fulfilled,
-      //   (state, action: PayloadAction<User>) => {
-      //     state.updateCurrentUserStatus = FETCH_STATUS.SUCCESS;
-      //     state.currentUser = action.payload;
-      //     state.updateCurrentUserStatus = FETCH_STATUS.IDLE;
-      //   },
-      // )
-      // .addCase(updateCurrentUser.rejected, (state, action) => {
-      //   state.updateCurrentUserStatus = FETCH_STATUS.ERROR;
-      //   state.updateCurrentUserError = action.payload ?? {
-      //     errorMessage: "Failed to fetch user information",
-      //   };
-      //   state.updateCurrentUserStatus = FETCH_STATUS.IDLE;
-      // })
+      .addCase(updateCurrentUser.pending, (state) => {
+        state.updateCurrentUserStatus = FETCH_STATUS.LOADING;
+      })
+      .addCase(
+        updateCurrentUser.fulfilled,
+        (state, action: PayloadAction<User>) => {
+          state.updateCurrentUserStatus = FETCH_STATUS.SUCCESS;
+          state.currentUser = action.payload;
+          state.updateCurrentUserStatus = FETCH_STATUS.IDLE;
+        }
+      )
+      .addCase(updateCurrentUser.rejected, (state, action) => {
+        state.updateCurrentUserStatus = FETCH_STATUS.ERROR;
+        state.updateCurrentUserError = action.payload ?? {
+          errorMessage: "Failed to fetch user information",
+        };
+        state.updateCurrentUserStatus = FETCH_STATUS.IDLE;
+      })
       .addCase(createUser.pending, (state) => {
         state.createUserStatus = FETCH_STATUS.LOADING;
       })

@@ -17,10 +17,6 @@ export const profileSchema = (t: TFunction<"translation", undefined>) =>
       .string()
       .email(t("formErrors.invalidEmail"))
       .max(30, t("formErrors.maxLength", { count: 30 })),
-    password: z
-      .string()
-      .min(8, t("formErrors.minLength", { count: 8 }))
-      .max(30, t("formErrors.maxLength", { count: 30 })),
   });
 
 export type ProfileFormType = z.infer<ReturnType<typeof profileSchema>>;

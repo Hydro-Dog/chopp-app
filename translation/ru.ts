@@ -3,6 +3,7 @@ export const ru = {
   welcome: "Добро пожаловать в React Native",
   description: "Это простой пример локализации.",
   fullName: "Фио",
+  email: "Email",
   phoneNumber: "Телефон",
   password: "Пароль",
   registration: "Регистрация",
@@ -14,6 +15,8 @@ export const ru = {
     submit: "Подтвердить",
   },
   ok: "Ок",
+  cancel: "Отмена",
+  changePassword: 'Изменить пароль',
   registrationForm: {
     acceptPersonalDataProcessingMessage_1: "Согласен на",
     acceptPersonalDataProcessingMessage_2: "обработку персональных данных",

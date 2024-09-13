@@ -44,12 +44,12 @@ export default function ChoppBackScreenLayout({
 // TODO: Ревизия стилей
 const styles = StyleSheet.create({
   container: {
-    // flexBasis: "100%",
+    flexBasis: "100%",
   },
   content: {
     alignItems: "center",
     // height: '100%'
-    // flexBasis: "100%",
+    flexBasis: "100%",
   },
   logo: {
     position: "absolute",
@@ -62,9 +62,7 @@ const styles = StyleSheet.create({
   backButton: {
     flexDirection: "row",
     justifyContent: "flex-start",
-    width: "100%",
     marginTop: 64,
-    // position: "absolute",
     marginLeft: 32,
     marginBottom: 16,
   },

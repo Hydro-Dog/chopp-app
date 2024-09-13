@@ -32,10 +32,16 @@ export default function ProfileSettings() {
     dispatch(fetchCurrentUser());
   }, [dispatch]);
 
+  console.log("currentUserStatus: ", currentUserStatus);
+
   return (
-    <ChoppBackScreenLayout loading={currentUserStatus === FETCH_STATUS.LOADING}>
+    <ChoppBackScreenLayout loading={currentUserStatus !== FETCH_STATUS.SUCCESS}>
       <View style={styles.dialogContent}>
-        {isEditMode ? <ProfileForm /> : <ProfileScreen user={currentUser} />}
+        {isEditMode ? (
+          <ProfileForm setViewMode={setViewMode} user={currentUser} />
+        ) : (
+          <ProfileScreen setEditMode={setEditMode} user={currentUser} />
+        )}
         {/* TODO: перевод */}
       </View>
     </ChoppBackScreenLayout>
@@ -46,7 +52,7 @@ export default function ProfileSettings() {
 const styles = StyleSheet.create({
   dialogContent: {
     width: "80%",
-    // flexBasis: '100%'
+    flexBasis: "80%",
   },
   container: {
     // display: "flex",
