@@ -9,7 +9,13 @@ export default function AppLayout() {
   useAuthGuard();
 
   return (
-    <View style={{ backgroundColor: theme.colors?.background, flex: 1 }}>
+    <View
+      style={{
+        backgroundColor: theme.colors?.background,
+        flex: 1,
+        // flexBasis: "100%",
+      }}
+    >
       <Stack screenOptions={{ headerShown: false }} />
     </View>
   );

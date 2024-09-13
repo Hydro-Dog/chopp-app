@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { createUser, login } from "./actions";
-import { UserAuthorization } from ".";
+import { createUser, fetchCurrentUser, login } from "./actions";
+import { User, UserAuthorization } from ".";
 import { ErrorResponse, FETCH_STATUS } from "@/shared";
 
 export type UserState = {
-  // currentUser: User | null;
-  // currentUserStatus: FETCH_STATUS;
-  // currentUserError: ErrorResponse | null;
+  currentUser?: User;
+  currentUserStatus: FETCH_STATUS;
+  currentUserError: ErrorResponse | null;
   // updateCurrentUserStatus: FETCH_STATUS;
   // updateCurrentUserError: ErrorResponse | null;
   createUserStatus: FETCH_STATUS;
@@ -18,9 +18,9 @@ export type UserState = {
 };
 
 const initialState: UserState = {
-  // currentUser: null,
-  // currentUserStatus: FETCH_STATUS.IDLE,
-  // currentUserError: null,
+  currentUser: undefined,
+  currentUserStatus: FETCH_STATUS.IDLE,
+  currentUserError: null,
   // updateCurrentUserStatus: FETCH_STATUS.IDLE,
   // updateCurrentUserError: null,
   createUserStatus: FETCH_STATUS.IDLE,
@@ -44,22 +44,22 @@ export const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // .addCase(fetchCurrentUser.pending, (state) => {
-      //   state.currentUserStatus = FETCH_STATUS.LOADING;
-      // })
-      // .addCase(
-      //   fetchCurrentUser.fulfilled,
-      //   (state, action: PayloadAction<User>) => {
-      //     state.currentUserStatus = FETCH_STATUS.SUCCESS;
-      //     state.currentUser = action.payload;
-      //   },
-      // )
-      // .addCase(fetchCurrentUser.rejected, (state, action) => {
-      //   state.currentUserStatus = FETCH_STATUS.ERROR;
-      //   state.currentUserError = action.payload ?? {
-      //     errorMessage: "Failed to fetch user information",
-      //   };
-      // })
+      .addCase(fetchCurrentUser.pending, (state) => {
+        state.currentUserStatus = FETCH_STATUS.LOADING;
+      })
+      .addCase(
+        fetchCurrentUser.fulfilled,
+        (state, action: PayloadAction<User>) => {
+          state.currentUserStatus = FETCH_STATUS.SUCCESS;
+          state.currentUser = action.payload;
+        }
+      )
+      .addCase(fetchCurrentUser.rejected, (state, action) => {
+        state.currentUserStatus = FETCH_STATUS.ERROR;
+        state.currentUserError = action.payload ?? {
+          errorMessage: "Failed to fetch user information",
+        };
+      })
       // .addCase(updateCurrentUser.pending, (state) => {
       //   state.updateCurrentUserStatus = FETCH_STATUS.LOADING;
       // })
@@ -96,7 +96,7 @@ export const userSlice = createSlice({
         (state, action: PayloadAction<UserAuthorization>) => {
           state.loginStatus = FETCH_STATUS.SUCCESS;
           // localStorage.setItem("token", action.payload.Authorization);
-        },
+        }
       )
       .addCase(login.rejected, (state, action) => {
         state.loginStatus = FETCH_STATUS.ERROR;

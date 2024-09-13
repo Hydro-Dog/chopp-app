@@ -5,10 +5,12 @@ import { StyleSheet, Animated } from "react-native";
 
 type Props = {
   errorMessage?: string | FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
+  message?: string | FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
 };
 
 export const ChoppAnimatedHelperText = ({
   errorMessage,
+  message,
   children,
 }: PropsWithChildren<Props>) => {
   const fadeAnim = useRef(new Animated.Value(0)).current; // Начальное значение прозрачности
@@ -17,19 +19,24 @@ export const ChoppAnimatedHelperText = ({
   useEffect(() => {
     // Анимация появления и исчезновения ошибки
     Animated.timing(fadeAnim, {
-      toValue: errorMessage ? 1 : 0, // Целевое значение прозрачности
+      toValue: errorMessage || message ? 1 : 0, // Целевое значение прозрачности
       duration: 300, // Длительность анимации
       useNativeDriver: true, // Использование нативного драйвера для лучшей производительности
     }).start();
-  }, [errorMessage]);
+  }, [errorMessage, message]);
 
   return (
-    <Animated.View style={[styles.error, { opacity: fadeAnim }]}>
+    <Animated.View style={[styles.message, { opacity: fadeAnim }]}>
       <Animated.Text
         style={{ transform: [{ translateX: moveAnim }] }}
         numberOfLines={1}
       >
         <ChoppThemedText variant="error">
+          {message && !errorMessage && (
+            <ChoppThemedText style={styles.message}>
+              {message && String(message)}
+            </ChoppThemedText>
+          )}
           {errorMessage && String(errorMessage)}
         </ChoppThemedText>
       </Animated.Text>
@@ -44,7 +51,7 @@ const styles = StyleSheet.create({
     width: "100%",
     overflow: "hidden",
   },
-  error: {
+  message: {
     height: 24,
     width: 10000,
   },

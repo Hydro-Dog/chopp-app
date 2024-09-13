@@ -33,17 +33,17 @@ const useRefreshToken = ({ auth, setAuth }: Args) => {
 export const useSetInterceptors = ({ auth, setAuth }: Args) => {
   const refresh = useRefreshToken({ auth, setAuth });
 
-  axiosPrivate.interceptors.request.use(
+  const requestInterceptor = axiosPrivate.interceptors.request.use(
     (config) => {
       if (!config.headers["Authorization"]) {
         config.headers["Authorization"] = `Bearer ${auth?.accessToken}`;
       }
       return config;
     },
-    (error) => Promise.reject(error)
+    (error) => Promise.reject(error),
   );
 
-  axiosPrivate.interceptors.response.use(
+  const responseInterceptor = axiosPrivate.interceptors.response.use(
     (response) => response,
     async (error) => {
       const prevRequest = error?.config;
@@ -54,6 +54,12 @@ export const useSetInterceptors = ({ auth, setAuth }: Args) => {
         return axiosPrivate(prevRequest);
       }
       return Promise.reject(error);
-    }
+    },
   );
+
+  // Функция для очистки интерцепторов
+  return () => {
+    axiosPrivate.interceptors.request.eject(requestInterceptor);
+    axiosPrivate.interceptors.response.eject(responseInterceptor);
+  };
 };

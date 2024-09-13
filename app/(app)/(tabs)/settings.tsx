@@ -29,7 +29,7 @@ export default function TabSettingsScreen() {
               <ChoppIcon
                 size={ICON_SIZE.l}
                 style={styles.cardIcon}
-                name="flower-outline"
+                name="help-buoy-outline"
                 // name="lock-closed-outline"
               />
               <ChoppThemedText type="bold">Стаус</ChoppThemedText>
@@ -100,7 +100,7 @@ export default function TabSettingsScreen() {
             <Card.Actions>
               <Button
                 style={styles.cardAction}
-                onPress={console.log}
+                onPress={() => router.push("/settings/profile-settings")}
               >
                 Настроить
               </Button>
@@ -108,9 +108,8 @@ export default function TabSettingsScreen() {
           </Card>
         </View>
       </View>
-      
+
       {/* <Stack.Screen name="/settings/profile" /> */}
-      
     </View>
   );
 }

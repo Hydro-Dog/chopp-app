@@ -1,7 +1,6 @@
 export type User = {
   id: number;
-  token: string;
-
+  token?: string;
   fullName: string;
   phoneNumber: string;
   email: string;

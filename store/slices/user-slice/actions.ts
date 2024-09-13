@@ -10,24 +10,27 @@ import {
   //   UserRegisterDTO,
 } from "./types";
 
-import { axiosDefault } from "@/services";
+import { axiosDefault, axiosPrivate } from "@/services";
 import { ErrorResponse } from "@/shared";
 
-// export const fetchCurrentUser = createAsyncThunk<User, void, { rejectValue: ErrorResponse }>(
-//   '/fetchCurrentUser',
-//   async (_, thunkAPI) => {
-//     try {
-//       const response = await api.get<User>('/user');
-//       return response.data;
-//     } catch (error) {
-//       if (axios.isAxiosError(error) && error.response) {
-//         return thunkAPI.rejectWithValue(error.response.data as ErrorResponse);
-//       } else {
-//         return thunkAPI.rejectWithValue({ errorMessage: 'An unknown error occurred' });
-//       }
-//     }
-//   },
-// );
+export const fetchCurrentUser = createAsyncThunk<
+  User,
+  void,
+  { rejectValue: ErrorResponse }
+>("/fetchCurrentUser", async (_, thunkAPI) => {
+  try {
+    const response = await axiosPrivate.get<User>("/currentUser");
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return thunkAPI.rejectWithValue(error.response.data as ErrorResponse);
+    } else {
+      return thunkAPI.rejectWithValue({
+        errorMessage: "An unknown error occurred",
+      });
+    }
+  }
+});
 
 // export const updateCurrentUser = createAsyncThunk<User, User, { rejectValue: ErrorResponse }>(
 //   '/updateCurrentUser',
@@ -73,7 +76,7 @@ export const login = createAsyncThunk<
   try {
     const response = await axiosDefault.post<UserAuthorization>(
       `/login`,
-      userData,
+      userData
     );
     return response.data;
   } catch (error) {

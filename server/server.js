@@ -1,6 +1,6 @@
-const express = require("express");
-const cors = require("cors");
 const crypto = require("crypto");
+const cors = require("cors");
+const express = require("express");
 const app = express();
 const port = 4004;
 
@@ -20,7 +20,7 @@ app.use((req, res, next) => {
   next();
 });
 
-let users = {[DEFAULT_USER.email]:DEFAULT_USER};
+let users = { [DEFAULT_USER.email]: DEFAULT_USER };
 
 function generateTokens() {
   return {
@@ -42,12 +42,16 @@ app.post("/api/user/create", (req, res) => {
 
 app.post("/api/login", (req, res) => {
   const { login, password } = req.body;
-console.log('login, password: ', login, password)
-  console.log('users: ', users[login.toLocaleLowerCase()]?.password?.toLocaleLowerCase(), password?.toLocaleLowerCase(), users[login.toLocaleLowerCase()]?.password?.toLocaleLowerCase() === password?.toLocaleLowerCase())
-
-  if (users[login.toLocaleLowerCase()] && users[login.toLocaleLowerCase()]?.password?.toLocaleLowerCase() === password?.toLocaleLowerCase()) {
+  if (
+    users[login.toLocaleLowerCase()] &&
+    users[login.toLocaleLowerCase()]?.password?.toLocaleLowerCase() ===
+      password?.toLocaleLowerCase()
+  ) {
     const tokens = generateTokens();
-    users[login.toLocaleLowerCase()] = { ...users[login.toLocaleLowerCase()], ...tokens };
+    users[login.toLocaleLowerCase()] = {
+      ...users[login.toLocaleLowerCase()],
+      ...tokens,
+    };
     res.json(tokens);
   } else {
     res.status(401).json({ errorMessage: "Неверные учетные данные" });
@@ -57,7 +61,7 @@ console.log('login, password: ', login, password)
 app.post("/api/refresh", (req, res) => {
   const { refreshToken } = req.body;
   const user = Object.values(users).find(
-    (user) => user.refreshToken === refreshToken
+    (user) => user.refreshToken === refreshToken,
   );
   if (user) {
     const tokens = generateTokens();
@@ -70,6 +74,11 @@ app.post("/api/refresh", (req, res) => {
   } else {
     res.status(403).json({ errorMessage: "Неверный refresh token" });
   }
+});
+
+// Новый эндпоинт для получения данных текущего пользователя
+app.get("/api/currentUser", (req, res) => {
+  res.json(DEFAULT_USER);
 });
 
 app.listen(port, () => {

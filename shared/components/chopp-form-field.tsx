@@ -6,18 +6,20 @@ import { ChoppAnimatedHelperText } from "./chopp-animated-helper-text";
 type Props = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   errorMessage?: string | FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
+  message?: string | FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
   styles?: Record<string, any>;
 };
 
 export const ChoppFormField = ({
   children,
   errorMessage,
+  message,
   ...props
 }: PropsWithChildren<Props>) => {
   return (
     <View style={{ ...styles.field, ...props.styles }}>
       <View style={{ width: "auto", height: "auto" }}>{children}</View>
-      <ChoppAnimatedHelperText errorMessage={errorMessage} />
+      <ChoppAnimatedHelperText message={message} errorMessage={errorMessage} />
     </View>
   );
 };
