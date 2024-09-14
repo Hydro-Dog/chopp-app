@@ -4,7 +4,6 @@ import { View, StyleSheet } from "react-native";
 import { ChoppAnimatedHelperText } from "./chopp-animated-helper-text";
 
 type Props = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   errorMessage?: string | FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
   message?: string | FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
   styles?: Record<string, any>;

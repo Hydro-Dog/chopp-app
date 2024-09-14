@@ -13,7 +13,6 @@ export default function AppLayout() {
       style={{
         backgroundColor: theme.colors?.background,
         flex: 1,
-        // flexBasis: "100%",
       }}
     >
       <Stack screenOptions={{ headerShown: false }} />

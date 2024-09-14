@@ -18,3 +18,7 @@ export const getFromStorage = async (key: string) => {
     console.error("Error retrieving data: ", String(error));
   }
 };
+
+export const clearStorage = async () => {
+  await AsyncStorage.clear();
+};

@@ -72,6 +72,7 @@ export const userSlice = createSlice({
         updateCurrentUser.fulfilled,
         (state, action: PayloadAction<User>) => {
           state.updateCurrentUserStatus = FETCH_STATUS.SUCCESS;
+          console.log('action.payload: ', action.payload)
           state.currentUser = action.payload;
           state.updateCurrentUserStatus = FETCH_STATUS.IDLE;
         }

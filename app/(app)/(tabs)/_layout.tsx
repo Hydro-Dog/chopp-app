@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { Tabs } from "expo-router";
 
 import { TabBarIcon } from "@/pages/navigation/TabBarIcon";
@@ -6,6 +7,7 @@ import { useChoppTheme } from "@/shared";
 
 export default function TabLayout() {
   const { theme } = useChoppTheme();
+  const { t } = useTranslation();
 
   return (
     <Tabs
@@ -17,11 +19,10 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          //TODO: перевод
-          title: "Main",
+          title: t("mainPage"),
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "cafe" : "cafe-outline"}
+              name={focused ? "help-buoy" : "help-buoy-outline"}
               color={color}
             />
           ),
@@ -30,8 +31,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="chat"
         options={{
-          //TODO: перевод
-          title: "Chat",
+          title: t("supportPage"),
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "chatbox-ellipses" : "chatbox-ellipses-outline"}
@@ -43,8 +43,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="settings"
         options={{
-          //TODO: перевод
-          title: "Settings",
+          title: t("settingsPage"),
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "settings" : "settings-outline"}
@@ -56,11 +55,22 @@ export default function TabLayout() {
       <Tabs.Screen
         name="dev"
         options={{
-          //TODO: перевод
           title: "Dev",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "code-slash" : "code-slash-outline"}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="logout"
+        options={{
+          title: t("logoutPage"),
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon
+              name={focused ? "log-out" : "log-out-outline"}
               color={color}
             />
           ),

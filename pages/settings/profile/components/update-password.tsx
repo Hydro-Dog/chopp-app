@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { View } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { Button, IconButton, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -73,12 +73,15 @@ export const UpdatePassword = ({ mode, setMode }: Props) => {
   };
 
   return mode === "view" ? (
-    <Button mode="outlined" style={{}} onPress={() => setMode("edit")}>
+    <Button mode="outlined" onPress={() => setMode("edit")}>
       {t("changePassword")}
     </Button>
   ) : (
     <View>
-      <ChoppFormField errorMessage={errors.password?.message}>
+      <ChoppFormField
+        message={t("enterNewPassword")}
+        errorMessage={errors.password?.message}
+      >
         <Controller
           control={control}
           name="password"
@@ -105,13 +108,7 @@ export const UpdatePassword = ({ mode, setMode }: Props) => {
           )}
         />
       </ChoppFormField>
-      <View
-        //   TODO: Ревизия стилей
-        style={{
-          flexDirection: "row",
-          justifyContent: "flex-end",
-        }}
-      >
+      <View style={styles.buttons}>
         <IconButton
           icon="close"
           iconColor={theme.colors.secondary}
@@ -129,3 +126,10 @@ export const UpdatePassword = ({ mode, setMode }: Props) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  buttons: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+  },
+});

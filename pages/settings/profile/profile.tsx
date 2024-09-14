@@ -15,20 +15,20 @@ export const ProfileScreen = ({ user, setEditMode }: Props) => {
   const { t } = useTranslation();
 
   return (
-    <View style={{ justifyContent: "space-between", flexBasis: "100%" }}>
-      <View style={styles.container}>
+    <View style={styles.container}>
+      <View style={styles.items}>
         {KEYS.map((item) => (
-          // TODO: Перевод
           <ProfileItem key={item} title={t(item)} label={user?.[item]} />
         ))}
       </View>
-      <Button onPress={setEditMode}>Редактировать</Button>
+      <Button onPress={setEditMode}>{t("edit")}</Button>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  container: { justifyContent: "space-between", flexBasis: "100%" },
+  items: {
     gap: 16,
   },
   button: {

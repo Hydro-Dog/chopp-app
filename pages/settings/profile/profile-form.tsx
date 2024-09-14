@@ -5,14 +5,12 @@ import { View, StyleSheet } from "react-native";
 import { Button, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "expo-router";
-import { useBoolean } from "usehooks-ts";
+import { UpdatePassword } from "./components";
 import { ProfileFormType, profileSchema } from "./types";
 import { FETCH_STATUS, SNACKBAR_VARIANTS, useChoppSnackbar } from "@/shared";
-import { formatPhoneNumber, ChoppFormField, useChoppTheme } from "@/shared";
+import { formatPhoneNumber, ChoppFormField } from "@/shared";
 import { updateCurrentUser, User } from "@/store/slices/user-slice";
 import { AppDispatch, RootState } from "@/store/store";
-import { UpdatePassword } from "./components";
 
 type Props = {
   user?: User;
@@ -21,11 +19,7 @@ type Props = {
 
 export const ProfileForm = ({ user, setViewMode }: Props) => {
   const [passwordMode, setPasswordMode] = useState<"view" | "edit">("view");
-  const { theme } = useChoppTheme();
   const { t } = useTranslation();
-  const router = useRouter();
-  const { value: passwordVisible, toggle: togglePasswordVisibility } =
-    useBoolean();
   const { updateCurrentUserStatus } = useSelector(
     (state: RootState) => state.user
   );
@@ -68,7 +62,7 @@ export const ProfileForm = ({ user, setViewMode }: Props) => {
   };
 
   return (
-    <View style={{ justifyContent: "space-between", flexBasis: "100%" }}>
+    <View style={styles.container}>
       <View>
         <ChoppFormField errorMessage={errors.fullName?.message}>
           <Controller
@@ -158,10 +152,9 @@ export const ProfileForm = ({ user, setViewMode }: Props) => {
 
         <UpdatePassword mode={passwordMode} setMode={setPasswordMode} />
       </View>
-      <View style={{ gap: 16 }}>
+      <View style={styles.buttons}>
         <Button
           mode="contained"
-          style={{}}
           loading={updateCurrentUserStatus === FETCH_STATUS.LOADING}
           disabled={
             updateCurrentUserStatus === FETCH_STATUS.LOADING ||
@@ -172,7 +165,6 @@ export const ProfileForm = ({ user, setViewMode }: Props) => {
           {t("ok")}
         </Button>
         <Button
-          style={{}}
           loading={updateCurrentUserStatus === FETCH_STATUS.LOADING}
           onPress={onClose}
         >
@@ -184,7 +176,8 @@ export const ProfileForm = ({ user, setViewMode }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  registerButton: {
-    marginTop: 24,
+  container: { justifyContent: "space-between", flexBasis: "100%" },
+  buttons: {
+    gap: 16,
   },
 });

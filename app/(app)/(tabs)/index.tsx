@@ -11,7 +11,7 @@ export default function TabMainScreen() {
           {t("registration")}
         </ChoppThemedText>
 
-        <Button mode="outlined">{t("actions.login")}</Button>
+        <Button mode="outlined">{t("actions.logцin")}</Button>
       </View>
     </View>
   );

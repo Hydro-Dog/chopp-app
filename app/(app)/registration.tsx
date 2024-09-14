@@ -13,8 +13,6 @@ export default function RegistrationPage() {
   const { t } = useTranslation();
   const router = useRouter();
 
-  console.log('RegistrationPage theme.dark: ', theme.dark, theme.colors?.background)
-
   return (
     <KeyboardAwareScrollView>
       <View style={styles.container}>

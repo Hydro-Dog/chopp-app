@@ -58,10 +58,31 @@ app.post("/api/login", (req, res) => {
   }
 });
 
+app.put("/api/currentUser", (req, res) => {
+  const { email, fullName, password, phoneNumber } = req.body;
+  
+  // Проверка существования пользователя в "базе данных"
+  if (users[DEFAULT_USER.email]) {
+    // Обновление данных пользователя
+    users[DEFAULT_USER.email] = {
+      ...users[DEFAULT_USER.email],
+      email: email || users[DEFAULT_USER.email].email,
+      fullName: fullName || users[DEFAULT_USER.email].fullName,
+      password: password || users[DEFAULT_USER.email].password,
+      phoneNumber: phoneNumber || users[DEFAULT_USER.email].phoneNumber
+    };
+    // Возврат обновлённых данных пользователя
+    res.json(users[DEFAULT_USER.email]);
+  } else {
+    res.status(404).json({ errorMessage: "Пользователь не найден" });
+  }
+});
+
+
 app.post("/api/refresh", (req, res) => {
   const { refreshToken } = req.body;
   const user = Object.values(users).find(
-    (user) => user.refreshToken === refreshToken,
+    (user) => user.refreshToken === refreshToken
   );
   if (user) {
     const tokens = generateTokens();

@@ -17,6 +17,7 @@ export default function TabMainScreen() {
   );
 }
 
+//TODO: ревизия стилей
 const styles = StyleSheet.create({
   container: {},
 });

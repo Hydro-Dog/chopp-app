@@ -1,15 +1,12 @@
 import React from "react";
 import { StyleSheet, View, Image } from "react-native";
-import { Avatar, Button, Card, Chip, Text } from "react-native-paper";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { Button, Card, Chip } from "react-native-paper";
+import { useRouter } from "expo-router";
 import { t } from "i18next";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
 import { ChoppIcon, ChoppThemedText, useChoppTheme } from "@/shared";
 import { ICON_SIZE } from "@/shared/enums";
-import { Stack, useRouter } from "expo-router";
-
-const LeftContent = (props) => <Avatar.Icon {...props} icon="folder" />;
 
 export default function TabSettingsScreen() {
   const { theme } = useChoppTheme();
@@ -18,10 +15,6 @@ export default function TabSettingsScreen() {
   return (
     <View style={styles.container}>
       <Image style={styles.logo} source={theme.dark ? LogoDark : LogoLight} />
-      {/* <ChoppThemedText type="subtitleBold">
-        {t("welcomeMessage")}
-      </ChoppThemedText> */}
-
       <View style={styles.cardsContainer}>
         <View style={styles.row}>
           <Card style={styles.card}>
@@ -30,9 +23,8 @@ export default function TabSettingsScreen() {
                 size={ICON_SIZE.l}
                 style={styles.cardIcon}
                 name="help-buoy-outline"
-                // name="lock-closed-outline"
               />
-              <ChoppThemedText type="bold">Стаус</ChoppThemedText>
+              <ChoppThemedText type="bold">{t("button")}</ChoppThemedText>
               <Card.Actions>
                 <Chip
                   style={{
@@ -45,7 +37,7 @@ export default function TabSettingsScreen() {
                   <ChoppThemedText
                     style={{ fontSize: 14, color: theme.colors.success }}
                   >
-                    Кнопка активна
+                    {t("buttonIsActive")}
                   </ChoppThemedText>
                 </Chip>
               </Card.Actions>
@@ -58,10 +50,10 @@ export default function TabSettingsScreen() {
                 style={styles.cardIcon}
                 name="reader-outline"
               />
-              <ChoppThemedText type="bold">История событий</ChoppThemedText>
+              <ChoppThemedText type="bold">{t("callsHistory")}</ChoppThemedText>
             </Card.Content>
             <Card.Actions>
-              <Button style={styles.cardAction}>Просмотр</Button>
+              <Button style={styles.cardAction}>{t("details")}</Button>
             </Card.Actions>
           </Card>
         </View>
@@ -74,18 +66,12 @@ export default function TabSettingsScreen() {
                 name="wallet-outline"
               />
               <View style={{ display: "flex", flexDirection: "row", gap: 4 }}>
-                <ChoppThemedText
-                  // variant="notification"
-                  type="bold"
-                >
-                  Баланс:
-                </ChoppThemedText>
+                <ChoppThemedText type="bold">{t("ballance")}:</ChoppThemedText>
                 <ChoppThemedText>1990р </ChoppThemedText>
-                {/* <ChoppThemedText>0р </ChoppThemedText> */}
               </View>
             </Card.Content>
             <Card.Actions>
-              <Button style={styles.cardAction}>Пополнить</Button>
+              <Button style={styles.cardAction}>{t("replenish")}</Button>
             </Card.Actions>
           </Card>
           <Card style={styles.card}>
@@ -95,21 +81,19 @@ export default function TabSettingsScreen() {
                 style={styles.cardIcon}
                 name="person-outline"
               />
-              <ChoppThemedText type="bold">Профиль</ChoppThemedText>
+              <ChoppThemedText type="bold">{t("profile")}</ChoppThemedText>
             </Card.Content>
             <Card.Actions>
               <Button
                 style={styles.cardAction}
                 onPress={() => router.push("/settings/profile-settings")}
               >
-                Настроить
+                {t("setup")}
               </Button>
             </Card.Actions>
           </Card>
         </View>
       </View>
-
-      {/* <Stack.Screen name="/settings/profile" /> */}
     </View>
   );
 }

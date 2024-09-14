@@ -24,7 +24,7 @@ export default function VerificationCodePage() {
           mode="outlined"
           style={styles.submitButton}
           disabled={code.filter(Boolean).length !== 4}
-          // onPress={handleSubmit(onSubmit)}
+          onPress={console.log}
         >
           {t("actions.submit")}
         </Button>
@@ -47,9 +47,6 @@ const styles = StyleSheet.create({
   },
   title: {
     marginBottom: 24,
-  },
-  content: {
-    marginTop: 24,
   },
   submitButton: {
     marginTop: 24,
