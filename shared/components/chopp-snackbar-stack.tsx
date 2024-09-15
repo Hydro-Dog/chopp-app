@@ -86,6 +86,7 @@ export const ChoppSnackbarStack = ({ children }: PropsWithChildren<object>) => {
       {children}
       <View>
         {Object.values(snackbarMessages)?.map((item, index) => {
+          console.log('item.duration: ', item.duration, item.duration || 3000)
           return (
             <Snackbar
               duration={item.duration || 3000}
@@ -96,7 +97,7 @@ export const ChoppSnackbarStack = ({ children }: PropsWithChildren<object>) => {
                 opacity: 0.95,
               }}
               visible
-              onDismiss={() => {}}
+              onDismiss={() => popSnackbar(item.id)}
               action={{
                 textColor: snackbarColors[item.variant].color,
                 label: item?.actionLabel || "╳",

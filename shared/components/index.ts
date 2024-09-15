@@ -14,3 +14,4 @@ export * from "./chopp-protected-route";
 export * from "./chopp-icon";
 export * from "./chopp-back-button";
 export * from "./chopp-back-screen-layout";
+export * from "./chopp-big-round-button";

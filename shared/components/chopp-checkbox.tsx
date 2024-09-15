@@ -55,12 +55,12 @@ export const ChoppCheckbox = ({ value, onChange, label }: Props) => {
       Animated.timing(scale, {
         toValue: 0.95,
         duration: 100,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
       Animated.timing(scale, {
         toValue: 1,
         duration: 100,
-        useNativeDriver: true,
+        useNativeDriver: false,
       }),
     ]).start();
 

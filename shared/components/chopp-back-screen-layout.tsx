@@ -49,7 +49,6 @@ export default function ChoppBackScreenLayout({
   );
 }
 
-// TODO: Ревизия стилей
 const styles = StyleSheet.create({
   container: {
     flexBasis: "100%",

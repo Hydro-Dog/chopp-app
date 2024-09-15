@@ -1,6 +1,11 @@
 export const ru = {
   jopa1: "Жопа",
   welcome: "Добро пожаловать в React Native",
+  alarmButtonHint: "Удерживайте, чтобы вызвать помощь",
+  alarmButtonDialogTitle: "Вызов",
+  alarmButtonDialogText: "Вызвать бригаду оперативного реагирования?",
+  activeButtonHint:
+    "Тревожная кнопка активна. Вы можете вызвать помощь в любой момент",
   edit: "Редактировать",
   description: "Это простой пример локализации.",
   fullName: "Фио",
@@ -18,7 +23,7 @@ export const ru = {
   ok: "Ок",
   cancel: "Отмена",
   back: "Назад",
-  logoutFromProfile: 'Выйти из профиля',
+  logoutFromProfile: "Выйти из профиля",
   changePassword: "Изменить пароль",
   enterNewPassword: "Введите новый пароль",
   logoutPage: "Выход",

@@ -5,12 +5,27 @@ import { useRouter } from "expo-router";
 import { t } from "i18next";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
-import { ChoppIcon, ChoppThemedText, useChoppTheme } from "@/shared";
+import {
+  ChoppIcon,
+  ChoppThemedText,
+  SNACKBAR_VARIANTS,
+  useChoppSnackbar,
+  useChoppTheme,
+} from "@/shared";
 import { ICON_SIZE } from "@/shared/enums";
 
 export default function TabSettingsScreen() {
   const { theme } = useChoppTheme();
   const router = useRouter();
+  const { push } = useChoppSnackbar();
+
+  const onButtonStatusPressed = () => {
+    push({
+      id: String(Math.random()),
+      variant: SNACKBAR_VARIANTS.SUCCESS,
+      text: t("activeButtonHint"),
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -32,7 +47,7 @@ export default function TabSettingsScreen() {
                     ...styles.cardStatusChip,
                     ...styles.cardAction,
                   }}
-                  onPress={() => console.log("Pressed")}
+                  onPress={onButtonStatusPressed}
                 >
                   <ChoppThemedText
                     style={{ fontSize: 14, color: theme.colors.success }}

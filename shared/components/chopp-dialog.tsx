@@ -1,13 +1,14 @@
 import React, { ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { ScrollView } from "react-native";
 import { Portal, Dialog, Button } from "react-native-paper";
 import { ChoppThemedText } from "./chopp-themed-text";
-import { useTranslation } from "react-i18next";
 
 type Props = {
   visible?: boolean;
   onClose: () => void;
   onOk?: () => void;
+  onCancel?: () => void;
   title?: ReactNode;
   text?: ReactNode;
   okLabel?: string;
@@ -16,13 +17,14 @@ type Props = {
 export const ChoppDialog = ({
   visible,
   onClose,
+  onCancel,
   onOk,
   title,
   okLabel,
   text,
 }: Props) => {
   const { t } = useTranslation();
-  
+
   return (
     <Portal>
       <Dialog visible={!!visible} onDismiss={onClose}>
@@ -37,6 +39,9 @@ export const ChoppDialog = ({
           </Dialog.Content>
         </ScrollView>
         <Dialog.Actions>
+          {onCancel && (
+            <Button onPress={onCancel}>{okLabel || t("cancel")}</Button>
+          )}
           {onOk && <Button onPress={onOk}>{okLabel || t("ok")}</Button>}
         </Dialog.Actions>
       </Dialog>

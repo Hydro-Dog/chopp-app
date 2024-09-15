@@ -16,9 +16,9 @@ export default function LogoutPage() {
     router.push("/login");
   };
 
-  const onCancel = () => {
-    router.push("/(app)/(tabs)");
-  };
+  // const onCancel = () => {
+  //   router.back();
+  // };
 
   return (
     <ChoppBackScreenLayout
@@ -45,7 +45,7 @@ export default function LogoutPage() {
         <Button mode="contained" onPress={onOk}>
           {t("ok")}
         </Button>
-        <Button onPress={onCancel}>{t("cancel")}</Button>
+        {/* <Button onPress={onCancel}>{t("cancel")}</Button> */}
       </View>
     </ChoppBackScreenLayout>
   );
