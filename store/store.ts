@@ -1,16 +1,93 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, Middleware } from "@reduxjs/toolkit";
 import { userSlice, UserState } from "./slices/user-slice";
+import {
+  pushWsMessage,
+  setWsConnected,
+  setWsError,
+  wsConnect,
+  wsDisconnect,
+  wsSend,
+  wsSlice,
+  WsState,
+} from "./slices/ws-slice";
+
+type WsAction = {
+  type: string;
+  payload?: any;
+};
+
+//@ts-ignore
+const wsMiddleware: Middleware = (store) => {
+  let socket: WebSocket | null = null;
+
+  return (next) => (action: WsAction) => {
+    switch (action.type) {
+      case wsConnect.toString():
+        if (socket !== null) {
+          socket.close();
+        }
+
+        socket = new WebSocket(action.payload.url);
+
+        socket.onopen = () => {
+          store.dispatch(setWsConnected(true));
+        };
+
+        socket.onmessage = (event) => {
+          console.log('onmessage')
+          const data =
+            typeof event.data === "object"
+              ? JSON.parse(event.data)
+              : event.data;
+          store.dispatch(pushWsMessage(data));
+        };
+
+        socket.onclose = () => {
+          store.dispatch(setWsConnected(false));
+        };
+
+        socket.onclose = (error) => {
+          store.dispatch(setWsError(error));
+        };
+
+        break;
+
+      case wsDisconnect.toString():
+        if (socket !== null) {
+          socket.close();
+          socket = null;
+        }
+
+        break;
+
+      case wsSend.toString():
+        if (socket !== null) {
+          socket.send(JSON.stringify(action.payload));
+        }
+
+        break;
+
+      default:
+        break;
+    }
+
+    return next(action);
+  };
+};
 
 export const store = configureStore({
   reducer: {
     user: userSlice.reducer,
+    ws: wsSlice.reducer,
   },
-  // middleware: (getDefaultMiddleware) =>
-  //   getDefaultMiddleware().concat(wsMiddleware),
+  middleware: (getDefaultMiddleware) => {
+    return getDefaultMiddleware().concat(wsMiddleware);
+  },
 });
 
 export type RootState = {
   user: UserState;
+  ws: WsState;
 };
 
 export type AppDispatch = typeof store.dispatch;

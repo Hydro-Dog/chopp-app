@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
-import { Platform, StatusBar, View } from "react-native";
 import { Provider as StoreProvider } from "react-redux";
 import { useFonts } from "expo-font";
-import { Slot, Stack } from "expo-router";
+import { Slot } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
-import { useChoppTheme } from "@/shared";
+import { WsWrapper } from "@/shared/components/chopp-ws-wrapper";
 import { ChoppGlobalProvider } from "@/shared/context/chopp-global-context";
 import { store } from "@/store/store";
 import { initI18n } from "@/translation/i18n";
@@ -36,17 +35,19 @@ export default function RootLayout() {
   return (
     <StoreProvider store={store}>
       <ChoppGlobalProvider>
-        <Slot />
-        {/* TODO: Сделать, чтобы на светлой теме статус бар на айфоне не сливался с фоном*/}
-        {/* <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} /> */}
+        <WsWrapper>
+          <Slot />
+          {/* TODO: Сделать, чтобы на светлой теме статус бар на айфоне не сливался с фоном*/}
+          {/* <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} /> */}
 
-        {/* <Stack screenOptions={{ headerShown: false }}>
+          {/* <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="registration" />
             <Stack.Screen name="login" />
             <Stack.Screen name="+not-found" />
             <Stack.Screen name="+html" />
           </Stack> */}
+        </WsWrapper>
       </ChoppGlobalProvider>
     </StoreProvider>
   );
