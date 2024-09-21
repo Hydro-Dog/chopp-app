@@ -37,6 +37,7 @@ export const ru = {
   details: "Подробнее",
   ballance: "Баланс",
   replenish: "Пополнить",
+  payment: "Оплата",
   profile: "Профиль",
   setup: "Настроить",
   registrationForm: {

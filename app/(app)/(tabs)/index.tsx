@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, View } from "react-native";
+import { ActivityIndicator } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { useBoolean } from "usehooks-ts";
 import {
@@ -13,7 +14,6 @@ import {
 import { useFilterWsMessages } from "@/shared/hooks";
 import { wsSend } from "@/store/slices/ws-slice";
 import { AppDispatch, RootState } from "@/store/store";
-import { ActivityIndicator } from "react-native-paper";
 
 export default function TabMainScreen() {
   const { t } = useTranslation();
@@ -27,6 +27,18 @@ export default function TabMainScreen() {
   const { wsConnected } = useSelector((state: RootState) => state.ws);
   const { lastMessage } = useFilterWsMessages("callStatus");
 
+  const onCall = () => {
+    dispatch(
+      wsSend(
+        createWsMessage({
+          type: "callStatus",
+          code: "call",
+        }),
+      ),
+    );
+    hideModal();
+  };
+
   useEffect(() => {
     if (wsConnected) {
       console.log("dispatch: callStatus ");
@@ -35,8 +47,8 @@ export default function TabMainScreen() {
           createWsMessage({
             type: "callStatus",
             code: "getCallStatus",
-          })
-        )
+          }),
+        ),
       );
     }
   }, [dispatch, wsConnected]);
@@ -60,7 +72,7 @@ export default function TabMainScreen() {
       <ChoppDialog
         visible={isModalVisible}
         onClose={hideModal}
-        onOk={hideModal}
+        onOk={onCall}
         onCancel={hideModal}
         title={t("alarmButtonDialogTitle")}
         text={t("alarmButtonDialogText")}

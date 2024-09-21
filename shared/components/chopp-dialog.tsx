@@ -11,6 +11,7 @@ type Props = {
   onCancel?: () => void;
   title?: ReactNode;
   text?: ReactNode;
+  content?: ReactNode;
   okLabel?: string;
 };
 
@@ -21,6 +22,7 @@ export const ChoppDialog = ({
   onOk,
   title,
   okLabel,
+  content,
   text,
 }: Props) => {
   const { t } = useTranslation();
@@ -35,7 +37,7 @@ export const ChoppDialog = ({
           contentContainerStyle={{ flexGrow: 1 }}
         >
           <Dialog.Content>
-            <ChoppThemedText>{text}</ChoppThemedText>
+            {content || <ChoppThemedText>{text}</ChoppThemedText>}
           </Dialog.Content>
         </ScrollView>
         <Dialog.Actions>

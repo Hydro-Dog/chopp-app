@@ -61,19 +61,9 @@ wss.on("connection", function connection(ws) {
       );
     }
 
-    if (
-      receivedData.type === "callStatus" &&
-      receivedData.code === "getCallStatus"
-    ) {
-      //idle, processing, accepted (declined), onTheWay, onTheSpot, completed
-      console.log("ws.send");
+    console.log();
+    if (receivedData.type === "callStatus" && receivedData.code === "call") {
       ws.send(
-        // JSON.stringify({
-        //   type: "callStatus",
-        //   message: "idle",
-        //   timeStamp: new Date().valueOf(),
-        // })
-
         JSON.stringify({
           type: "callStatus",
           message: "processing",
@@ -89,7 +79,7 @@ wss.on("connection", function connection(ws) {
             timeStamp: new Date().valueOf(),
           })
         );
-      }, 4000);
+      }, 1000);
 
       setTimeout(() => {
         ws.send(
@@ -99,7 +89,7 @@ wss.on("connection", function connection(ws) {
             timeStamp: new Date().valueOf(),
           })
         );
-      }, 6000);
+      }, 3000);
 
       setTimeout(() => {
         ws.send(
@@ -109,7 +99,7 @@ wss.on("connection", function connection(ws) {
             timeStamp: new Date().valueOf(),
           })
         );
-      }, 8000);
+      }, 5000);
 
       setTimeout(() => {
         ws.send(
@@ -119,7 +109,78 @@ wss.on("connection", function connection(ws) {
             timeStamp: new Date().valueOf(),
           })
         );
-      }, 10000);
+      }, 7000);
+
+      setTimeout(() => {
+        ws.send(
+          JSON.stringify({
+            type: "callStatus",
+            message: "completed",
+            timeStamp: new Date().valueOf(),
+          })
+        );
+      }, 9000);
+    }
+
+    if (
+      receivedData.type === "callStatus" &&
+      receivedData.code === "getCallStatus"
+    ) {
+      //idle, processing, accepted (declined), onTheWay, onTheSpot, completed
+      console.log("ws.send");
+      ws.send(
+        JSON.stringify({
+          type: "callStatus",
+          message: "idle",
+          timeStamp: new Date().valueOf(),
+        })
+
+        // JSON.stringify({
+        //   type: "callStatus",
+        //   message: "processing",
+        //   timeStamp: new Date().valueOf(),
+        // })
+      );
+
+      // setTimeout(() => {
+      //   ws.send(
+      //     JSON.stringify({
+      //       type: "callStatus",
+      //       message: "accepted",
+      //       timeStamp: new Date().valueOf(),
+      //     })
+      //   );
+      // }, 4000);
+
+      // setTimeout(() => {
+      //   ws.send(
+      //     JSON.stringify({
+      //       type: "callStatus",
+      //       message: "onTheWay",
+      //       timeStamp: new Date().valueOf(),
+      //     })
+      //   );
+      // }, 6000);
+
+      // setTimeout(() => {
+      //   ws.send(
+      //     JSON.stringify({
+      //       type: "callStatus",
+      //       message: "onTheSpot",
+      //       timeStamp: new Date().valueOf(),
+      //     })
+      //   );
+      // }, 8000);
+
+      // setTimeout(() => {
+      //   ws.send(
+      //     JSON.stringify({
+      //       type: "callStatus",
+      //       message: "accepted",
+      //       timeStamp: new Date().valueOf(),
+      //     })
+      //   );
+      // }, 10000);
     }
   });
 

@@ -3,9 +3,14 @@ import { StyleSheet, View, Image } from "react-native";
 import { Button, Card, Chip } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { t } from "i18next";
+import { useBoolean } from "usehooks-ts";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
+import BankMockPng from "@/assets/bank-mock.png";
+import BankMockNoBgPng from "@/assets/bank-mock-np-bg.png";
+
 import {
+  ChoppDialog,
   ChoppIcon,
   ChoppThemedText,
   SNACKBAR_VARIANTS,
@@ -18,6 +23,11 @@ export default function TabSettingsScreen() {
   const { theme } = useChoppTheme();
   const router = useRouter();
   const { push } = useChoppSnackbar();
+  const {
+    value: isModalVisible,
+    setTrue: showModal,
+    setFalse: hideModal,
+  } = useBoolean();
 
   const onButtonStatusPressed = () => {
     push({
@@ -27,9 +37,14 @@ export default function TabSettingsScreen() {
     });
   };
 
+  const onReplenish = () => {
+    showModal();
+  };
+
   return (
     <View style={styles.container}>
       <Image style={styles.logo} source={theme.dark ? LogoDark : LogoLight} />
+
       <View style={styles.cardsContainer}>
         <View style={styles.row}>
           <Card style={styles.card}>
@@ -86,7 +101,9 @@ export default function TabSettingsScreen() {
               </View>
             </Card.Content>
             <Card.Actions>
-              <Button style={styles.cardAction}>{t("replenish")}</Button>
+              <Button style={styles.cardAction} onPress={onReplenish}>
+                {t("replenish")}
+              </Button>
             </Card.Actions>
           </Card>
           <Card style={styles.card}>
@@ -109,11 +126,28 @@ export default function TabSettingsScreen() {
           </Card>
         </View>
       </View>
+      <ChoppDialog
+        visible={isModalVisible}
+        onClose={hideModal}
+        onOk={hideModal}
+        onCancel={hideModal}
+        title={t("payment")}
+        content={<Image style={styles.logo2} source={BankMockNoBgPng} />}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  replenishPng: {},
+  logo2: {
+    // position: "absolute",
+    width: 290,
+    height: 360,
+    // right: -80,
+    // top: 50,
+    // opacity: 0.2,
+  },
   logo: {
     position: "absolute",
     width: 250,
