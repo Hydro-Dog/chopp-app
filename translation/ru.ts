@@ -40,6 +40,18 @@ export const ru = {
   payment: "Оплата",
   profile: "Профиль",
   setup: "Настроить",
+  callStatus: {
+    processing: "Обрабатываем",
+    processingHint: "Запрос обрабатывается оператором",
+    accepted: "Принято",
+    acceptedHint: "Ваш вызов принят",
+    onTheWay: "В пути",
+    onTheWayHint: "Бригада едет к вам",
+    onTheSpot: "На месте",
+    onTheSpotHint: "Пригада прибыла на место",
+    completed: "Завершено",
+    completedHint: "Вызов завершен",
+  },
   registrationForm: {
     acceptPersonalDataProcessingMessage_1: "Согласен на",
     acceptPersonalDataProcessingMessage_2: "обработку персональных данных",

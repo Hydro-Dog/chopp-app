@@ -105,21 +105,12 @@ wss.on("connection", function connection(ws) {
         ws.send(
           JSON.stringify({
             type: "callStatus",
-            message: "processing",
+            message: "completed",
             timeStamp: new Date().valueOf(),
           })
         );
       }, 7000);
 
-      setTimeout(() => {
-        ws.send(
-          JSON.stringify({
-            type: "callStatus",
-            message: "completed",
-            timeStamp: new Date().valueOf(),
-          })
-        );
-      }, 9000);
     }
 
     if (

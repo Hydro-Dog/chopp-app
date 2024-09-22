@@ -1,37 +1,39 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { View, StyleSheet, Animated } from "react-native";
 import { Card, Avatar } from "react-native-paper";
-import { useChoppTheme } from "../context";
 import { useSelector } from "react-redux";
+import { TFunction } from "i18next";
+import { useChoppTheme } from "../context";
 import { useFilterWsMessages } from "../hooks";
 
-const stepsMap = {
+const getStepsMap = (t: TFunction<"translation", undefined>) => ({
   processing: {
-    title: "Processing",
-    description: "Your request is being processed.",
+    title: t("callStatus.processing"),
+    description: t("callStatus.processingHint"),
     icon: "progress-clock",
   },
   accepted: {
-    title: "Accepted",
-    description: "Your request has been accepted.",
+    title: t("callStatus.accepted"),
+    description: t("callStatus.acceptedHint"),
     icon: "check-circle-outline",
   },
   onTheWay: {
-    title: "On The Way",
-    description: "The service is on its way to your location.",
+    title: t("callStatus.onTheWay"),
+    description: t("callStatus.onTheWayHint"),
     icon: "car",
   },
   onTheSpot: {
-    title: "On The Spot",
-    description: "The service has arrived at your location.",
+    title: t("callStatus.onTheSpot"),
+    description: t("callStatus.onTheSpotHint"),
     icon: "map-marker",
   },
   completed: {
-    title: "Completed",
-    description: "The service has been completed successfully.",
+    title: t("callStatus.completed"),
+    description: t("callStatus.completedHint"),
     icon: "check-all",
   },
-};
+});
 
 // const steps = [
 //   {
@@ -69,16 +71,13 @@ const stepsMap = {
 const steps = ["processing", "accepted", "onTheWay", "onTheSpot", "completed"];
 
 export const ChoppCallStatusScreen = () => {
-  //   const [currentStep, setCurrentStep] = useState(2); // Example: currently on the "On The Way" step
+  const { t } = useTranslation();
   const { lastMessage } = useFilterWsMessages("callStatus");
-  console.log("lastMessage ; ", lastMessage.message);
   const { theme } = useChoppTheme();
 
   const completedIndex = steps.findIndex((item) => item == lastMessage.message);
-  console.log("completedIndex: ", completedIndex);
   const completedSteps = steps.slice(0, completedIndex + 1);
-
-  console.log("completedSteps: ", completedSteps);
+  const stepsMap = getStepsMap(t);
 
   // Создаем анимированные значения для каждого шага
   const backgroundColors = steps.map(
