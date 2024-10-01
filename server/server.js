@@ -212,7 +212,7 @@ app.post("/api/user/create", (req, res) => {
   }
 });
 
-app.post("/api/login", (req, res) => {
+app.post("/api/auth/login", (req, res) => {
   const { login, password } = req.body;
   if (
     users[login.toLocaleLowerCase()] &&

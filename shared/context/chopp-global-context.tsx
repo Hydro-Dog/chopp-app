@@ -1,7 +1,7 @@
 import { PropsWithChildren } from "react";
 import { AuthProvider } from "./auth-context";
 import { ChoppThemeProvider } from "./chopp-theme-context";
-import { ChoppProtectedRoute, ChoppSnackbarStack } from "../components";
+import { ChoppSnackbarStack } from "../components";
 
 export const ChoppGlobalProvider = ({
   children,
@@ -9,9 +9,7 @@ export const ChoppGlobalProvider = ({
   return (
     <AuthProvider>
       <ChoppThemeProvider>
-        <ChoppProtectedRoute>
-          <ChoppSnackbarStack>{children}</ChoppSnackbarStack>
-        </ChoppProtectedRoute>
+        <ChoppSnackbarStack>{children}</ChoppSnackbarStack>
       </ChoppThemeProvider>
     </AuthProvider>
   );

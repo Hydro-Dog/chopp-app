@@ -5,9 +5,6 @@ import {
   UserAuthorization,
   UserLoginDTO,
   UserRegisterDTO,
-  //   UserAuthorization,
-  //   UserLoginDTO,
-  //   UserRegisterDTO,
 } from "./types";
 
 import { axiosDefault, axiosPrivate } from "@/services";
@@ -63,7 +60,7 @@ export const createUser = createAsyncThunk<
   { rejectValue: ErrorResponse }
 >("/createUser", async (data, thunkAPI) => {
   try {
-    const response = await axiosDefault.post<User>(`/user/create`, data);
+    const response = await axiosDefault.post<User>(`/auth/registration`, data);
     return response.data;
   } catch (error) {
     console.log("axios error: ", error);
@@ -84,7 +81,7 @@ export const login = createAsyncThunk<
 >("/loginUser", async (userData, thunkAPI) => {
   try {
     const response = await axiosDefault.post<UserAuthorization>(
-      `/login`,
+      `/auth/login`,
       userData
     );
     return response.data;

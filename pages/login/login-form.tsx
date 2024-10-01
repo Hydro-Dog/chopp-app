@@ -83,7 +83,7 @@ export const LoginForm = () => {
         />
       </ChoppFormField>
 
-      <ChoppFormField errorMessage={errors.password?.message}>
+      <ChoppFormField errorMessage={errors.password?.message} styles={{width: ''}}>
         <Controller
           control={control}
           name="password"

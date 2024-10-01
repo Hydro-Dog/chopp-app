@@ -4,6 +4,7 @@ import { Tabs } from "expo-router";
 
 import { TabBarIcon } from "@/pages/navigation/TabBarIcon";
 import { useChoppTheme } from "@/shared";
+import { View } from "react-native";
 
 export default function TabLayout() {
   const { theme } = useChoppTheme();
@@ -14,6 +15,11 @@ export default function TabLayout() {
       screenOptions={{
         tabBarActiveTintColor: theme.colors.primary,
         headerShown: false,
+        tabBarStyle: {
+          height: 90, // Adjust the height here
+          paddingBottom: 30, // Adjust padding if needed
+          paddingTop: 0, // Optional padding to make icons/text centered
+        },
       }}
     >
       <Tabs.Screen
@@ -52,7 +58,7 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="dev"
         options={{
           title: "Dev",
@@ -63,7 +69,7 @@ export default function TabLayout() {
             />
           ),
         }}
-      />
+      /> */}
       <Tabs.Screen
         name="logout"
         options={{

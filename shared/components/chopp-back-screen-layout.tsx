@@ -5,6 +5,7 @@ import { ActivityIndicator } from "react-native-paper";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
 import { ChoppBackButton, useChoppTheme } from "@/shared";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 type Props = {
   showLogo?: boolean;
@@ -25,27 +26,32 @@ export default function ChoppBackScreenLayout({
   const { theme } = useChoppTheme();
 
   return (
-    <View style={styles.container}>
-      {showLogo && customLogo ? (
-        customLogo
-      ) : showLogo ? (
-        <Image style={styles.logo} source={theme.dark ? LogoDark : LogoLight} />
-      ) : (
-        <></>
-      )}
-      {showBackButton && <ChoppBackButton style={styles.backButton} />}
-      <View style={{ ...styles.content, ...containerStyles }}>
-        {loading ? (
-          <ActivityIndicator
-            style={{ marginTop: 20 }}
-            animating={true}
-            color={theme.colors.primary}
+    <KeyboardAwareScrollView>
+      <View style={styles.container}>
+        {showLogo && customLogo ? (
+          customLogo
+        ) : showLogo ? (
+          <Image
+            style={styles.logo}
+            source={theme.dark ? LogoDark : LogoLight}
           />
         ) : (
-          children
+          <></>
         )}
+        {showBackButton && <ChoppBackButton style={styles.backButton} />}
+        <View style={{ ...styles.content, ...containerStyles }}>
+          {loading ? (
+            <ActivityIndicator
+              style={{ marginTop: 20 }}
+              animating={true}
+              color={theme.colors.primary}
+            />
+          ) : (
+            children
+          )}
+        </View>
       </View>
-    </View>
+    </KeyboardAwareScrollView>
   );
 }
 
