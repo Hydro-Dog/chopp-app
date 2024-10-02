@@ -34,7 +34,6 @@ const wsMiddleware: Middleware = (store) => {
         };
 
         socket.onmessage = (event) => {
-          console.log('onmessage')
           const data =
             typeof event.data === "object"
               ? JSON.parse(event.data)

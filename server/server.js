@@ -19,6 +19,71 @@ const DEFAULT_USER = {
   phoneNumber: "8-989-898-98-98",
 };
 
+const CHAT_HISTORY = [
+  {
+    type: "supportMessage",
+    message: "Hello! How can I help you today?",
+    timeStamp: new Date().valueOf() - 100000,
+  },
+  {
+    type: "userMessage",
+    message: "I am having trouble logging in.",
+    timeStamp: new Date().valueOf() - 95000,
+  },
+  {
+    type: "supportMessage",
+    message: "Have you tried resetting your password?",
+    timeStamp: new Date().valueOf() - 90000,
+  },
+  {
+    type: "userMessage",
+    message: "Yes, but it didn't work.",
+    timeStamp: new Date().valueOf() - 85000,
+  },
+  {
+    type: "supportMessage",
+    message: "Can you please provide your registered email address?",
+    timeStamp: new Date().valueOf() - 80000,
+  },
+  {
+    type: "userMessage",
+    message: "Sure, it's example@example.com.",
+    timeStamp: new Date().valueOf() - 75000,
+  },
+  {
+    type: "supportMessage",
+    message:
+      "Thank you, I will reset your password manually. Please check your email shortly.",
+    timeStamp: new Date().valueOf() - 70000,
+  },
+  {
+    type: "userMessage",
+    message: "Received the reset link, trying now.",
+    timeStamp: new Date().valueOf() - 65000,
+  },
+  {
+    type: "supportMessage",
+    message: "Great! Let me know if it works.",
+    timeStamp: new Date().valueOf() - 60000,
+  },
+  {
+    type: "userMessage",
+    message: "It worked, thanks!",
+    timeStamp: new Date().valueOf() - 55000,
+  },
+  {
+    type: "supportMessage",
+    message:
+      "You're welcome! If you have any more questions, feel free to ask.",
+    timeStamp: new Date().valueOf() - 50000,
+  },
+  {
+    type: "userMessage",
+    message: "Will do. Have a great day!",
+    timeStamp: new Date().valueOf() - 45000,
+  },
+];
+
 app.use(cors());
 app.use(express.json());
 
@@ -61,7 +126,20 @@ wss.on("connection", function connection(ws) {
       );
     }
 
-    console.log();
+    if (
+      receivedData.type === "chatHistory" &&
+      receivedData.code === "getHistory"
+    ) {
+      console.log("Отправляем историю сообщений");
+      const response = {
+        type: "chatHistory",
+        payload: CHAT_HISTORY,
+        timestamp: new Date().valueOf(),
+      };
+
+      ws.send(JSON.stringify(response));
+    }
+
     if (receivedData.type === "callStatus" && receivedData.code === "call") {
       ws.send(
         JSON.stringify({
@@ -110,7 +188,6 @@ wss.on("connection", function connection(ws) {
           })
         );
       }, 7000);
-
     }
 
     if (
@@ -125,53 +202,7 @@ wss.on("connection", function connection(ws) {
           message: "idle",
           timeStamp: new Date().valueOf(),
         })
-
-        // JSON.stringify({
-        //   type: "callStatus",
-        //   message: "processing",
-        //   timeStamp: new Date().valueOf(),
-        // })
       );
-
-      // setTimeout(() => {
-      //   ws.send(
-      //     JSON.stringify({
-      //       type: "callStatus",
-      //       message: "accepted",
-      //       timeStamp: new Date().valueOf(),
-      //     })
-      //   );
-      // }, 4000);
-
-      // setTimeout(() => {
-      //   ws.send(
-      //     JSON.stringify({
-      //       type: "callStatus",
-      //       message: "onTheWay",
-      //       timeStamp: new Date().valueOf(),
-      //     })
-      //   );
-      // }, 6000);
-
-      // setTimeout(() => {
-      //   ws.send(
-      //     JSON.stringify({
-      //       type: "callStatus",
-      //       message: "onTheSpot",
-      //       timeStamp: new Date().valueOf(),
-      //     })
-      //   );
-      // }, 8000);
-
-      // setTimeout(() => {
-      //   ws.send(
-      //     JSON.stringify({
-      //       type: "callStatus",
-      //       message: "accepted",
-      //       timeStamp: new Date().valueOf(),
-      //     })
-      //   );
-      // }, 10000);
     }
   });
 

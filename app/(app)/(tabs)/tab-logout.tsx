@@ -3,10 +3,10 @@ import { StyleSheet, View } from "react-native";
 import { Button } from "react-native-paper";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
-import { ChoppThemedText, clearStorage, useChoppTheme } from "@/shared";
+import { ChoppThemedText, useChoppTheme } from "@/shared";
 import ChoppBackScreenLayout from "@/shared/components/chopp-back-screen-layout";
 
-export default function LogoutPage() {
+export default function TabLogout() {
   const router = useRouter();
   const { theme } = useChoppTheme();
   const { t } = useTranslation();

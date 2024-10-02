@@ -4,10 +4,9 @@ import { Button, Card, Chip } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { t } from "i18next";
 import { useBoolean } from "usehooks-ts";
+import BankMockNoBgPng from "@/assets/bank-mock-np-bg.png";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
-import BankMockPng from "@/assets/bank-mock.png";
-import BankMockNoBgPng from "@/assets/bank-mock-np-bg.png";
 
 import {
   ChoppDialog,
@@ -19,7 +18,7 @@ import {
 } from "@/shared";
 import { ICON_SIZE } from "@/shared/enums";
 
-export default function TabSettingsScreen() {
+export default function TabSettings() {
   const { theme } = useChoppTheme();
   const router = useRouter();
   const { push } = useChoppSnackbar();

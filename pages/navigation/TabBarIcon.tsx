@@ -4,6 +4,8 @@ import { type ComponentProps } from "react";
 import { type IconProps } from "@expo/vector-icons/build/createIconSet";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
+
+//TODO: выяснить че это за хуйня (компонент)
 export function TabBarIcon({
   style,
   ...props

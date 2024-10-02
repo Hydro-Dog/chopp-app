@@ -35,7 +35,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="chat"
+        name="tab-support-chat"
         options={{
           title: t("supportPage"),
           tabBarIcon: ({ color, focused }) => (
@@ -47,7 +47,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="settings"
+        name="tab-settings"
         options={{
           title: t("settingsPage"),
           tabBarIcon: ({ color, focused }) => (
@@ -71,7 +71,7 @@ export default function TabLayout() {
         }}
       /> */}
       <Tabs.Screen
-        name="logout"
+        name="tab-logout"
         options={{
           title: t("logoutPage"),
           tabBarIcon: ({ color, focused }) => (

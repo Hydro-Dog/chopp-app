@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useBoolean } from "usehooks-ts";
 import {
   ChoppBigRoundButton,
-  ChoppCallStatusScreen,
   ChoppDialog,
   ChoppThemedText,
   createWsMessage,
@@ -14,6 +13,7 @@ import {
 import { useFilterWsMessages } from "@/shared/hooks";
 import { wsSend } from "@/store/slices/ws-slice";
 import { AppDispatch, RootState } from "@/store/store";
+import { ChoppCallStatusScreen } from "@/pages/main";
 
 export default function TabMainScreen() {
   const { t } = useTranslation();

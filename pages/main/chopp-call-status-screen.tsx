@@ -4,8 +4,8 @@ import { View, StyleSheet, Animated } from "react-native";
 import { Card, Avatar } from "react-native-paper";
 import { useSelector } from "react-redux";
 import { TFunction } from "i18next";
-import { useChoppTheme } from "../context";
-import { useFilterWsMessages } from "../hooks";
+import { useChoppTheme } from "../../shared/context";
+import { useFilterWsMessages } from "../../shared/hooks";
 
 const getStepsMap = (t: TFunction<"translation", undefined>) => ({
   processing: {
