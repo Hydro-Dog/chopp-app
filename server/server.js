@@ -82,6 +82,22 @@ const CHAT_HISTORY = [
     message: "Will do. Have a great day!",
     timeStamp: new Date().valueOf() - 45000,
   },
+  {
+    type: "userMessage",
+    message: "It worked, thanks!",
+    timeStamp: new Date().valueOf() - 55000,
+  },
+  {
+    type: "supportMessage",
+    message:
+      "You're welcome! If you have any more questions, feel free to ask.",
+    timeStamp: new Date().valueOf() - 50000,
+  },
+  {
+    type: "userMessage",
+    message: "Will do. Have a great day!",
+    timeStamp: new Date().valueOf() - 45000,
+  },
 ];
 
 app.use(cors());

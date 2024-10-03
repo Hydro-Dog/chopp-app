@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, SafeAreaView } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import {
+  StyleSheet,
+  View,
+  SafeAreaView,
+  FlatList,
+  Platform,
+  Keyboard,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+} from "react-native";
 import { IconButton, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import ChatHistory from "@/pages/supportChat/support-chat-history";
 import {
-  ChoppIcon,
   ChoppThemedText,
   createWsMessage,
   useChoppTheme,
   WS_MESSAGE_TYPE,
   WsMessage,
 } from "@/shared";
-import { ICON_SIZE } from "@/shared/enums";
 import { useFilterWsMessages } from "@/shared/hooks";
 import { wsSend } from "@/store/slices/ws-slice";
 import { AppDispatch, RootState } from "@/store/store";
@@ -27,7 +32,7 @@ export default function TabSupportChat() {
 
   const { wsConnected } = useSelector((state: RootState) => state.ws);
   const { lastMessage: chatHistory } = useFilterWsMessages(
-    WS_MESSAGE_TYPE.CHAT_HISTORY
+    WS_MESSAGE_TYPE.CHAT_HISTORY,
   );
 
   useEffect(() => {
@@ -37,8 +42,8 @@ export default function TabSupportChat() {
           createWsMessage({
             type: WS_MESSAGE_TYPE.CHAT_HISTORY,
             code: "getHistory",
-          })
-        )
+          }),
+        ),
       );
     }
   }, [dispatch, wsConnected]);
@@ -55,33 +60,52 @@ export default function TabSupportChat() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAwareScrollView
-        style={styles.keyboardAwareContainer}
-        extraScrollHeight={10}
-        enableOnAndroid={true}
-        keyboardShouldPersistTaps="handled"
+      <FlatList
+        data={messages}
+        renderItem={({ item: msg }) => (
+          <View
+            key={Math.random()}
+            style={[
+              styles.messageContainer,
+              msg.type === "userMessage"
+                ? { backgroundColor: theme.colors.primary }
+                : { backgroundColor: theme.colors.secondary },
+            ]}
+          >
+            <ChoppThemedText style={styles.messageText}>
+              {msg.message}
+            </ChoppThemedText>
+            <ChoppThemedText style={styles.timeText}>
+              {new Date(msg.timeStamp).toLocaleTimeString()}
+            </ChoppThemedText>
+          </View>
+        )}
+        keyExtractor={(item) => item.id}
+      />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.inputContainer}
       >
-        <View style={styles.chatContainer}>
-          <ChatHistory messages={messages} />
-        </View>
-        <View style={styles.inputContainer}>
-          <TextInput
-            multiline
-            value={text}
-            onChangeText={setText}
-            mode="outlined"
-            numberOfLines={1}
-            style={styles.input}
-          />
-          <IconButton
-            disabled={!text}
-            icon="send"
-            iconColor={theme.colors.primary}
-            size={32}
-            onPress={onSend}
-          />
-        </View>
-      </KeyboardAwareScrollView>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.inner}>
+            <TextInput
+              multiline
+              value={text}
+              onChangeText={setText}
+              mode="outlined"
+              numberOfLines={1}
+              style={styles.input}
+            />
+            <IconButton
+              disabled={!text}
+              icon="send"
+              iconColor={theme.colors.primary}
+              size={32}
+              onPress={onSend}
+            />
+          </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
@@ -90,18 +114,46 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  keyboardAwareContainer: {
-    flex: 1,
-  },
-  chatContainer: {
-    flex: 1,
-  },
+  keyboardAwareContainer: {},
+  chatContainer: {},
   inputContainer: {
     flexDirection: "row",
     padding: 10,
   },
   input: {
     flex: 1,
-    marginRight: 10,
+  },
+  messageContainer: {
+    borderRadius: 20,
+    padding: 10,
+    marginVertical: 5,
+  },
+  messageText: {
+    color: "white",
+  },
+  timeText: {
+    alignSelf: "flex-end",
+    fontSize: 12,
+    color: "white",
+  },
+
+  inner: {
+    padding: 24,
+    flex: 1,
+    justifyContent: "space-around",
+  },
+  header: {
+    fontSize: 36,
+    marginBottom: 48,
+  },
+  textInput: {
+    height: 40,
+    borderColor: "#000000",
+    borderBottomWidth: 1,
+    marginBottom: 36,
+  },
+  btnContainer: {
+    backgroundColor: "white",
+    marginTop: 12,
   },
 });
