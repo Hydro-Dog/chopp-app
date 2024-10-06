@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   StyleSheet,
   View,
   SafeAreaView,
-  FlatList,
   Platform,
   Keyboard,
   KeyboardAvoidingView,
@@ -11,6 +10,7 @@ import {
 } from "react-native";
 import { IconButton, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
+import { ChatHistory } from "@/pages/supportChat";
 import {
   ChoppThemedText,
   createWsMessage,
@@ -22,18 +22,34 @@ import { useFilterWsMessages } from "@/shared/hooks";
 import { wsSend } from "@/store/slices/ws-slice";
 import { AppDispatch, RootState } from "@/store/store";
 
-// TODO: сейчас поле воода текста - это часть общего вью, а надо чтобы оно было зафиксированно внизу
-
 export default function TabSupportChat() {
   const { theme } = useChoppTheme();
   const [text, setText] = useState("");
   const dispatch = useDispatch<AppDispatch>();
   const [messages, setMessages] = useState([] as WsMessage[]);
-
   const { wsConnected } = useSelector((state: RootState) => state.ws);
   const { lastMessage: chatHistory } = useFilterWsMessages(
-    WS_MESSAGE_TYPE.CHAT_HISTORY,
+    WS_MESSAGE_TYPE.CHAT_HISTORY
   );
+  const { lastMessage: typingStatus } = useFilterWsMessages(
+    WS_MESSAGE_TYPE.TYPING
+  );
+  const { lastMessage: currentMessage } = useFilterWsMessages(
+    WS_MESSAGE_TYPE.MESSAGE
+  );
+
+  console.log("typingStatus: ", typingStatus);
+
+  useEffect(() => {
+    console.log("currentMessage: ", currentMessage);
+    if(currentMessage) {
+
+      setMessages((messages) => [...messages, currentMessage]);
+      setTimeout(() => {
+        flatListRef.current.scrollToEnd({ animated: true });
+      }, 100);
+    }
+  }, [currentMessage]);
 
   useEffect(() => {
     if (wsConnected) {
@@ -42,8 +58,8 @@ export default function TabSupportChat() {
           createWsMessage({
             type: WS_MESSAGE_TYPE.CHAT_HISTORY,
             code: "getHistory",
-          }),
-        ),
+          })
+        )
       );
     }
   }, [dispatch, wsConnected]);
@@ -56,39 +72,45 @@ export default function TabSupportChat() {
 
   const onSend = () => {
     setText("");
+    dispatch(
+      wsSend(
+        createWsMessage({
+          type: WS_MESSAGE_TYPE.MESSAGE,
+          code: "newMessage",
+          message: text,
+        })
+      )
+    );
   };
+
+  const flatListRef = useRef(null);
+
+  useEffect(() => {
+    if (flatListRef.current) {
+      setTimeout(() => {
+        flatListRef.current.scrollToEnd({ animated: true });
+      }, 100);
+    }
+  }, [typingStatus?.code]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <FlatList
-        data={messages}
-        renderItem={({ item: msg }) => (
-          <View
-            key={Math.random()}
-            style={[
-              styles.messageContainer,
-              msg.type === "userMessage"
-                ? { backgroundColor: theme.colors.primary }
-                : { backgroundColor: theme.colors.secondary },
-            ]}
-          >
-            <ChoppThemedText style={styles.messageText}>
-              {msg.message}
-            </ChoppThemedText>
-            <ChoppThemedText style={styles.timeText}>
-              {new Date(msg.timeStamp).toLocaleTimeString()}
-            </ChoppThemedText>
-          </View>
-        )}
-        keyExtractor={(item) => item.id}
+      <ChatHistory
+        ref={flatListRef}
+        messages={messages}
+        isTyping={typingStatus?.code === "typingStarted"}
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.inputContainer}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.inner}>
+          <View style={styles.inputContainer}>
             <TextInput
+              onFocus={() => {
+                setTimeout(() => {
+                  flatListRef.current.scrollToEnd({ animated: true });
+                }, 100);
+              }}
               multiline
               value={text}
               onChangeText={setText}
@@ -114,11 +136,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  inputContainer2: {
+    // flexDirection: "row",
+    // padding: 10,
+    // width: '100%'
+  },
   keyboardAwareContainer: {},
   chatContainer: {},
   inputContainer: {
     flexDirection: "row",
     padding: 10,
+    width: "100%",
   },
   input: {
     flex: 1,

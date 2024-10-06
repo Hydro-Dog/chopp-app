@@ -21,7 +21,7 @@ const DEFAULT_USER = {
 
 const CHAT_HISTORY = [
   {
-    type: "supportMessage",
+    type: "message",
     message: "Hello! How can I help you today?",
     timeStamp: new Date().valueOf() - 100000,
   },
@@ -31,7 +31,7 @@ const CHAT_HISTORY = [
     timeStamp: new Date().valueOf() - 95000,
   },
   {
-    type: "supportMessage",
+    type: "message",
     message: "Have you tried resetting your password?",
     timeStamp: new Date().valueOf() - 90000,
   },
@@ -41,7 +41,7 @@ const CHAT_HISTORY = [
     timeStamp: new Date().valueOf() - 85000,
   },
   {
-    type: "supportMessage",
+    type: "message",
     message: "Can you please provide your registered email address?",
     timeStamp: new Date().valueOf() - 80000,
   },
@@ -51,7 +51,7 @@ const CHAT_HISTORY = [
     timeStamp: new Date().valueOf() - 75000,
   },
   {
-    type: "supportMessage",
+    type: "message",
     message:
       "Thank you, I will reset your password manually. Please check your email shortly.",
     timeStamp: new Date().valueOf() - 70000,
@@ -62,7 +62,7 @@ const CHAT_HISTORY = [
     timeStamp: new Date().valueOf() - 65000,
   },
   {
-    type: "supportMessage",
+    type: "message",
     message: "Great! Let me know if it works.",
     timeStamp: new Date().valueOf() - 60000,
   },
@@ -72,23 +72,7 @@ const CHAT_HISTORY = [
     timeStamp: new Date().valueOf() - 55000,
   },
   {
-    type: "supportMessage",
-    message:
-      "You're welcome! If you have any more questions, feel free to ask.",
-    timeStamp: new Date().valueOf() - 50000,
-  },
-  {
-    type: "userMessage",
-    message: "Will do. Have a great day!",
-    timeStamp: new Date().valueOf() - 45000,
-  },
-  {
-    type: "userMessage",
-    message: "It worked, thanks!",
-    timeStamp: new Date().valueOf() - 55000,
-  },
-  {
-    type: "supportMessage",
+    type: "message",
     message:
       "You're welcome! If you have any more questions, feel free to ask.",
     timeStamp: new Date().valueOf() - 50000,
@@ -146,7 +130,7 @@ wss.on("connection", function connection(ws) {
       receivedData.type === "chatHistory" &&
       receivedData.code === "getHistory"
     ) {
-      console.log("Отправляем историю сообщений");
+      console.log("\u041e\u0442\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c \u0438\u0441\u0442\u043e\u0440\u0438\u044e \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0439");
       const response = {
         type: "chatHistory",
         payload: CHAT_HISTORY,
@@ -154,6 +138,41 @@ wss.on("connection", function connection(ws) {
       };
 
       ws.send(JSON.stringify(response));
+    }
+
+    if (receivedData.type === "message" && receivedData.code === "newMessage") {
+      // Отправка typingStarted
+      ws.send(
+        JSON.stringify({
+          code: "typingStarted",
+          message: receivedData.message,
+          timeStamp: receivedData.timeStamp,
+          type: "typing",
+        })
+      );
+
+      // Отправка typingStopped через 2 секунды
+      setTimeout(() => {
+        ws.send(
+          JSON.stringify({
+            code: "typingStopped",
+            message: receivedData.message,
+            timeStamp: receivedData.timeStamp,
+            type: "typing",
+          })
+        );
+      }, 3000);
+
+      // Отправка окончательного сообщения через 4 секунды
+      setTimeout(() => {
+        ws.send(
+          JSON.stringify({
+            type: "message",
+            message: "Thank you for your message. We are looking into it.",
+            timeStamp: new Date().valueOf(),
+          })
+        );
+      }, 6000);
     }
 
     if (receivedData.type === "callStatus" && receivedData.code === "call") {
