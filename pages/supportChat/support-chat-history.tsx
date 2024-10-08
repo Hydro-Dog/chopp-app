@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet, FlatList, Animated } from "react-native";
 import { ChoppThemedText, useChoppTheme, WsMessage } from "@/shared"; // Убедитесь в правильном импорте темы
 
 type Props = {
@@ -11,6 +11,7 @@ export const ChatHistory = forwardRef<FlatList<WsMessage>, Props>(
   ({ messages, isTyping }, ref) => {
     const { theme } = useChoppTheme();
     const [dots, setDots] = useState("");
+    const fadeAnim = useState(() => new Animated.Value(0))[0];
 
     useEffect(() => {
       if (isTyping) {
@@ -23,42 +24,73 @@ export const ChatHistory = forwardRef<FlatList<WsMessage>, Props>(
       }
     }, [isTyping]);
 
+    useEffect(() => {
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+    }, [messages]);
+
     return (
       <FlatList
         ref={ref}
         data={messages}
         ListFooterComponent={
-          isTyping ? (
-            <ChoppThemedText style={{ width: "100px" }}>
-              Печатает{dots}
-            </ChoppThemedText>
-          ) : (
-            <></>
-          )
+          isTyping ? <ChoppThemedText>Печатает{dots}</ChoppThemedText> : <></>
         }
         ListFooterComponentStyle={{
           display: "flex",
           justifyContent: "flex-end",
           flexDirection: "row",
+          marginRight: 16,
         }}
         renderItem={({ item: msg }) => (
-          <View
-            style={[
-              styles.messageContainer,
-              msg.type === "userMessage"
-                ? { backgroundColor: theme.colors.primary }
-                : { backgroundColor: theme.colors.secondary },
-            ]}
+          <Animated.View
+            style={{
+              opacity: fadeAnim,
+              transform: [
+                {
+                  scale: fadeAnim.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0.9, 1],
+                  }),
+                },
+              ],
+            }}
           >
-            <ChoppThemedText style={styles.messageText}>
-              {msg.message}
-            </ChoppThemedText>
-            <ChoppThemedText style={styles.timeText}>
+            <View
+              style={[
+                styles.messageContainer,
+                msg.payload?.sender === "support"
+                  ? {
+                      alignSelf: "flex-start",
+                      marginRight: 40,
+                      backgroundColor: theme.colors.primary,
+                    }
+                  : {
+                      alignSelf: "flex-end",
+                      marginLeft: 40,
+                      backgroundColor: theme.colors.secondary,
+                    },
+              ]}
+            >
+              <ChoppThemedText style={styles.messageText}>
+                {msg.message}
+              </ChoppThemedText>
+            </View>
+            <ChoppThemedText
+              style={{
+                ...styles.timeText,
+                alignSelf:
+                  msg.payload?.sender === "support" ? "flex-start" : "flex-end",
+              }}
+            >
               {new Date(msg.timeStamp).toLocaleTimeString()}
             </ChoppThemedText>
-          </View>
+          </Animated.View>
         )}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.timestamp}
       />
     );
   }
@@ -83,15 +115,15 @@ const styles = StyleSheet.create({
   messageContainer: {
     borderRadius: 20,
     padding: 10,
-    marginVertical: 5,
+    marginHorizontal: 8,
   },
   messageText: {
     color: "white",
   },
   timeText: {
-    alignSelf: "flex-end",
+    marginHorizontal: 10,
+    marginBottom: 8,
     fontSize: 12,
-    color: "white",
   },
 
   inner: {

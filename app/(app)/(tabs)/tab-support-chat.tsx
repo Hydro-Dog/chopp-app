@@ -38,12 +38,8 @@ export default function TabSupportChat() {
     WS_MESSAGE_TYPE.MESSAGE
   );
 
-  console.log("typingStatus: ", typingStatus);
-
   useEffect(() => {
-    console.log("currentMessage: ", currentMessage);
-    if(currentMessage) {
-
+    if (currentMessage) {
       setMessages((messages) => [...messages, currentMessage]);
       setTimeout(() => {
         flatListRef.current.scrollToEnd({ animated: true });
@@ -71,16 +67,14 @@ export default function TabSupportChat() {
   }, [chatHistory]);
 
   const onSend = () => {
+    const newMessage = createWsMessage({
+      type: WS_MESSAGE_TYPE.MESSAGE,
+      message: text,
+      payload: { sender: "user" },
+    });
     setText("");
-    dispatch(
-      wsSend(
-        createWsMessage({
-          type: WS_MESSAGE_TYPE.MESSAGE,
-          code: "newMessage",
-          message: text,
-        })
-      )
-    );
+    setMessages((messages) => [...messages, newMessage]);
+    dispatch(wsSend(newMessage));
   };
 
   const flatListRef = useRef(null);
