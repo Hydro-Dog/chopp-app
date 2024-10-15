@@ -72,7 +72,7 @@ export default function TabSettings() {
               </Card.Actions>
             </Card.Content>
           </Card>
-          <Card style={styles.card}>
+          {/* <Card style={styles.card}>
             <Card.Content>
               <ChoppIcon
                 size={ICON_SIZE.l}
@@ -84,7 +84,7 @@ export default function TabSettings() {
             <Card.Actions>
               <Button style={styles.cardAction}>{t("details")}</Button>
             </Card.Actions>
-          </Card>
+          </Card> */}
         </View>
         <View style={styles.row}>
           <Card style={styles.card}>
