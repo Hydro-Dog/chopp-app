@@ -69,4 +69,5 @@ export const ru = {
     invalidEmail: "Некорректный email",
     mustAccept: "Необходимо принять условия",
   },
+  typing: "Печатает",
 };

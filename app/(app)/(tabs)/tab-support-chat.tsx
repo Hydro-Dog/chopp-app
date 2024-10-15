@@ -10,9 +10,8 @@ import {
 } from "react-native";
 import { IconButton, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import { ChatHistory } from "@/pages/supportChat";
+import { SupportChat } from "@/pages/supportChat";
 import {
-  ChoppThemedText,
   createWsMessage,
   useChoppTheme,
   WS_MESSAGE_TYPE,
@@ -24,18 +23,19 @@ import { AppDispatch, RootState } from "@/store/store";
 
 export default function TabSupportChat() {
   const { theme } = useChoppTheme();
-  const [text, setText] = useState("");
-  const dispatch = useDispatch<AppDispatch>();
+  const flatListRef = useRef(null);
+  const [messageText, setMessageText] = useState("");
   const [messages, setMessages] = useState([] as WsMessage[]);
+  const dispatch = useDispatch<AppDispatch>();
   const { wsConnected } = useSelector((state: RootState) => state.ws);
   const { lastMessage: chatHistory } = useFilterWsMessages(
-    WS_MESSAGE_TYPE.CHAT_HISTORY
+    WS_MESSAGE_TYPE.CHAT_HISTORY,
   );
   const { lastMessage: typingStatus } = useFilterWsMessages(
-    WS_MESSAGE_TYPE.TYPING
+    WS_MESSAGE_TYPE.TYPING,
   );
   const { lastMessage: currentMessage } = useFilterWsMessages(
-    WS_MESSAGE_TYPE.MESSAGE
+    WS_MESSAGE_TYPE.MESSAGE,
   );
 
   useEffect(() => {
@@ -54,8 +54,8 @@ export default function TabSupportChat() {
           createWsMessage({
             type: WS_MESSAGE_TYPE.CHAT_HISTORY,
             code: "getHistory",
-          })
-        )
+          }),
+        ),
       );
     }
   }, [dispatch, wsConnected]);
@@ -69,15 +69,13 @@ export default function TabSupportChat() {
   const onSend = () => {
     const newMessage = createWsMessage({
       type: WS_MESSAGE_TYPE.MESSAGE,
-      message: text,
+      message: messageText,
       payload: { sender: "user" },
     });
-    setText("");
+    setMessageText("");
     setMessages((messages) => [...messages, newMessage]);
     dispatch(wsSend(newMessage));
   };
-
-  const flatListRef = useRef(null);
 
   useEffect(() => {
     if (flatListRef.current) {
@@ -89,7 +87,7 @@ export default function TabSupportChat() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <ChatHistory
+      <SupportChat
         ref={flatListRef}
         messages={messages}
         isTyping={typingStatus?.code === "typingStarted"}
@@ -106,14 +104,14 @@ export default function TabSupportChat() {
                 }, 100);
               }}
               multiline
-              value={text}
-              onChangeText={setText}
+              value={messageText}
+              onChangeText={setMessageText}
               mode="outlined"
               numberOfLines={1}
               style={styles.input}
             />
             <IconButton
-              disabled={!text}
+              disabled={!messageText}
               icon="send"
               iconColor={theme.colors.primary}
               size={32}
@@ -130,52 +128,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  inputContainer2: {
-    // flexDirection: "row",
-    // padding: 10,
-    // width: '100%'
-  },
-  keyboardAwareContainer: {},
-  chatContainer: {},
   inputContainer: {
     flexDirection: "row",
-    padding: 10,
+    padding: 20,
     width: "100%",
   },
   input: {
     flex: 1,
-  },
-  messageContainer: {
-    borderRadius: 20,
-    padding: 10,
-    marginVertical: 5,
-  },
-  messageText: {
-    color: "white",
-  },
-  timeText: {
-    alignSelf: "flex-end",
-    fontSize: 12,
-    color: "white",
-  },
-
-  inner: {
-    padding: 24,
-    flex: 1,
-    justifyContent: "space-around",
-  },
-  header: {
-    fontSize: 36,
-    marginBottom: 48,
-  },
-  textInput: {
-    height: 40,
-    borderColor: "#000000",
-    borderBottomWidth: 1,
-    marginBottom: 36,
-  },
-  btnContainer: {
-    backgroundColor: "white",
-    marginTop: 12,
   },
 });

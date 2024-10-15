@@ -1,1 +1,1 @@
-export * from "./support-chat-history";
+export * from "./support-chat";

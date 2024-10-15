@@ -1,17 +1,19 @@
 import React, { forwardRef, useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, Animated } from "react-native";
-import { ChoppThemedText, useChoppTheme, WsMessage } from "@/shared"; // Убедитесь в правильном импорте темы
+import { useTranslation } from "react-i18next";
+import { View, StyleSheet, FlatList, Animated } from "react-native";
+import { ChoppThemedText, useChoppTheme, WsMessage } from "@/shared";
 
 type Props = {
   messages?: WsMessage[];
   isTyping?: boolean;
 };
 
-export const ChatHistory = forwardRef<FlatList<WsMessage>, Props>(
+export const SupportChat = forwardRef<FlatList<WsMessage>, Props>(
   ({ messages, isTyping }, ref) => {
     const { theme } = useChoppTheme();
     const [dots, setDots] = useState("");
     const fadeAnim = useState(() => new Animated.Value(0))[0];
+    const { t } = useTranslation();
 
     useEffect(() => {
       if (isTyping) {
@@ -37,17 +39,20 @@ export const ChatHistory = forwardRef<FlatList<WsMessage>, Props>(
         ref={ref}
         data={messages}
         ListFooterComponent={
-          isTyping ? <ChoppThemedText>Печатает{dots}</ChoppThemedText> : <></>
+          isTyping ? (
+            <ChoppThemedText>
+              {t("typing")}
+              {dots}
+            </ChoppThemedText>
+          ) : (
+            <></>
+          )
         }
-        ListFooterComponentStyle={{
-          display: "flex",
-          justifyContent: "flex-end",
-          flexDirection: "row",
-          marginRight: 16,
-        }}
+        ListFooterComponentStyle={styles.listFooter}
         renderItem={({ item: msg }) => (
           <Animated.View
             style={{
+              paddingHorizontal: 8,
               opacity: fadeAnim,
               transform: [
                 {
@@ -93,24 +98,20 @@ export const ChatHistory = forwardRef<FlatList<WsMessage>, Props>(
         keyExtractor={(item) => item.timestamp}
       />
     );
-  }
+  },
 );
 
-ChatHistory.displayName = "ChatHistory";
+SupportChat.displayName = "SupportChat";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  keyboardAwareContainer: {},
-  chatContainer: {},
-  inputContainer: {
+  listFooter: {
+    display: "flex",
+    justifyContent: "flex-end",
     flexDirection: "row",
-    padding: 10,
-    width: "100%",
-  },
-  input: {
-    flex: 1,
+    marginRight: 16,
   },
   messageContainer: {
     borderRadius: 20,
@@ -124,25 +125,5 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     marginBottom: 8,
     fontSize: 12,
-  },
-
-  inner: {
-    padding: 24,
-    flex: 1,
-    justifyContent: "space-around",
-  },
-  header: {
-    fontSize: 36,
-    marginBottom: 48,
-  },
-  textInput: {
-    height: 40,
-    borderColor: "#000000",
-    borderBottomWidth: 1,
-    marginBottom: 36,
-  },
-  btnContainer: {
-    backgroundColor: "white",
-    marginTop: 12,
   },
 });
