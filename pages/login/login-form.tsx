@@ -46,8 +46,6 @@ export const LoginForm = () => {
   const onSubmit: SubmitHandler<LoginFormType> = async (data) => {
     try {
       const res = await dispatch(login(data)).unwrap();
-      console.log("Redirect ", res);
-      //TODO: вынести в функцию
       setAuth(res);
       addToStorage("accessToken", res.accessToken);
       addToStorage("refreshToken", res.refreshToken);

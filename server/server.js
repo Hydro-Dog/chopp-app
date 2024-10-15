@@ -3,6 +3,9 @@ const http = require("http");
 const crypto = require("crypto");
 const cors = require("cors");
 const express = require("express");
+const { faker } = require('@faker-js/faker');
+
+
 const app = express();
 const port = 4004;
 
@@ -18,6 +21,34 @@ const DEFAULT_USER = {
   password: "11111111",
   phoneNumber: "8-989-898-98-98",
 };
+
+const DEFAULT_ADMIN = {
+  email: "admin@admin.ru",
+  fullName: "Admin Adminovich",
+  password: "11111111",
+  phoneNumber: "8-989-898-98-98",
+};
+
+const generateUsers = () => {
+  const users = {};
+  // Добавление администратора
+  users["admin@admin.ru"] = DEFAULT_ADMIN;
+  users["a@a.a"] = DEFAULT_USER;
+
+  // Генерация 20 пользователей
+  for (let i = 0; i < 20; i++) {
+    const email = faker.internet.email();
+    users[email] = {
+      email: email,
+      fullName: faker.person.fullName(),
+      password: faker.internet.password(),
+      phoneNumber: faker.phone.number(),
+    };
+  }
+  return users;
+};
+
+let users = generateUsers();
 
 const CHAT_HISTORY = [
   {
@@ -104,8 +135,6 @@ app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
   next();
 });
-
-let users = { [DEFAULT_USER.email]: DEFAULT_USER };
 
 function generateTokens() {
   return {
@@ -291,6 +320,48 @@ app.post("/api/user/create", (req, res) => {
     users[email] = { ...DEFAULT_USER, email, password, tokens };
     res.status(200).json({ message: "OK" });
   }
+});
+
+app.get("/api/users", (req, res) => {
+  const { page = 1, limit = 10, search = "", sort = "fullName", order = "asc" } = req.query;
+
+  // Конвертируем page и limit в числа для обработки
+  const pageNumber = parseInt(page, 10);
+  const limitNumber = parseInt(limit, 10);
+
+  // Фильтрация пользователей по строке поиска по всем полям
+  const filteredUsers = Object.values(users).filter((user) =>
+    Object.values(user).some((value) =>
+      String(value).toLowerCase().includes(search.toLowerCase())
+    )
+  );
+
+  // Сортировка пользователей
+  const sortedUsers = filteredUsers.sort((a, b) => {
+    const valueA = a[sort] ? String(a[sort]).toLowerCase() : ''; // Обеспечиваем нормализацию данных и предотвращаем ошибки
+    const valueB = b[sort] ? String(b[sort]).toLowerCase() : '';
+    if (order === "asc") {
+      return valueA.localeCompare(valueB);
+    } else {
+      return valueB.localeCompare(valueA);
+    }
+  });
+
+  // Вычисление общего количества страниц
+  const pageCount = Math.ceil(sortedUsers.length / limitNumber);
+
+  // Получение среза пользователей для текущей страницы
+  const startIndex = (pageNumber - 1) * limitNumber;
+  const endIndex = startIndex + limitNumber;
+  const usersOnPage = sortedUsers.slice(startIndex, endIndex);
+
+  // Возвращаем данные пользователей с информацией о пагинации
+  res.json({
+    users: usersOnPage,
+    page: pageNumber,
+    totalPages: pageCount,
+    totalUsers: sortedUsers.length,
+  });
 });
 
 app.post("/api/auth/login", (req, res) => {
