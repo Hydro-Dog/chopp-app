@@ -3,8 +3,7 @@ const http = require("http");
 const crypto = require("crypto");
 const cors = require("cors");
 const express = require("express");
-const { faker } = require('@faker-js/faker');
-
+const { faker } = require("@faker-js/faker");
 
 const app = express();
 const port = 4004;
@@ -16,6 +15,7 @@ const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
 const DEFAULT_USER = {
+  id: "000",
   email: "a@a.a",
   fullName: "Ivan Pupkin",
   password: "11111111",
@@ -23,6 +23,7 @@ const DEFAULT_USER = {
 };
 
 const DEFAULT_ADMIN = {
+  id: "111",
   email: "admin@admin.ru",
   fullName: "Admin Adminovich",
   password: "11111111",
@@ -43,6 +44,7 @@ const generateUsers = () => {
       fullName: faker.person.fullName(),
       password: faker.internet.password(),
       phoneNumber: faker.phone.number(),
+      id: faker.number.float(),
     };
   }
   return users;
@@ -323,45 +325,103 @@ app.post("/api/user/create", (req, res) => {
 });
 
 app.get("/api/users", (req, res) => {
-  const { page = 1, limit = 10, search = "", sort = "fullName", order = "asc" } = req.query;
+  const {
+    page = 1,
+    limit = 10,
+    search = "",
+    sort = "fullName",
+    order = "asc",
+  } = req.query;
 
-  // Конвертируем page и limit в числа для обработки
-  const pageNumber = parseInt(page, 10);
-  const limitNumber = parseInt(limit, 10);
+  const pageNumber = parseInt(page, 10) || 1;
+  const limitNumber = parseInt(limit, 10) || 10;
 
-  // Фильтрация пользователей по строке поиска по всем полям
   const filteredUsers = Object.values(users).filter((user) =>
     Object.values(user).some((value) =>
       String(value).toLowerCase().includes(search.toLowerCase())
     )
   );
 
-  // Сортировка пользователей
   const sortedUsers = filteredUsers.sort((a, b) => {
-    const valueA = a[sort] ? String(a[sort]).toLowerCase() : ''; // Обеспечиваем нормализацию данных и предотвращаем ошибки
-    const valueB = b[sort] ? String(b[sort]).toLowerCase() : '';
-    if (order === "asc") {
-      return valueA.localeCompare(valueB);
-    } else {
-      return valueB.localeCompare(valueA);
-    }
+    const valueA = a[sort] ? String(a[sort]).toLowerCase() : "";
+    const valueB = b[sort] ? String(b[sort]).toLowerCase() : "";
+    return order === "asc"
+      ? valueA.localeCompare(valueB)
+      : valueB.localeCompare(valueA);
   });
 
-  // Вычисление общего количества страниц
-  const pageCount = Math.ceil(sortedUsers.length / limitNumber);
-
-  // Получение среза пользователей для текущей страницы
   const startIndex = (pageNumber - 1) * limitNumber;
   const endIndex = startIndex + limitNumber;
   const usersOnPage = sortedUsers.slice(startIndex, endIndex);
 
-  // Возвращаем данные пользователей с информацией о пагинации
   res.json({
-    users: usersOnPage,
-    page: pageNumber,
-    totalPages: pageCount,
-    totalUsers: sortedUsers.length,
+    items: usersOnPage,
+    pageNumber,
+    totalPages: Math.ceil(sortedUsers.length / limitNumber),
+    totalRecords: sortedUsers.length,
   });
+});
+
+
+// New fetchCallHistory endpoint with mock data
+app.get("/api/users/:userId/callHistory", (req, res) => {
+  const { userId } = req.params;
+  const {
+    page = 1,
+    limit = 10,
+    search = "",
+    sort = "date",
+    order = "asc",
+  } = req.query;
+
+  const pageNumber = parseInt(page, 10) || 1;
+  const limitNumber = parseInt(limit, 10) || 10;
+
+  // Mock call history data
+  const callHistory = Array.from({ length: 20 }).map((_, index) => ({
+    date: faker.date.recent(90).toISOString(),
+    status: randomize(["inProgress", "fulfilled", "canceled"]),
+    address: faker.address.streetAddress(),
+    comment: faker.lorem.sentence(),
+    id: faker.number.float(),
+  }));
+
+  // Apply search and sort filters
+  const filteredHistory = callHistory
+    .filter((entry) =>
+      entry.comment.toLowerCase().includes(search.toLowerCase())
+    )
+    .sort((a, b) => {
+      const valueA = a[sort] || '';
+      const valueB = b[sort] || '';
+      return order === "asc"
+        ? valueA.localeCompare(valueB)
+        : valueB.localeCompare(valueA);
+    });
+
+  // Paginate the results
+  const startIndex = (pageNumber - 1) * limitNumber;
+  const endIndex = startIndex + limitNumber;
+  const historyForPage = filteredHistory.slice(startIndex, endIndex);
+
+  res.json({
+    items: historyForPage,
+    pageNumber,
+    totalPages: Math.ceil(filteredHistory.length / limitNumber),
+    totalRecords: filteredHistory.length,
+  });
+});
+
+
+app.get("/api/users/:id", (req, res) => {
+  const { id } = req.params;
+  const user = Object.values(users).find((user) => user.id.toString() === id);
+
+  if (user) {
+    res.json(user);
+  } else {
+    res.status(404).json({ errorMessage: "User not found" });
+  }
 });
 
 app.post("/api/auth/login", (req, res) => {
@@ -424,3 +484,11 @@ app.get("/api/currentUser", (req, res) => {
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+function randomize(items) {
+  if (!Array.isArray(items) || items.length === 0) {
+    throw new Error("Please provide a non-empty array.");
+  }
+  const randomIndex = Math.floor(Math.random() * items.length);
+  return items[randomIndex];
+}
