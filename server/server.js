@@ -1,9 +1,9 @@
-const WebSocket = require("ws");
-const http = require("http");
 const crypto = require("crypto");
+const http = require("http");
+const { faker } = require("@faker-js/faker");
 const cors = require("cors");
 const express = require("express");
-const { faker } = require("@faker-js/faker");
+const WebSocket = require("ws");
 
 const app = express();
 const port = 4004;
@@ -154,7 +154,7 @@ wss.on("connection", function connection(ws) {
     JSON.stringify({
       type: "connection",
       message: "Connection successful",
-    })
+    }),
   );
 
   ws.on("message", function incoming(message) {
@@ -165,7 +165,7 @@ wss.on("connection", function connection(ws) {
         JSON.stringify({
           type: "pong",
           message: "Pong!",
-        })
+        }),
       );
     }
 
@@ -174,7 +174,7 @@ wss.on("connection", function connection(ws) {
       receivedData.code === "getHistory"
     ) {
       console.log(
-        "\u041e\u0442\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c \u0438\u0441\u0442\u043e\u0440\u0438\u044e \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0439"
+        "\u041e\u0442\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c \u0438\u0441\u0442\u043e\u0440\u0438\u044e \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0439",
       );
       const response = {
         type: "chatHistory",
@@ -193,7 +193,7 @@ wss.on("connection", function connection(ws) {
           message: receivedData.message,
           timeStamp: receivedData.timeStamp,
           type: "typing",
-        })
+        }),
       );
 
       // Отправка typingStopped через 2 секунды
@@ -204,7 +204,7 @@ wss.on("connection", function connection(ws) {
             message: receivedData.message,
             timeStamp: receivedData.timeStamp,
             type: "typing",
-          })
+          }),
         );
       }, 3000);
 
@@ -216,7 +216,7 @@ wss.on("connection", function connection(ws) {
             message: "Thank you for your message. We are looking into it.",
             timeStamp: new Date().valueOf(),
             payload: { sender: "support" },
-          })
+          }),
         );
       }, 6000);
     }
@@ -227,7 +227,7 @@ wss.on("connection", function connection(ws) {
           type: "callStatus",
           message: "processing",
           timeStamp: new Date().valueOf(),
-        })
+        }),
       );
 
       setTimeout(() => {
@@ -236,7 +236,7 @@ wss.on("connection", function connection(ws) {
             type: "callStatus",
             message: "accepted",
             timeStamp: new Date().valueOf(),
-          })
+          }),
         );
       }, 1000);
 
@@ -246,7 +246,7 @@ wss.on("connection", function connection(ws) {
             type: "callStatus",
             message: "onTheWay",
             timeStamp: new Date().valueOf(),
-          })
+          }),
         );
       }, 3000);
 
@@ -256,7 +256,7 @@ wss.on("connection", function connection(ws) {
             type: "callStatus",
             message: "onTheSpot",
             timeStamp: new Date().valueOf(),
-          })
+          }),
         );
       }, 5000);
 
@@ -266,7 +266,7 @@ wss.on("connection", function connection(ws) {
             type: "callStatus",
             message: "completed",
             timeStamp: new Date().valueOf(),
-          })
+          }),
         );
       }, 7000);
     }
@@ -282,7 +282,7 @@ wss.on("connection", function connection(ws) {
           type: "callStatus",
           message: "idle",
           timeStamp: new Date().valueOf(),
-        })
+        }),
       );
     }
   });
@@ -295,7 +295,7 @@ wss.on("connection", function connection(ws) {
         type: "disconnection",
         message: "Disconnected",
         timeStamp: new Date().valueOf(),
-      })
+      }),
     );
   });
 
@@ -305,7 +305,7 @@ wss.on("connection", function connection(ws) {
       JSON.stringify({
         type: "error",
         message: "An error occurred",
-      })
+      }),
     );
   });
 });
@@ -338,8 +338,8 @@ app.get("/api/users", (req, res) => {
 
   const filteredUsers = Object.values(users).filter((user) =>
     Object.values(user).some((value) =>
-      String(value).toLowerCase().includes(search.toLowerCase())
-    )
+      String(value).toLowerCase().includes(search.toLowerCase()),
+    ),
   );
 
   const sortedUsers = filteredUsers.sort((a, b) => {
@@ -362,7 +362,6 @@ app.get("/api/users", (req, res) => {
   });
 });
 
-
 // New fetchCallHistory endpoint with mock data
 app.get("/api/users/:userId/callHistory", (req, res) => {
   const { userId } = req.params;
@@ -378,22 +377,41 @@ app.get("/api/users/:userId/callHistory", (req, res) => {
   const limitNumber = parseInt(limit, 10) || 10;
 
   // Mock call history data
-  const callHistory = Array.from({ length: 20 }).map((_, index) => ({
-    date: faker.date.recent(90).toISOString(),
-    status: randomize(["inProgress", "fulfilled", "canceled"]),
-    address: faker.address.streetAddress(),
-    comment: faker.lorem.sentence(),
-    id: faker.number.float(),
-  }));
+  const callHistory = Array.from({ length: 20 }).map((_, index) => {
+    const userIndex = Math.round(
+      Math.random() * (Object.values(users).length - 1),
+    );
+
+    const userKey = Object.keys(users)[userIndex];
+
+    console.log("userIndex: ", userIndex);
+    console.log("users: ", users);
+    return {
+      date: faker.date.recent(90).toISOString(),
+      status: randomize([
+        "processing",
+        "accepted",
+        "onTheWay",
+        "onTheSpot",
+        "completed",
+        "canceled"
+      ]),
+      address: faker.address.streetAddress(),
+      comment: faker.lorem.sentence(),
+      id: faker.number.float(),
+      userId: users[userKey].id, // Связываем каждый вызов с ID пользователя
+      userFullName: users[userKey].fullName,
+    };
+  });
 
   // Apply search and sort filters
   const filteredHistory = callHistory
     .filter((entry) =>
-      entry.comment.toLowerCase().includes(search.toLowerCase())
+      entry.comment.toLowerCase().includes(search.toLowerCase()),
     )
     .sort((a, b) => {
-      const valueA = a[sort] || '';
-      const valueB = b[sort] || '';
+      const valueA = a[sort] || "";
+      const valueB = b[sort] || "";
       return order === "asc"
         ? valueA.localeCompare(valueB)
         : valueB.localeCompare(valueA);
@@ -411,7 +429,6 @@ app.get("/api/users/:userId/callHistory", (req, res) => {
     totalRecords: filteredHistory.length,
   });
 });
-
 
 app.get("/api/users/:id", (req, res) => {
   const { id } = req.params;
@@ -458,10 +475,14 @@ app.put("/api/currentUser", (req, res) => {
   }
 });
 
+app.patch("/api/call/:id", (req, res) => {
+  res.status(200).json({ message: "OK" });
+});
+
 app.post("/api/refresh", (req, res) => {
   const { refreshToken } = req.body;
   const user = Object.values(users).find(
-    (user) => user.refreshToken === refreshToken
+    (user) => user.refreshToken === refreshToken,
   );
   if (user) {
     const tokens = generateTokens();
