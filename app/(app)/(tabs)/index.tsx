@@ -9,6 +9,7 @@ import {
   ChoppDialog,
   ChoppThemedText,
   createWsMessage,
+  WS_MESSAGE_TYPE,
 } from "@/shared";
 import { useFilterWsMessages } from "@/shared/hooks";
 import { wsSend } from "@/store/slices/ws-slice";
@@ -25,13 +26,13 @@ export default function TabMainScreen() {
     setFalse: hideModal,
   } = useBoolean();
   const { wsConnected } = useSelector((state: RootState) => state.ws);
-  const { lastMessage } = useFilterWsMessages("callStatus");
+  const { lastMessage } = useFilterWsMessages(WS_MESSAGE_TYPE.CALL_STATUS);
 
   const onCall = () => {
     dispatch(
       wsSend(
         createWsMessage({
-          type: "callStatus",
+          type: WS_MESSAGE_TYPE.CALL_STATUS,
           code: "call",
         }),
       ),
@@ -45,7 +46,7 @@ export default function TabMainScreen() {
       dispatch(
         wsSend(
           createWsMessage({
-            type: "callStatus",
+            type: WS_MESSAGE_TYPE.CALL_STATUS,
             code: "getCallStatus",
           }),
         ),

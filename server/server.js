@@ -311,7 +311,7 @@ wss.on("connection", function connection(ws) {
 });
 
 // REST API endpoints
-app.post("/api/user/create", (req, res) => {
+app.post("/api/auth/registration", (req, res) => {
   const { email, password } = req.body;
   if (users[email]?.toLocaleLowerCase()) {
     res
