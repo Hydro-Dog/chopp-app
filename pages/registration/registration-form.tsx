@@ -11,6 +11,7 @@ import { RegistrationFormType, registrationSchema } from "./types";
 import {
   ChoppDialog,
   FETCH_STATUS,
+  revertPhoneNumberFormating,
   SNACKBAR_VARIANTS,
   useChoppSnackbar,
 } from "@/shared";
@@ -53,7 +54,8 @@ export const RegistrationForm = () => {
 
   const onSubmit: SubmitHandler<RegistrationFormType> = async (data) => {
     try {
-      const res = await dispatch(createUser(data)).unwrap();
+      const payload = { ...data, phoneNumber: revertPhoneNumberFormating(data.phoneNumber) }
+      const res = await dispatch(createUser(payload)).unwrap();
       console.log("Redirect ", res);
       router.push("/login");
       //TODO: убрать any

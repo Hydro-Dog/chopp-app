@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UpdatePassword } from "./components";
 import { ProfileFormType, profileSchema } from "./types";
-import { FETCH_STATUS, SNACKBAR_VARIANTS, useChoppSnackbar } from "@/shared";
+import { FETCH_STATUS, revertPhoneNumberFormating, SNACKBAR_VARIANTS, useChoppSnackbar } from "@/shared";
 import { formatPhoneNumber, ChoppFormField } from "@/shared";
 import { updateCurrentUser, User } from "@/store/slices/user-slice";
 import { AppDispatch, RootState } from "@/store/store";
@@ -43,7 +43,8 @@ export const ProfileForm = ({ user, setViewMode }: Props) => {
 
   const onSubmit: SubmitHandler<ProfileFormType> = async (data) => {
     try {
-      await dispatch(updateCurrentUser(data)).unwrap();
+      const payload = { ...data, phoneNumber: revertPhoneNumberFormating(data.phoneNumber) }
+      await dispatch(updateCurrentUser(payload)).unwrap();
       setViewMode();
 
       //TODO: убрать any
@@ -86,18 +87,22 @@ export const ProfileForm = ({ user, setViewMode }: Props) => {
           <Controller
             control={control}
             name="phoneNumber"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                keyboardType="number-pad"
-                mode="outlined"
-                label={t("phoneNumber")}
-                disabled={passwordMode === "edit"}
-                value={value}
-                onBlur={onBlur}
-                onChangeText={(text) => onChange(formatPhoneNumber(text))}
-                error={!!errors.phoneNumber}
-              />
-            )}
+            render={({ field: { onChange, onBlur, value } }) => {
+              const inputValue = formatPhoneNumber(value);
+
+              return (
+                <TextInput
+                  keyboardType="number-pad"
+                  mode="outlined"
+                  label={t("phoneNumber")}
+                  disabled={passwordMode === "edit"}
+                  value={inputValue}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  error={!!errors.phoneNumber}
+                />
+              )
+            }}
           />
         </ChoppFormField>
 
