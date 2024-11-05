@@ -4,6 +4,34 @@ const { faker } = require("@faker-js/faker");
 const cors = require("cors");
 const express = require("express");
 const WebSocket = require("ws");
+const { v4: uuidv4 } = require("uuid");
+
+function generateUUID() {
+  return uuidv4(); // Генерация уникального UUID
+}
+
+function generateChatHistory() {
+  const numberOfMessages = 12; // Количество сообщений в истории
+  const adminId = DEFAULT_ADMIN.id; // ID администратора
+  let chatHistory = [];
+  const senderId = generateUUID();
+
+  for (let i = 0; i < numberOfMessages; i++) {
+    chatHistory.push({
+      type: "message",
+      message: faker.lorem.sentence(),
+      timeStamp: new Date().valueOf() - (100000 - i * 5000),
+      payload: {
+        messageId: generateUUID(),
+        wasRead: Math.random() > 0.5,
+        senderId,
+        receiverId: adminId, // Фиксированный ID администратора
+      },
+    });
+  }
+
+  return chatHistory;
+}
 
 const app = express();
 const port = 4004;
@@ -129,6 +157,321 @@ const CHAT_HISTORY = [
   },
 ];
 
+function handleCallHistoryStats(ws) {
+  const statuses = [
+    "idle",
+    "processing",
+    "accepted",
+    "declined",
+    "onTheWay",
+    "onTheSpot",
+    "completed",
+    "canceled",
+  ];
+  const statusCounts = {};
+
+  statuses.forEach((status) => {
+    // Генерация случайного количества для каждого статуса от 1 до 100
+    statusCounts[status] = Math.floor(Math.random() * 100) + 1;
+  });
+
+  const sendStats = () => {
+    const response = {
+      type: "callHistoryStats",
+      payload: statusCounts,
+    };
+    ws.send(JSON.stringify(response));
+  };
+
+  // Отправка начальной статистики
+  sendStats();
+
+  // Создание интервала для регулярного обновления статистики
+  const intervalId = setInterval(() => {
+    Object.keys(statusCounts).forEach((key) => {
+      statusCounts[key] += 1; // Увеличение счетчика каждого статуса на 1
+    });
+    sendStats();
+  }, 5000);
+
+  // Обработка закрытия соединения и очистка интервала
+  ws.on("close", () => {
+    clearInterval(intervalId);
+    console.log("WebSocket connection closed and interval cleared.");
+  });
+
+  ws.on("error", () => {
+    clearInterval(intervalId);
+    console.log("WebSocket encountered an error and interval cleared.");
+  });
+}
+
+CHAT_HISTORY.forEach((message) => {
+  message.read = Math.random() > 0.5;
+});
+
+function handleChatsData(ws) {
+  const adminId = DEFAULT_ADMIN.id; // ID администратора
+  // Статистика для подсчета количества прочитанных и непрочитанных сообщений
+  const data = [
+    {
+      userId: "111222",
+      userName: "Mr Smith",
+      hasUnreadMessages: true,
+      lastMessage: {
+        type: "message",
+        message: faker.lorem.sentence(),
+        timeStamp: new Date().valueOf() - (100000 - 1 * 5000),
+        payload: {
+          messageId: generateUUID(),
+          wasRead: Math.random() > 0.5,
+          senderId: generateUUID(),
+          receiverId: adminId, // Фиксированный ID администратора
+        },
+      },
+    },
+    {
+      userId: "333",
+      userName: "John Doe",
+      hasUnreadMessages: false,
+      lastMessage: {
+        type: "message",
+        message: faker.lorem.sentence(),
+        timeStamp: new Date().valueOf() - (100000 - 2 * 5000),
+        payload: {
+          messageId: generateUUID(),
+          wasRead: Math.random() > 0.5,
+          senderId: generateUUID(),
+          receiverId: adminId, // Фиксированный ID администратора
+        },
+      },
+    },
+    {
+      userId: "444",
+      userName: "Bob Dylan",
+      hasUnreadMessages: true,
+      lastMessage: {
+        type: "message",
+        message: faker.lorem.sentence(),
+        timeStamp: new Date().valueOf() - (100000 - 3 * 5000),
+        payload: {
+          messageId: generateUUID(),
+          wasRead: Math.random() > 0.5,
+          senderId: generateUUID(),
+          receiverId: adminId, // Фиксированный ID администратора
+        },
+      },
+    },
+    {
+      userId: "555",
+      userName: "Wow Ser",
+      hasUnreadMessages: true,
+      lastMessage: {
+        type: "message",
+        message: faker.lorem.sentence(),
+        timeStamp: new Date().valueOf() - (100000 - 4 * 5000),
+        payload: {
+          messageId: generateUUID(),
+          wasRead: Math.random() > 0.5,
+          senderId: generateUUID(),
+          receiverId: adminId, // Фиксированный ID администратора
+        },
+      },
+    },
+    {
+      userId: "111222",
+      userName: "Mr Smith",
+      hasUnreadMessages: true,
+      lastMessage: {
+        type: "message",
+        message: faker.lorem.sentence(),
+        timeStamp: new Date().valueOf() - (100000 - 1 * 5000),
+        payload: {
+          messageId: generateUUID(),
+          wasRead: Math.random() > 0.5,
+          senderId: generateUUID(),
+          receiverId: adminId, // Фиксированный ID администратора
+        },
+      },
+    },
+    {
+      userId: "333",
+      userName: "John Doe",
+      hasUnreadMessages: false,
+      lastMessage: {
+        type: "message",
+        message: faker.lorem.sentence(),
+        timeStamp: new Date().valueOf() - (100000 - 2 * 5000),
+        payload: {
+          messageId: generateUUID(),
+          wasRead: Math.random() > 0.5,
+          senderId: generateUUID(),
+          receiverId: adminId, // Фиксированный ID администратора
+        },
+      },
+    },
+    {
+      userId: "444",
+      userName: "Bob Dylan",
+      hasUnreadMessages: true,
+      lastMessage: {
+        type: "message",
+        message: faker.lorem.sentence(),
+        timeStamp: new Date().valueOf() - (100000 - 3 * 5000),
+        payload: {
+          messageId: generateUUID(),
+          wasRead: Math.random() > 0.5,
+          senderId: generateUUID(),
+          receiverId: adminId, // Фиксированный ID администратора
+        },
+      },
+    },
+    {
+      userId: "555",
+      userName: "Wow Ser",
+      hasUnreadMessages: true,
+      lastMessage: {
+        type: "message",
+        message: faker.lorem.sentence(),
+        timeStamp: new Date().valueOf() - (100000 - 4 * 5000),
+        payload: {
+          messageId: generateUUID(),
+          wasRead: Math.random() > 0.5,
+          senderId: generateUUID(),
+          receiverId: adminId, // Фиксированный ID администратора
+        },
+      },
+    },
+    {
+      userId: "111222",
+      userName: "Mr Smith",
+      hasUnreadMessages: true,
+      lastMessage: {
+        type: "message",
+        message: faker.lorem.sentence(),
+        timeStamp: new Date().valueOf() - (100000 - 1 * 5000),
+        payload: {
+          messageId: generateUUID(),
+          wasRead: Math.random() > 0.5,
+          senderId: generateUUID(),
+          receiverId: adminId, // Фиксированный ID администратора
+        },
+      },
+    },
+    {
+      userId: "333",
+      userName: "John Doe",
+      hasUnreadMessages: false,
+      lastMessage: {
+        type: "message",
+        message: faker.lorem.sentence(),
+        timeStamp: new Date().valueOf() - (100000 - 2 * 5000),
+        payload: {
+          messageId: generateUUID(),
+          wasRead: Math.random() > 0.5,
+          senderId: generateUUID(),
+          receiverId: adminId, // Фиксированный ID администратора
+        },
+      },
+    },
+    {
+      userId: "444",
+      userName: "Bob Dylan",
+      hasUnreadMessages: true,
+      lastMessage: {
+        type: "message",
+        message: faker.lorem.sentence(),
+        timeStamp: new Date().valueOf() - (100000 - 3 * 5000),
+        payload: {
+          messageId: generateUUID(),
+          wasRead: Math.random() > 0.5,
+          senderId: generateUUID(),
+          receiverId: adminId, // Фиксированный ID администратора
+        },
+      },
+    },
+    {
+      userId: "555",
+      userName: "Wow Ser",
+      hasUnreadMessages: true,
+      lastMessage: {
+        type: "message",
+        message: faker.lorem.sentence(),
+        timeStamp: new Date().valueOf() - (100000 - 4 * 5000),
+        payload: {
+          messageId: generateUUID(),
+          wasRead: Math.random() > 0.5,
+          senderId: generateUUID(),
+          receiverId: adminId, // Фиксированный ID администратора
+        },
+      },
+    },
+  ];
+
+  // Отправка статистики обратно на клиент
+  const response = {
+    type: "chatStats",
+    payload: data,
+  };
+
+  ws.send(JSON.stringify(response));
+}
+
+function handleNewActivity(ws) {
+  // Генерация случайной активности
+  const generateActivity = () => {
+    const userKeys = Object.keys(users);
+    const userKey = userKeys[Math.floor(Math.random() * userKeys.length)];
+    return {
+      date: faker.date.recent(90).toISOString(),
+      status: randomize([
+        "processing",
+        "accepted",
+        "onTheWay",
+        "onTheSpot",
+        "completed",
+        "canceled",
+      ]),
+      address: faker.address.streetAddress(),
+      comment: faker.lorem.sentence(),
+      id: faker.number.float(),
+      userId: users[userKey].id,
+      userFullName: users[userKey].fullName,
+    };
+  };
+
+  let activityRecord = generateActivity();
+
+  // Отправка активности
+  const sendActivity = () => {
+    const response = {
+      type: "newActivity",
+      payload: activityRecord,
+    };
+    ws.send(JSON.stringify(response));
+  };
+
+  // Немедленно отправить первую активность
+  // sendActivity();
+
+  // Обновление и отправка активности каждые 15 секунд
+  const intervalId = setInterval(() => {
+    activityRecord = generateActivity(); // Генерация новой активности
+    sendActivity();
+  }, 5000);
+
+  // Обработка закрытия соединения и очистка интервала
+  ws.on("close", () => {
+    clearInterval(intervalId);
+    console.log("WebSocket connection closed and interval cleared.");
+  });
+
+  ws.on("error", () => {
+    clearInterval(intervalId);
+    console.log("WebSocket encountered an error and interval cleared.");
+  });
+}
+
 app.use(cors());
 app.use(express.json());
 
@@ -154,27 +497,28 @@ wss.on("connection", function connection(ws) {
     JSON.stringify({
       type: "connection",
       message: "Connection successful",
-    }),
+    })
   );
 
   ws.on("message", function incoming(message) {
     // Обработка входящего сообщения и ответ в зависимости от содержимого
     const receivedData = JSON.parse(message);
+
     if (receivedData.type === "ping") {
       ws.send(
         JSON.stringify({
           type: "pong",
           message: "Pong!",
-        }),
+        })
       );
     }
 
     if (
-      receivedData.type === "chatHistory" &&
-      receivedData.code === "getHistory"
+      receivedData.type === "chatHistory"
+      // && receivedData.code === "getHistory"
     ) {
       console.log(
-        "\u041e\u0442\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c \u0438\u0441\u0442\u043e\u0440\u0438\u044e \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0439",
+        "\u041e\u0442\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c \u0438\u0441\u0442\u043e\u0440\u0438\u044e \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0439"
       );
       const response = {
         type: "chatHistory",
@@ -193,7 +537,7 @@ wss.on("connection", function connection(ws) {
           message: receivedData.message,
           timeStamp: receivedData.timeStamp,
           type: "typing",
-        }),
+        })
       );
 
       // Отправка typingStopped через 2 секунды
@@ -204,7 +548,7 @@ wss.on("connection", function connection(ws) {
             message: receivedData.message,
             timeStamp: receivedData.timeStamp,
             type: "typing",
-          }),
+          })
         );
       }, 3000);
 
@@ -216,18 +560,21 @@ wss.on("connection", function connection(ws) {
             message: "Thank you for your message. We are looking into it.",
             timeStamp: new Date().valueOf(),
             payload: { sender: "support" },
-          }),
+          })
         );
       }, 6000);
     }
 
-    if (receivedData.type === "callStatus" && receivedData.code === "call") {
+    if (
+      receivedData.type === "callStatus"
+      // && receivedData.code === "call"
+    ) {
       ws.send(
         JSON.stringify({
           type: "callStatus",
           message: "processing",
           timeStamp: new Date().valueOf(),
-        }),
+        })
       );
 
       setTimeout(() => {
@@ -236,7 +583,7 @@ wss.on("connection", function connection(ws) {
             type: "callStatus",
             message: "accepted",
             timeStamp: new Date().valueOf(),
-          }),
+          })
         );
       }, 1000);
 
@@ -246,7 +593,7 @@ wss.on("connection", function connection(ws) {
             type: "callStatus",
             message: "onTheWay",
             timeStamp: new Date().valueOf(),
-          }),
+          })
         );
       }, 3000);
 
@@ -256,7 +603,7 @@ wss.on("connection", function connection(ws) {
             type: "callStatus",
             message: "onTheSpot",
             timeStamp: new Date().valueOf(),
-          }),
+          })
         );
       }, 5000);
 
@@ -266,14 +613,14 @@ wss.on("connection", function connection(ws) {
             type: "callStatus",
             message: "completed",
             timeStamp: new Date().valueOf(),
-          }),
+          })
         );
       }, 7000);
     }
 
     if (
-      receivedData.type === "callStatus" &&
-      receivedData.code === "getCallStatus"
+      receivedData.type === "callStatus"
+      // &&receivedData.code === "getCallStatus"
     ) {
       //idle, processing, accepted (declined), onTheWay, onTheSpot, completed
       console.log("ws.send");
@@ -282,8 +629,23 @@ wss.on("connection", function connection(ws) {
           type: "callStatus",
           message: "idle",
           timeStamp: new Date().valueOf(),
-        }),
+        })
       );
+    }
+
+    if (
+      receivedData.type === "getCallHistoryStats"
+      // &&receivedData.code === "getCallHistoryStats"
+    ) {
+      handleCallHistoryStats(ws);
+    }
+
+    if (receivedData.type === "getNewActivity") {
+      handleNewActivity(ws);
+    }
+
+    if (receivedData.type === "getChatStats") {
+      handleChatsData(ws);
     }
   });
 
@@ -295,7 +657,7 @@ wss.on("connection", function connection(ws) {
         type: "disconnection",
         message: "Disconnected",
         timeStamp: new Date().valueOf(),
-      }),
+      })
     );
   });
 
@@ -305,7 +667,7 @@ wss.on("connection", function connection(ws) {
       JSON.stringify({
         type: "error",
         message: "An error occurred",
-      }),
+      })
     );
   });
 });
@@ -338,8 +700,8 @@ app.get("/api/users", (req, res) => {
 
   const filteredUsers = Object.values(users).filter((user) =>
     Object.values(user).some((value) =>
-      String(value).toLowerCase().includes(search.toLowerCase()),
-    ),
+      String(value).toLowerCase().includes(search.toLowerCase())
+    )
   );
 
   const sortedUsers = filteredUsers.sort((a, b) => {
@@ -379,13 +741,11 @@ app.get("/api/users/:userId/callHistory", (req, res) => {
   // Mock call history data
   const callHistory = Array.from({ length: 20 }).map((_, index) => {
     const userIndex = Math.round(
-      Math.random() * (Object.values(users).length - 1),
+      Math.random() * (Object.values(users).length - 1)
     );
 
     const userKey = Object.keys(users)[userIndex];
 
-    console.log("userIndex: ", userIndex);
-    console.log("users: ", users);
     return {
       date: faker.date.recent(90).toISOString(),
       status: randomize([
@@ -394,7 +754,7 @@ app.get("/api/users/:userId/callHistory", (req, res) => {
         "onTheWay",
         "onTheSpot",
         "completed",
-        "canceled"
+        "canceled",
       ]),
       address: faker.address.streetAddress(),
       comment: faker.lorem.sentence(),
@@ -407,7 +767,7 @@ app.get("/api/users/:userId/callHistory", (req, res) => {
   // Apply search and sort filters
   const filteredHistory = callHistory
     .filter((entry) =>
-      entry.comment.toLowerCase().includes(search.toLowerCase()),
+      entry.comment.toLowerCase().includes(search.toLowerCase())
     )
     .sort((a, b) => {
       const valueA = a[sort] || "";
@@ -482,7 +842,7 @@ app.patch("/api/call/:id", (req, res) => {
 app.post("/api/refresh", (req, res) => {
   const { refreshToken } = req.body;
   const user = Object.values(users).find(
-    (user) => user.refreshToken === refreshToken,
+    (user) => user.refreshToken === refreshToken
   );
   if (user) {
     const tokens = generateTokens();

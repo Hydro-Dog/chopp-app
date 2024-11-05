@@ -4,7 +4,7 @@ import { WsMessage } from "@/shared";
 
 export type WsState = {
   wsConnected: boolean;
-  messages: WsMessage[];
+  messages: WsMessage<unknown>[];
   error: any;
 };
 
