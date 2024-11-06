@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UpdatePassword } from "./components";
 import { ProfileFormType, profileSchema } from "./types";
-import { FETCH_STATUS, revertPhoneNumberFormating, SNACKBAR_VARIANTS, useChoppSnackbar } from "@/shared";
+import { FETCH_STATUS, SNACKBAR_VARIANTS, useChoppSnackbar } from "@/shared";
 import { formatPhoneNumber, ChoppFormField } from "@/shared";
 import { updateCurrentUser, User } from "@/store/slices/user-slice";
 import { AppDispatch, RootState } from "@/store/store";
@@ -43,8 +43,7 @@ export const ProfileForm = ({ user, setViewMode }: Props) => {
 
   const onSubmit: SubmitHandler<ProfileFormType> = async (data) => {
     try {
-      const payload = { ...data, phoneNumber: revertPhoneNumberFormating(data.phoneNumber) }
-      await dispatch(updateCurrentUser(payload)).unwrap();
+      await dispatch(updateCurrentUser(data)).unwrap();
       setViewMode();
 
       //TODO: убрать any

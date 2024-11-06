@@ -8,7 +8,7 @@ import {
 } from "./types";
 
 import { axiosDefault, axiosPrivate } from "@/services";
-import { ErrorResponse } from "@/shared";
+import { ErrorResponse, sanitizedUser } from "@/shared";
 
 export const fetchCurrentUser = createAsyncThunk<
   User,
@@ -35,7 +35,7 @@ export const updateCurrentUser = createAsyncThunk<
   { rejectValue: ErrorResponse }
 >("/updateCurrentUser", async (userData, thunkAPI) => {
   try {
-    const response = await axiosPrivate.put<User>("/users/currentUser", userData);
+    const response = await axiosPrivate.put<User>("/users/currentUser", sanitizedUser(userData));
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
@@ -60,7 +60,7 @@ export const createUser = createAsyncThunk<
   { rejectValue: ErrorResponse }
 >("/createUser", async (data, thunkAPI) => {
   try {
-    const response = await axiosDefault.post<User>(`/auth/registration`, data);
+    const response = await axiosDefault.post<User>(`/auth/registration`, sanitizedUser(data));
     return response.data;
   } catch (error) {
     console.log("axios error: ", error);
