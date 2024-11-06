@@ -11,11 +11,9 @@ import { RegistrationFormType, registrationSchema } from "./types";
 import {
   ChoppDialog,
   FETCH_STATUS,
+  formatPhoneNumber,
   SNACKBAR_VARIANTS,
   useChoppSnackbar,
-} from "@/shared";
-import {
-  formatPhoneNumber,
   ChoppFormField,
   ChoppCheckbox,
   ChoppThemedText,

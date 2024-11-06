@@ -86,18 +86,22 @@ export const ProfileForm = ({ user, setViewMode }: Props) => {
           <Controller
             control={control}
             name="phoneNumber"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                keyboardType="number-pad"
-                mode="outlined"
-                label={t("phoneNumber")}
-                disabled={passwordMode === "edit"}
-                value={value}
-                onBlur={onBlur}
-                onChangeText={(text) => onChange(formatPhoneNumber(text))}
-                error={!!errors.phoneNumber}
-              />
-            )}
+            render={({ field: { onChange, onBlur, value } }) => {
+              const inputValue = formatPhoneNumber(value);
+
+              return (
+                <TextInput
+                  keyboardType="number-pad"
+                  mode="outlined"
+                  label={t("phoneNumber")}
+                  disabled={passwordMode === "edit"}
+                  value={inputValue}
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  error={!!errors.phoneNumber}
+                />
+              )
+            }}
           />
         </ChoppFormField>
 

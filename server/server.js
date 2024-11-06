@@ -673,7 +673,7 @@ wss.on("connection", function connection(ws) {
 });
 
 // REST API endpoints
-app.post("/api/user/create", (req, res) => {
+app.post("/api/auth/registration", (req, res) => {
   const { email, password } = req.body;
   if (users[email]?.toLocaleLowerCase()) {
     res
@@ -790,6 +790,10 @@ app.get("/api/users/:userId/callHistory", (req, res) => {
   });
 });
 
+app.get("/api/users/currentUser", (req, res) => {
+  res.json(DEFAULT_USER);
+});
+
 app.get("/api/users/:id", (req, res) => {
   const { id } = req.params;
   const user = Object.values(users).find((user) => user.id.toString() === id);
@@ -819,7 +823,7 @@ app.post("/api/auth/login", (req, res) => {
   }
 });
 
-app.put("/api/currentUser", (req, res) => {
+app.put("/api/users/currentUser", (req, res) => {
   const { email, fullName, password, phoneNumber } = req.body;
   if (users[DEFAULT_USER.email]) {
     users[DEFAULT_USER.email] = {
@@ -855,10 +859,6 @@ app.post("/api/refresh", (req, res) => {
   } else {
     res.status(403).json({ errorMessage: "Неверный refresh token" });
   }
-});
-
-app.get("/api/currentUser", (req, res) => {
-  res.json(DEFAULT_USER);
 });
 
 // Запуск сервера
