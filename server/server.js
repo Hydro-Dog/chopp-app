@@ -1,37 +1,15 @@
+const { timeStamp } = require("console");
 const crypto = require("crypto");
 const http = require("http");
 const { faker } = require("@faker-js/faker");
 const cors = require("cors");
 const express = require("express");
-const WebSocket = require("ws");
 const { v4: uuidv4 } = require("uuid");
+const WebSocket = require("ws");
 
 function generateUUID() {
   return uuidv4(); // Генерация уникального UUID
 }
-
-// function generateChatHistory() {
-//   const numberOfMessages = 12; // Количество сообщений в истории
-//   const adminId = DEFAULT_ADMIN.id; // ID администратора
-//   let chatHistory = [];
-//   const senderId = generateUUID();
-
-//   for (let i = 0; i < numberOfMessages; i++) {
-//     chatHistory.push({
-//       type: "message",
-//       message: faker.lorem.sentence(),
-//       timeStamp: new Date().valueOf() - (100000 - i * 5000),
-//       payload: {
-//         messageId: generateUUID(),
-//         wasRead: Math.random() > 0.5,
-//         senderId,
-//         receiverId: adminId, // Фиксированный ID администратора
-//       },
-//     });
-//   }
-
-//   return chatHistory;
-// }
 
 const app = express();
 const port = 4004;
@@ -79,83 +57,6 @@ const generateUsers = () => {
 };
 
 let users = generateUsers();
-
-// const CHAT_HISTORY = [
-//   {
-//     type: "message",
-//     message: "Hello! How can I help you today?",
-//     timeStamp: new Date().valueOf() - 100000,
-//     payload: { sender: "support" },
-//   },
-//   {
-//     type: "message",
-//     message: "I am having trouble logging in.",
-//     timeStamp: new Date().valueOf() - 95000,
-//     payload: { sender: "user" },
-//   },
-//   {
-//     type: "message",
-//     message: "Have you tried resetting your password?",
-//     timeStamp: new Date().valueOf() - 90000,
-//     payload: { sender: "support" },
-//   },
-//   {
-//     type: "message",
-//     message: "Yes, but it didn't work.",
-//     timeStamp: new Date().valueOf() - 85000,
-//     payload: { sender: "user" },
-//   },
-//   {
-//     type: "message",
-//     message: "Can you please provide your registered email address?",
-//     timeStamp: new Date().valueOf() - 80000,
-//     payload: { sender: "support" },
-//   },
-//   {
-//     type: "message",
-//     message: "Sure, it's example@example.com.",
-//     timeStamp: new Date().valueOf() - 75000,
-//     payload: { sender: "user" },
-//   },
-//   {
-//     type: "message",
-//     message:
-//       "Thank you, I will reset your password manually. Please check your email shortly.",
-//     timeStamp: new Date().valueOf() - 70000,
-//     payload: { sender: "support" },
-//   },
-//   {
-//     type: "message",
-//     message: "Received the reset link, trying now.",
-//     timeStamp: new Date().valueOf() - 65000,
-//     payload: { sender: "user" },
-//   },
-//   {
-//     type: "message",
-//     message: "Great! Let me know if it works.",
-//     timeStamp: new Date().valueOf() - 60000,
-//     payload: { sender: "support" },
-//   },
-//   {
-//     type: "message",
-//     message: "It worked, thanks!",
-//     timeStamp: new Date().valueOf() - 55000,
-//     payload: { sender: "user" },
-//   },
-//   {
-//     type: "message",
-//     message:
-//       "You're welcome! If you have any more questions, feel free to ask.",
-//     timeStamp: new Date().valueOf() - 50000,
-//     payload: { sender: "support" },
-//   },
-//   {
-//     type: "message",
-//     message: "Will do. Have a great day!",
-//     timeStamp: new Date().valueOf() - 45000,
-//     payload: { sender: "user" },
-//   },
-// ];
 
 function handleCallHistoryStats(ws) {
   const statuses = [
@@ -206,217 +107,6 @@ function handleCallHistoryStats(ws) {
   });
 }
 
-// CHAT_HISTORY.forEach((message) => {
-//   message.read = Math.random() > 0.5;
-// });
-
-// function handleChatsData(ws) {
-//   const adminId = DEFAULT_ADMIN.id; // ID администратора
-//   // Статистика для подсчета количества прочитанных и непрочитанных сообщений
-//   const data = [
-//     {
-//       userId: DEFAULT_USER.id,
-//       fullName: DEFAULT_USER.fullName,
-//       hasUnreadMessages: true,
-//       lastMessage: {
-//         type: "message",
-//         message: faker.lorem.sentence(),
-//         timeStamp: new Date().valueOf() - (100000 - 1 * 5000),
-//         payload: {
-//           messageId: DEFAULT_ADMIN,
-//           wasRead: Math.random() > 0.5,
-//           senderId: DEFAULT_USER.id,
-//           receiverId: DEFAULT_ADMIN.id, // Фиксированный ID администратора
-//         },
-//       },
-//     },
-//     {
-//       userId: "333",
-//       userName: "John Doe",
-//       hasUnreadMessages: false,
-//       lastMessage: {
-//         type: "message",
-//         message: faker.lorem.sentence(),
-//         timeStamp: new Date().valueOf() - (100000 - 2 * 5000),
-//         payload: {
-//           messageId: generateUUID(),
-//           wasRead: Math.random() > 0.5,
-//           senderId: generateUUID(),
-//           receiverId: DEFAULT_ADMIN.id, // Фиксированный ID администратора
-//         },
-//       },
-//     },
-//     {
-//       userId: "444",
-//       userName: "Bob Dylan",
-//       hasUnreadMessages: true,
-//       lastMessage: {
-//         type: "message",
-//         message: faker.lorem.sentence(),
-//         timeStamp: new Date().valueOf() - (100000 - 3 * 5000),
-//         payload: {
-//           messageId: generateUUID(),
-//           wasRead: Math.random() > 0.5,
-//           senderId: generateUUID(),
-//           receiverId: DEFAULT_ADMIN.id, // Фиксированный ID администратора
-//         },
-//       },
-//     },
-//     {
-//       userId: "555",
-//       userName: "Wow Ser",
-//       hasUnreadMessages: true,
-//       lastMessage: {
-//         type: "message",
-//         message: faker.lorem.sentence(),
-//         timeStamp: new Date().valueOf() - (100000 - 4 * 5000),
-//         payload: {
-//           messageId: generateUUID(),
-//           wasRead: Math.random() > 0.5,
-//           senderId: generateUUID(),
-//           receiverId: DEFAULT_ADMIN.id, // Фиксированный ID администратора
-//         },
-//       },
-//     },
-//     {
-//       userId: "6",
-//       userName: "Mr Smith",
-//       hasUnreadMessages: true,
-//       lastMessage: {
-//         type: "message",
-//         message: faker.lorem.sentence(),
-//         timeStamp: new Date().valueOf() - (100000 - 1 * 5000),
-//         payload: {
-//           messageId: generateUUID(),
-//           wasRead: Math.random() > 0.5,
-//           senderId: generateUUID(),
-//           receiverId: DEFAULT_ADMIN.id, // Фиксированный ID администратора
-//         },
-//       },
-//     },
-//     {
-//       userId: "7",
-//       userName: "John Doe",
-//       hasUnreadMessages: false,
-//       lastMessage: {
-//         type: "message",
-//         message: faker.lorem.sentence(),
-//         timeStamp: new Date().valueOf() - (100000 - 2 * 5000),
-//         payload: {
-//           messageId: generateUUID(),
-//           wasRead: Math.random() > 0.5,
-//           senderId: generateUUID(),
-//           receiverId: DEFAULT_ADMIN.id, // Фиксированный ID администратора
-//         },
-//       },
-//     },
-//     {
-//       userId: "8",
-//       userName: "Bob Dylan",
-//       hasUnreadMessages: true,
-//       lastMessage: {
-//         type: "message",
-//         message: faker.lorem.sentence(),
-//         timeStamp: new Date().valueOf() - (100000 - 3 * 5000),
-//         payload: {
-//           messageId: generateUUID(),
-//           wasRead: Math.random() > 0.5,
-//           senderId: generateUUID(),
-//           receiverId: DEFAULT_ADMIN.id, // Фиксированный ID администратора
-//         },
-//       },
-//     },
-//     {
-//       userId: "9",
-//       userName: "Wow Ser",
-//       hasUnreadMessages: true,
-//       lastMessage: {
-//         type: "message",
-//         message: faker.lorem.sentence(),
-//         timeStamp: new Date().valueOf() - (100000 - 4 * 5000),
-//         payload: {
-//           messageId: generateUUID(),
-//           wasRead: Math.random() > 0.5,
-//           senderId: generateUUID(),
-//           receiverId: DEFAULT_ADMIN.id, // Фиксированный ID администратора
-//         },
-//       },
-//     },
-//     {
-//       userId: "10",
-//       userName: "Mr Smith",
-//       hasUnreadMessages: true,
-//       lastMessage: {
-//         type: "message",
-//         message: faker.lorem.sentence(),
-//         timeStamp: new Date().valueOf() - (100000 - 1 * 5000),
-//         payload: {
-//           messageId: generateUUID(),
-//           wasRead: Math.random() > 0.5,
-//           senderId: generateUUID(),
-//           receiverId: DEFAULT_ADMIN.id, // Фиксированный ID администратора
-//         },
-//       },
-//     },
-//     {
-//       userId: "11",
-//       userName: "John Doe",
-//       hasUnreadMessages: false,
-//       lastMessage: {
-//         type: "message",
-//         message: faker.lorem.sentence(),
-//         timeStamp: new Date().valueOf() - (100000 - 2 * 5000),
-//         payload: {
-//           messageId: generateUUID(),
-//           wasRead: Math.random() > 0.5,
-//           senderId: generateUUID(),
-//           receiverId: DEFAULT_ADMIN.id, // Фиксированный ID администратора
-//         },
-//       },
-//     },
-//     {
-//       userId: "12",
-//       userName: "Bob Dylan",
-//       hasUnreadMessages: true,
-//       lastMessage: {
-//         type: "message",
-//         message: faker.lorem.sentence(),
-//         timeStamp: new Date().valueOf() - (100000 - 3 * 5000),
-//         payload: {
-//           messageId: generateUUID(),
-//           wasRead: Math.random() > 0.5,
-//           senderId: generateUUID(),
-//           receiverId: DEFAULT_ADMIN.id, // Фиксированный ID администратора
-//         },
-//       },
-//     },
-//     {
-//       userId: "13",
-//       userName: "Wow Ser",
-//       hasUnreadMessages: true,
-//       lastMessage: {
-//         type: "message",
-//         message: faker.lorem.sentence(),
-//         timeStamp: new Date().valueOf() - (100000 - 4 * 5000),
-//         payload: {
-//           messageId: generateUUID(),
-//           wasRead: Math.random() > 0.5,
-//           senderId: generateUUID(),
-//           receiverId: DEFAULT_ADMIN.id, // Фиксированный ID администратора
-//         },
-//       },
-//     },
-//   ];
-
-//   // Отправка статистики обратно на клиент
-//   const response = {
-//     type: "chatStats",
-//     payload: data,
-//   };
-
-//   ws.send(JSON.stringify(response));
-// }
-
 function handleNewActivity(ws) {
   // Генерация случайной активности
   const generateActivity = () => {
@@ -451,15 +141,6 @@ function handleNewActivity(ws) {
     ws.send(JSON.stringify(response));
   };
 
-  // Немедленно отправить первую активность
-  // sendActivity();
-
-  // Обновление и отправка активности каждые 15 секунд
-  // const intervalId = setInterval(() => {
-  //   activityRecord = generateActivity(); // Генерация новой активности
-  //   sendActivity();
-  // }, 5000);
-
   // Обработка закрытия соединения и очистка интервала
   ws.on("close", () => {
     // clearInterval(intervalId);
@@ -472,34 +153,33 @@ function handleNewActivity(ws) {
   });
 }
 
-const generateChatHistory = () => {
+const generateChatHistory = (chatId) => {
   const length = 20;
-  const senderId = generateUUID();
   return Array.from({ length }, (_, i, arr) => ({
-    type: "message",
-    message: faker.lorem.sentence(),
     timeStamp: new Date().valueOf() - (100000 - i * 5000),
-    payload: {
-      messageId: generateUUID(),
-      wasRead: i > length - 3,
-      senderId: i % 2 ? DEFAULT_ADMIN.id : DEFAULT_USER.id,
-      receiverId: i % 2 ? DEFAULT_USER.id : DEFAULT_ADMIN.id,
-    },
+    text: faker.lorem.sentence(),
+    messageId: generateUUID(),
+    wasReadBy:
+      i < length - 3 ? [DEFAULT_USER.id] : [DEFAULT_ADMIN.id, DEFAULT_USER.id],
+    senderId: i % 2 ? DEFAULT_ADMIN.id : DEFAULT_USER.id,
+    // receiverId: i % 2 ? DEFAULT_USER.id : DEFAULT_ADMIN.id,
+    chatId,
   }));
 };
 
-const CHAT_HISTORY = generateChatHistory();
-
 function sendRandomMessage(ws) {
   // Генерируем случайное сообщение из истории
-  const randomMessage =
-    CHAT_HISTORY[Math.floor(Math.random() * CHAT_HISTORY.length)];
-
-  // Формируем ответ с типом "newMessage"
-  const response = {
-    type: "newMessage",
-    payload: randomMessage,
+  const randomMessage = {
+    timeStamp: Date.now(),
+    text: faker.lorem.sentence(),
+    messageId: generateUUID(),
+    wasReadBy: [DEFAULT_USER.id],
+    senderId: DEFAULT_USER.id,
+    // receiverId: i % 2 ? DEFAULT_USER.id : DEFAULT_ADMIN.id,
+    chatId: "0000",
   };
+
+  const response = { type: "message", payload: randomMessage };
 
   // Отправляем сообщение через WebSocket
   ws.send(JSON.stringify(response));
@@ -537,14 +217,6 @@ wss.on("connection", function connection(ws) {
     // Обработка входящего сообщения и ответ в зависимости от содержимого
     const receivedData = JSON.parse(message);
 
-    if (receivedData.type === "getChatMessagesHistory") {
-      const response = {
-        type: "chatMessagesHistory",
-        payload: CHAT_HISTORY,
-      };
-      ws.send(JSON.stringify(response));
-    }
-
     if (receivedData.type === "ping") {
       ws.send(
         JSON.stringify({
@@ -552,55 +224,6 @@ wss.on("connection", function connection(ws) {
           message: "Pong!",
         })
       );
-    }
-
-    // if (
-    //   receivedData.type === "chatHistory"
-    //   // && receivedData.code === "getHistory"
-    // ) {
-    //   const response = {
-    //     type: "chatHistory",
-    //     payload: CHAT_HISTORY,
-    //     timestamp: new Date().valueOf(),
-    //   };
-
-    //   ws.send(JSON.stringify(response));
-    // }
-
-    if (receivedData.type === "message") {
-      // Отправка typingStarted
-      ws.send(
-        JSON.stringify({
-          code: "typingStarted",
-          message: receivedData.message,
-          timeStamp: receivedData.timeStamp,
-          type: "typing",
-        })
-      );
-
-      // Отправка typingStopped через 2 секунды
-      setTimeout(() => {
-        ws.send(
-          JSON.stringify({
-            code: "typingStopped",
-            message: receivedData.message,
-            timeStamp: receivedData.timeStamp,
-            type: "typing",
-          })
-        );
-      }, 3000);
-
-      // Отправка окончательного сообщения через 4 секунды
-      setTimeout(() => {
-        ws.send(
-          JSON.stringify({
-            type: "message",
-            message: "Thank you for your message. We are looking into it.",
-            timeStamp: new Date().valueOf(),
-            payload: { sender: "support" },
-          })
-        );
-      }, 6000);
     }
 
     if (
@@ -732,83 +355,54 @@ app.post("/api/auth/registration", (req, res) => {
   }
 });
 
-app.get("/api/chat/messages", (req, res) => {
-  res.json( CHAT_HISTORY);
+app.get("/api/currentUser", (req, res) => {
+  res.json(DEFAULT_ADMIN);
+});
+
+app.get("/api/chats/:id/messages", (req, res) => {
+  const chatId = req.params.id;
+
+  res.json(generateChatHistory(chatId));
 });
 
 // Новый REST API эндпоинт для получения статистики чатов
-app.get("/api/chat/previews", (req, res) => {
+app.get("/api/chats", (req, res) => {
   // Статистика для подсчета количества прочитанных и непрочитанных сообщений
+
+  const user2Id = generateUUID();
   const data = [
     {
-      userId: DEFAULT_USER.id,
+      chatId: "0000",
+      users: [DEFAULT_USER.id, DEFAULT_ADMIN.id],
       fullName: DEFAULT_USER.fullName,
-      hasUnreadMessages: true,
+      hasNewMessages: true,
       lastMessage: {
-        type: "message",
-        message: faker.lorem.sentence(),
-        timeStamp: new Date().valueOf() - (100000 - 1 * 5000),
-        payload: {
-          messageId: DEFAULT_ADMIN,
-          wasRead: Math.random() > 0.5,
-          senderId: DEFAULT_USER.id,
-          receiverId: DEFAULT_ADMIN.id, // Фиксированный ID администратора
-        },
+        timeStamp: Date.now(),
+        text: faker.lorem.sentence(),
+        messageId: generateUUID(),
+        wasReadBy: [DEFAULT_USER.id],
+        senderId: DEFAULT_ADMIN.id,
+        chatId: "0000",
       },
     },
     {
-      userId: "2",
-      fullName: "John Doe",
-      hasUnreadMessages: false,
+      chatId: "1111",
+      users: [user2Id, DEFAULT_ADMIN.id],
+      fullName: "Biba Pisin",
+      hasNewMessages: true,
       lastMessage: {
-        type: "message",
-        message: faker.lorem.sentence(),
-        timeStamp: new Date().valueOf() - (100000 - 2 * 5000),
-        payload: {
-          messageId: generateUUID(),
-          wasRead: Math.random() > 0.5,
-          senderId: generateUUID(),
-          receiverId: DEFAULT_ADMIN.id, // Фиксированный ID администратора
-        },
-      },
-    },
-    {
-      userId: "3",
-      fullName: "Bob Dylan",
-      hasUnreadMessages: true,
-      lastMessage: {
-        type: "message",
-        message: faker.lorem.sentence(),
-        timeStamp: new Date().valueOf() - (100000 - 3 * 5000),
-        payload: {
-          messageId: generateUUID(),
-          wasRead: Math.random() > 0.5,
-          senderId: generateUUID(),
-          receiverId: DEFAULT_ADMIN.id, // Фиксированный ID администратора
-        },
-      },
-    },
-    {
-      userId: "4",
-      fullName: "Wow Ser",
-      hasUnreadMessages: true,
-      lastMessage: {
-        type: "message",
-        message: faker.lorem.sentence(),
-        timeStamp: new Date().valueOf() - (100000 - 4 * 5000),
-        payload: {
-          messageId: generateUUID(),
-          wasRead: Math.random() > 0.5,
-          senderId: generateUUID(),
-          receiverId: DEFAULT_ADMIN.id, // Фиксированный ID администратора
-        },
+        timeStamp: Date.now(),
+        text: faker.lorem.sentence(),
+        messageId: generateUUID(),
+        wasReadBy: [user2Id],
+        senderId: DEFAULT_ADMIN.id,
+        receiverId: DEFAULT_USER.id,
       },
     },
   ];
 
   res.json(data);
 });
-
 
 app.post("/api/user/create", (req, res) => {
   const { email, password } = req.body;
