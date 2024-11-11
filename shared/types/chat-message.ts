@@ -1,8 +1,8 @@
 export type ChatMessage = {
-  messageId: string;
-  receiverId: string;
+  messageId?: string;
   senderId: string;
   text: string;
-  timeStamp?: string;
-  wasRead: string;
+  timeStamp?: number;
+  wasReadBy: string[];
+  chatId: string;
 };

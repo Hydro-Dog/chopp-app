@@ -2,13 +2,8 @@ import { WsMessage } from "../types";
 
 export const createWsMessage = ({
   type,
-  code,
-  message,
   payload,
-}: WsMessage) => ({
+}: Omit<WsMessage, 'timeStamp'>) => ({
   type,
-  code,
-  message,
-  timeStamp: new Date().valueOf(),
   payload,
 });

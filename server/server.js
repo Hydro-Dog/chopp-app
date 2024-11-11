@@ -26,6 +26,7 @@ const DEFAULT_USER = {
   fullName: "Ivan Pupkin",
   password: "11111111",
   phoneNumber: "8-989-898-98-98",
+  chatWithAdminId: "0000"
 };
 
 const DEFAULT_ADMIN = {
@@ -168,14 +169,23 @@ const generateChatHistory = (chatId) => {
 };
 
 function sendRandomMessage(ws) {
-  // Генерируем случайное сообщение из истории
+  // для проверки админа
+  // const randomMessage = {
+  //   timeStamp: Date.now(),
+  //   text: faker.lorem.sentence(),
+  //   messageId: generateUUID(),
+  //   wasReadBy: [DEFAULT_USER.id],
+  //   senderId: DEFAULT_USER.id,
+  //   chatId: "0000",
+  // };
+
+  // для проверки юзера
   const randomMessage = {
     timeStamp: Date.now(),
     text: faker.lorem.sentence(),
     messageId: generateUUID(),
-    wasReadBy: [DEFAULT_USER.id],
-    senderId: DEFAULT_USER.id,
-    // receiverId: i % 2 ? DEFAULT_USER.id : DEFAULT_ADMIN.id,
+    wasReadBy: [DEFAULT_ADMIN.id],
+    senderId: DEFAULT_ADMIN.id,
     chatId: "0000",
   };
 
@@ -363,6 +373,21 @@ app.get("/api/chats/:id/messages", (req, res) => {
   const chatId = req.params.id;
 
   res.json(generateChatHistory(chatId));
+});
+
+app.get("/api/chats/:chatId/stats", (req, res) => {
+  const chatId = req.params.chatId;  // Extracting the chat ID from the URL parameter
+
+  // Mock data for chat statistics
+  const chatStats = {
+    total: Math.floor(Math.random() * 100),
+    read: Math.floor(Math.random() * 50),
+    unRead: Math.floor(Math.random() * 50),
+  };
+
+  // You might want to check if such a chat exists or if the user has the right to view these stats
+  // For now, we assume the chat ID is valid and the user can view the stats
+  res.json(chatStats);
 });
 
 // Новый REST API эндпоинт для получения статистики чатов

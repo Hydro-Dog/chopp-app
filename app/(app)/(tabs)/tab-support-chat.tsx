@@ -10,8 +10,15 @@ import {
 } from "react-native";
 import { IconButton, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import { SupportChat } from "@/pages/supportChat";
 import {
+  useFetchChatStats,
+  useFetchMessages,
+  useNewIncomingMessageChatHandler,
+  useReadAllChatMessages,
+} from "./hooks";
+import { Chat } from "@/pages/chat";
+import {
+  ChatMessage,
   createWsMessage,
   useChoppTheme,
   WS_MESSAGE_TYPE,
@@ -20,77 +27,61 @@ import {
 import { useFilterWsMessages } from "@/shared/hooks";
 import { wsSend } from "@/store/slices/ws-slice";
 import { AppDispatch, RootState } from "@/store/store";
+import { useChatsContext } from "@/shared/context/chats-context";
 
 export default function TabSupportChat() {
   const { theme } = useChoppTheme();
   const flatListRef = useRef(null);
-  const [messageText, setMessageText] = useState("");
-  const [messages, setMessages] = useState([] as WsMessage[]);
+  const [text, setText] = useState("");
+  const { messages, setMessages } = useChatsContext();
+  
   const dispatch = useDispatch<AppDispatch>();
-  const { wsConnected } = useSelector((state: RootState) => state.ws);
-  const { lastMessage: chatHistory } = useFilterWsMessages(
-    WS_MESSAGE_TYPE.CHAT_HISTORY,
-  );
-  const { lastMessage: typingStatus } = useFilterWsMessages(
-    WS_MESSAGE_TYPE.TYPING,
-  );
-  const { lastMessage: currentMessage } = useFilterWsMessages(
+  const { currentUser } = useSelector((state: RootState) => state.user);
+  // const { wsConnected } = useSelector((state: RootState) => state.ws);
+  // const { lastMessage: chatHistory } = useFilterWsMessages(
+  //   WS_MESSAGE_TYPE.CHAT_HISTORY,
+  // );
+  // const { lastMessage: typingStatus } = useFilterWsMessages(
+  //   WS_MESSAGE_TYPE.TYPING,
+  // );
+  const { lastMessage: newMessage } = useFilterWsMessages<ChatMessage>(
     WS_MESSAGE_TYPE.MESSAGE,
   );
 
-  useEffect(() => {
-    if (currentMessage) {
-      setMessages((messages) => [...messages, currentMessage]);
+  useNewIncomingMessageChatHandler({ flatListRef });
+
+  const handleSendMessage = () => {
+    if (text.trim()) {
+      // Создаем и отправляем ws-сообщение
+      const newMessage = {
+        type: WS_MESSAGE_TYPE.MESSAGE,
+        payload: {
+          timeStamp: Date.now(),
+          text,
+          senderId: currentUser?.id,
+          chatId: currentUser?.chatWithAdminId,
+          wasReadBy: [currentUser?.id],
+        } as ChatMessage,
+      };
+
+      dispatch(wsSend(newMessage));
+      setText(""); // Очистка TextArea после отправки сообщения
+      //Обновить открытые сообщения
+      setMessages((prev) => {
+        return [...prev, newMessage.payload];
+      });
+
       setTimeout(() => {
         flatListRef.current.scrollToEnd({ animated: true });
       }, 100);
     }
-  }, [currentMessage]);
-
-  useEffect(() => {
-    if (wsConnected) {
-      dispatch(
-        wsSend(
-          createWsMessage({
-            type: WS_MESSAGE_TYPE.CHAT_HISTORY,
-            code: "getHistory",
-          }),
-        ),
-      );
-    }
-  }, [dispatch, wsConnected]);
-
-  useEffect(() => {
-    if (chatHistory && chatHistory.payload) {
-      setMessages(chatHistory.payload as WsMessage[]);
-    }
-  }, [chatHistory]);
-
-  const onSend = () => {
-    const newMessage = createWsMessage({
-      type: WS_MESSAGE_TYPE.MESSAGE,
-      message: messageText,
-      payload: { sender: "user" },
-    });
-    setMessageText("");
-    setMessages((messages) => [...messages, newMessage]);
-    dispatch(wsSend(newMessage));
   };
-
-  useEffect(() => {
-    if (flatListRef.current) {
-      setTimeout(() => {
-        flatListRef.current.scrollToEnd({ animated: true });
-      }, 100);
-    }
-  }, [typingStatus?.code]);
 
   return (
     <SafeAreaView style={styles.container}>
-      <SupportChat
+      <Chat
         ref={flatListRef}
-        messages={messages}
-        isTyping={typingStatus?.code === "typingStarted"}
+        // isTyping={typingStatus?.code === "typingStarted"}
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -104,18 +95,18 @@ export default function TabSupportChat() {
                 }, 100);
               }}
               multiline
-              value={messageText}
-              onChangeText={setMessageText}
+              value={text}
+              onChangeText={setText}
               mode="outlined"
               numberOfLines={1}
               style={styles.input}
             />
             <IconButton
-              disabled={!messageText}
+              disabled={!text}
               icon="send"
               iconColor={theme.colors.primary}
               size={32}
-              onPress={onSend}
+              onPress={handleSendMessage}
             />
           </View>
         </TouchableWithoutFeedback>

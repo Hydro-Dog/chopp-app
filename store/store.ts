@@ -1,4 +1,5 @@
 import { configureStore, Middleware } from "@reduxjs/toolkit";
+import { chatSlice, ChatState } from "./slices/chat-slice";
 import { userSlice, UserState } from "./slices/user-slice";
 import {
   pushWsMessage,
@@ -78,6 +79,7 @@ export const store = configureStore({
   reducer: {
     user: userSlice.reducer,
     ws: wsSlice.reducer,
+    chat: chatSlice.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware().concat(wsMiddleware);
@@ -87,6 +89,7 @@ export const store = configureStore({
 export type RootState = {
   user: UserState;
   ws: WsState;
+  chat: ChatState;
 };
 
 export type AppDispatch = typeof store.dispatch;

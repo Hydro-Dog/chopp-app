@@ -1,13 +1,20 @@
 import React, { useEffect } from "react";
-import { Provider as StoreProvider } from "react-redux";
+import {
+  Provider as StoreProvider,
+  useDispatch,
+  useSelector,
+} from "react-redux";
 import { useFonts } from "expo-font";
 import { Slot } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
 import { WsWrapper } from "@/shared/components/chopp-ws-wrapper";
 import { ChoppGlobalProvider } from "@/shared/context/chopp-global-context";
-import { store } from "@/store/store";
+import { AppDispatch, RootState, store } from "@/store/store";
 import { initI18n } from "@/translation/i18n";
+import { fetchCurrentUser } from "@/store/slices/user-slice";
+import { useBoolean } from "usehooks-ts";
+import { ChatsContextProvider } from "@/shared/context/chats-context";
 
 initI18n();
 
@@ -36,17 +43,19 @@ export default function RootLayout() {
     <StoreProvider store={store}>
       <ChoppGlobalProvider>
         <WsWrapper>
-          <Slot />
-          {/* TODO: Сделать, чтобы на светлой теме статус бар на айфоне не сливался с фоном*/}
-          {/* <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} /> */}
+          <ChatsContextProvider>
+            <Slot />
+            {/* TODO: Сделать, чтобы на светлой теме статус бар на айфоне не сливался с фоном*/}
+            {/* <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} /> */}
 
-          {/* <Stack screenOptions={{ headerShown: false }}>
+            {/* <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="registration" />
             <Stack.Screen name="login" />
             <Stack.Screen name="+not-found" />
             <Stack.Screen name="+html" />
           </Stack> */}
+          </ChatsContextProvider>
         </WsWrapper>
       </ChoppGlobalProvider>
     </StoreProvider>

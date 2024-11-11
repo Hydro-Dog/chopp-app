@@ -1,9 +1,10 @@
 export type User = {
-  id: number;
+  id: string;
   token?: string;
   fullName: string;
   phoneNumber: string;
   email: string;
+  chatWithAdminId?: string;
 };
 
 export type UserRegisterDTO = Omit<User, "id" | "token"> & { password: string };
