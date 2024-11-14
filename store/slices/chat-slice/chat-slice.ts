@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { fetchChatMessages, fetchChatStats } from "./actions";
 import { WsMessage, ChatMessage, FETCH_STATUS, ErrorResponse } from "@/shared";
-import { ChatData } from "@/shared/types/chat-data";
 import { ChatStats } from "@/shared/types/chat-stats";
 
 export type ChatState = {
@@ -9,8 +8,8 @@ export type ChatState = {
   fetchChatMessagesStatus: FETCH_STATUS;
   fetchChatMessagesError: ErrorResponse | null;
   chatsStats: ChatStats | null;
-  fetchChatsStatus: FETCH_STATUS;
-  fetchChatError: ErrorResponse | null;
+  fetchChatsStatsStatus: FETCH_STATUS;
+  fetchChatStatsError: ErrorResponse | null;
 };
 
 const initialState: ChatState = {
@@ -18,8 +17,8 @@ const initialState: ChatState = {
   fetchChatMessagesStatus: FETCH_STATUS.IDLE,
   fetchChatMessagesError: null,
   chatsStats: null,
-  fetchChatsStatus: FETCH_STATUS.IDLE,
-  fetchChatError: null,
+  fetchChatsStatsStatus: FETCH_STATUS.IDLE,
+  fetchChatStatsError: null,
 };
 
 export const chatSlice = createSlice({
@@ -51,18 +50,18 @@ export const chatSlice = createSlice({
         };
       })
       .addCase(fetchChatStats.pending, (state) => {
-        state.fetchChatsStatus = FETCH_STATUS.LOADING;
+        state.fetchChatsStatsStatus = FETCH_STATUS.LOADING;
       })
       .addCase(
         fetchChatStats.fulfilled,
-        (state, action: PayloadAction<ChatData[]>) => {
-          state.fetchChatsStatus = FETCH_STATUS.SUCCESS;
+        (state, action: PayloadAction<ChatStats>) => {
+          state.fetchChatsStatsStatus = FETCH_STATUS.SUCCESS;
           state.chatsStats = action.payload;
         },
       )
       .addCase(fetchChatStats.rejected, (state, action) => {
-        state.fetchChatsStatus = FETCH_STATUS.ERROR;
-        state.fetchChatError = action.payload ?? {
+        state.fetchChatsStatsStatus = FETCH_STATUS.ERROR;
+        state.fetchChatStatsError = action.payload ?? {
           errorMessage: "Failed to fetch chat information",
         };
       });

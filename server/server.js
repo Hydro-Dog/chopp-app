@@ -2,14 +2,31 @@ const { timeStamp } = require("console");
 const crypto = require("crypto");
 const http = require("http");
 const { faker } = require("@faker-js/faker");
+const { fakerRU } = require("@faker-js/faker");
+
 const cors = require("cors");
 const express = require("express");
 const { v4: uuidv4 } = require("uuid");
 const WebSocket = require("ws");
 
+console.log(fakerRU.person.fullName(), fakerRU.location.streetAddress());
+
 function generateUUID() {
   return uuidv4(); // Генерация уникального UUID
 }
+
+const COMMENTS = [
+  "Пожалуйста, добавьте в заказ дополнительно пачку молока и хлеб.",
+  "Доставку оставьте под дверью, оплату оставлю в почтовом ящике.",
+  "Перезвоните мне за 10 минут до приезда, я буду на месте.",
+  "Убедитесь, что все продукты свежие, особенно фрукты и овощи.",
+  "Если яиц не окажется в наличии, замените их на молоко.",
+  "Оставьте заказ у соседа, если меня не будет дома.",
+  "Пожалуйста, не звоните в домофон, я сплю. Просто оставьте заказ у двери.",
+  "Нужно больше пакетов, пожалуйста, упакуйте каждый вид продуктов отдельно.",
+  "Пожалуйста, приложите чек наружу пакета.",
+  "Привезите пожалуйста заказ после 18:00, до этого времени меня не будет дома.",
+];
 
 const app = express();
 const port = 4004;
@@ -23,16 +40,16 @@ const wss = new WebSocket.Server({ server });
 const DEFAULT_USER = {
   id: "0",
   email: "a@a.a",
-  fullName: "Ivan Pupkin",
+  fullName: "Иван Петров",
   password: "11111111",
   phoneNumber: "8-989-898-98-98",
-  chatWithAdminId: "0000"
+  chatWithAdminId: "0000",
 };
 
 const DEFAULT_ADMIN = {
   id: "007",
   email: "admin@admin.ru",
-  fullName: "Admin Adminovich",
+  fullName: "Админ Админ",
   password: "11111111",
   phoneNumber: "8-989-898-98-98",
 };
@@ -40,17 +57,17 @@ const DEFAULT_ADMIN = {
 const generateUsers = () => {
   const users = {};
   // Добавление администратора
-  users["admin@admin.ru"] = DEFAULT_ADMIN;
-  users["a@a.a"] = DEFAULT_USER;
+  // users["admin@admin.ru"] = DEFAULT_ADMIN;
+  // users["a@a.a"] = DEFAULT_USER;
 
   // Генерация 20 пользователей
   for (let i = 0; i < 20; i++) {
     const email = faker.internet.email();
     users[email] = {
       email: email,
-      fullName: faker.person.fullName(),
+      fullName: fakerRU.person.fullName(),
       password: faker.internet.password(),
-      phoneNumber: faker.phone.number(),
+      phoneNumber: '8-999-888-55-33',
       id: faker.number.float(),
     };
   }
@@ -123,8 +140,8 @@ function handleNewActivity(ws) {
         "completed",
         "canceled",
       ]),
-      address: faker.address.streetAddress(),
-      comment: faker.lorem.sentence(),
+      address: fakerRU.location.streetAddress(),
+      comment: COMMENTS[Math.floor(Math.random() * COMMENTS.length)],
       id: faker.number.float(),
       userId: users[userKey].id,
       userFullName: users[userKey].fullName,
@@ -142,6 +159,8 @@ function handleNewActivity(ws) {
     ws.send(JSON.stringify(response));
   };
 
+  setTimeout(sendActivity, 3000);
+
   // Обработка закрытия соединения и очистка интервала
   ws.on("close", () => {
     // clearInterval(intervalId);
@@ -158,7 +177,7 @@ const generateChatHistory = (chatId) => {
   const length = 20;
   return Array.from({ length }, (_, i, arr) => ({
     timeStamp: new Date().valueOf() - (100000 - i * 5000),
-    text: faker.lorem.sentence(),
+    text: fakerRU.lorem.sentence(),
     messageId: generateUUID(),
     wasReadBy:
       i < length - 3 ? [DEFAULT_USER.id] : [DEFAULT_ADMIN.id, DEFAULT_USER.id],
@@ -170,24 +189,24 @@ const generateChatHistory = (chatId) => {
 
 function sendRandomMessage(ws) {
   // для проверки админа
+  const randomMessage = {
+    timeStamp: Date.now(),
+    text: fakerRU.lorem.sentence(),
+    messageId: generateUUID(),
+    wasReadBy: [DEFAULT_USER.id],
+    senderId: DEFAULT_USER.id,
+    chatId: "0000",
+  };
+
+  // для проверки юзера
   // const randomMessage = {
   //   timeStamp: Date.now(),
   //   text: faker.lorem.sentence(),
   //   messageId: generateUUID(),
-  //   wasReadBy: [DEFAULT_USER.id],
-  //   senderId: DEFAULT_USER.id,
+  //   wasReadBy: [DEFAULT_ADMIN.id],
+  //   senderId: DEFAULT_ADMIN.id,
   //   chatId: "0000",
   // };
-
-  // для проверки юзера
-  const randomMessage = {
-    timeStamp: Date.now(),
-    text: faker.lorem.sentence(),
-    messageId: generateUUID(),
-    wasReadBy: [DEFAULT_ADMIN.id],
-    senderId: DEFAULT_ADMIN.id,
-    chatId: "0000",
-  };
 
   const response = { type: "message", payload: randomMessage };
 
@@ -236,65 +255,60 @@ wss.on("connection", function connection(ws) {
       );
     }
 
-    if (
-      receivedData.type === "callStatus"
-      // && receivedData.code === "call"
-    ) {
-      ws.send(
-        JSON.stringify({
-          type: "callStatus",
-          message: "processing",
-          timeStamp: new Date().valueOf(),
-        })
-      );
+    // if (
+    //   receivedData.type === "callStatus"
+    //   // && receivedData.code === "call"
+    // ) {
+    //   ws.send(
+    //     JSON.stringify({
+    //       type: "callStatus",
+    //       message: "processing",
+    //       timeStamp: new Date().valueOf(),
+    //     })
+    //   );
 
-      setTimeout(() => {
-        ws.send(
-          JSON.stringify({
-            type: "callStatus",
-            message: "accepted",
-            timeStamp: new Date().valueOf(),
-          })
-        );
-      }, 1000);
+    //   setTimeout(() => {
+    //     ws.send(
+    //       JSON.stringify({
+    //         type: "callStatus",
+    //         message: "accepted",
+    //         timeStamp: new Date().valueOf(),
+    //       })
+    //     );
+    //   }, 1000);
 
-      setTimeout(() => {
-        ws.send(
-          JSON.stringify({
-            type: "callStatus",
-            message: "onTheWay",
-            timeStamp: new Date().valueOf(),
-          })
-        );
-      }, 3000);
+    //   setTimeout(() => {
+    //     ws.send(
+    //       JSON.stringify({
+    //         type: "callStatus",
+    //         message: "onTheWay",
+    //         timeStamp: new Date().valueOf(),
+    //       })
+    //     );
+    //   }, 3000);
 
-      setTimeout(() => {
-        ws.send(
-          JSON.stringify({
-            type: "callStatus",
-            message: "onTheSpot",
-            timeStamp: new Date().valueOf(),
-          })
-        );
-      }, 5000);
+    //   setTimeout(() => {
+    //     ws.send(
+    //       JSON.stringify({
+    //         type: "callStatus",
+    //         message: "onTheSpot",
+    //         timeStamp: new Date().valueOf(),
+    //       })
+    //     );
+    //   }, 5000);
 
-      setTimeout(() => {
-        ws.send(
-          JSON.stringify({
-            type: "callStatus",
-            message: "completed",
-            timeStamp: new Date().valueOf(),
-          })
-        );
-      }, 7000);
-    }
+    //   setTimeout(() => {
+    //     ws.send(
+    //       JSON.stringify({
+    //         type: "callStatus",
+    //         message: "completed",
+    //         timeStamp: new Date().valueOf(),
+    //       })
+    //     );
+    //   }, 7000);
+    // }
 
-    if (
-      receivedData.type === "callStatus"
-      // &&receivedData.code === "getCallStatus"
-    ) {
-      //idle, processing, accepted (declined), onTheWay, onTheSpot, completed
-      console.log("ws.send");
+    if (receivedData.type === "callStatus") {
       ws.send(
         JSON.stringify({
           type: "callStatus",
@@ -304,20 +318,9 @@ wss.on("connection", function connection(ws) {
       );
     }
 
-    if (
-      receivedData.type === "getCallHistoryStats"
-      // &&receivedData.code === "getCallHistoryStats"
-    ) {
-      handleCallHistoryStats(ws);
-    }
-
     if (receivedData.type === "getNewActivity") {
       handleNewActivity(ws);
     }
-
-    // if (receivedData.type === "getChatStats") {
-    //   handleChatsData(ws);
-    // }
   });
 
   const messageInterval = setInterval(() => {
@@ -372,11 +375,54 @@ app.get("/api/currentUser", (req, res) => {
 app.get("/api/chats/:id/messages", (req, res) => {
   const chatId = req.params.id;
 
-  res.json(generateChatHistory(chatId));
+  const mockChatHistory = [
+    {
+      timeStamp: new Date().setMinutes(new Date().getMinutes() - 10),
+      text: "Здравствуйте, мой заказ опоздывает? Ожидаю уже больше часа.",
+      messageId: generateUUID(),
+      wasReadBy: [DEFAULT_ADMIN.id],
+      senderId: DEFAULT_USER.id,
+      chatId: chatId,
+    },
+    {
+      timeStamp: new Date().setMinutes(new Date().getMinutes() - 9),
+      text: "Здравствуйте! Позвольте мне проверить статус вашего заказа.",
+      messageId: generateUUID(),
+      wasReadBy: [],
+      senderId: DEFAULT_ADMIN.id,
+      chatId: chatId,
+    },
+    {
+      timeStamp: new Date().setMinutes(new Date().getMinutes() - 8),
+      text: "Ваш заказ уже в пути. К сожалению, возникла задержка из-за пробок на дороге. Желаете продолжить ожидание или отменить заказ?",
+      messageId: generateUUID(),
+      wasReadBy: ["user_id"],
+      senderId: DEFAULT_ADMIN.id,
+      chatId: chatId,
+    },
+    {
+      timeStamp: new Date().setMinutes(new Date().getMinutes() - 6),
+      text: "Продолжу ожидать, спасибо. Пожалуйста, сообщите, как только курьер будет рядом.",
+      messageId: generateUUID(),
+      wasReadBy: ["dispatcher_id"],
+      senderId: DEFAULT_USER.id,
+      chatId: chatId,
+    },
+    {
+      timeStamp: new Date().setMinutes(new Date().getMinutes() - 5),
+      text: "Конечно, мы уведомим вас за 10 минут до прибытия курьера. Благодарим за терпение!",
+      messageId: generateUUID(),
+      wasReadBy: ["user_id"],
+      senderId: DEFAULT_ADMIN.id,
+      chatId: chatId,
+    },
+  ];  
+
+  res.json(mockChatHistory);
 });
 
 app.get("/api/chats/:chatId/stats", (req, res) => {
-  const chatId = req.params.chatId;  // Extracting the chat ID from the URL parameter
+  const chatId = req.params.chatId; // Extracting the chat ID from the URL parameter
 
   // Mock data for chat statistics
   const chatStats = {
@@ -403,7 +449,7 @@ app.get("/api/chats", (req, res) => {
       hasNewMessages: true,
       lastMessage: {
         timeStamp: Date.now(),
-        text: faker.lorem.sentence(),
+        text: "Спасибо, оставайтесь на связи.",
         messageId: generateUUID(),
         wasReadBy: [DEFAULT_USER.id],
         senderId: DEFAULT_ADMIN.id,
@@ -413,11 +459,11 @@ app.get("/api/chats", (req, res) => {
     {
       chatId: "1111",
       users: [user2Id, DEFAULT_ADMIN.id],
-      fullName: "Biba Pisin",
+      fullName: "Алексей Иванов",
       hasNewMessages: true,
       lastMessage: {
         timeStamp: Date.now(),
-        text: faker.lorem.sentence(),
+        text: "Группа выехала на место, ожидайте.",
         messageId: generateUUID(),
         wasReadBy: [user2Id],
         senderId: DEFAULT_ADMIN.id,
@@ -512,8 +558,8 @@ app.get("/api/users/:userId/callHistory", (req, res) => {
         "completed",
         "canceled",
       ]),
-      address: faker.address.streetAddress(),
-      comment: faker.lorem.sentence(),
+      address: fakerRU.location.streetAddress(),
+      comment: COMMENTS[Math.floor(Math.random() * COMMENTS.length)],
       id: faker.number.float(),
       userId: users[userKey].id, // Связываем каждый вызов с ID пользователя
       userFullName: users[userKey].fullName,

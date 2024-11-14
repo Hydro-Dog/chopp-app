@@ -10,31 +10,20 @@ import {
 } from "react-native";
 import { IconButton, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  useFetchChatStats,
-  useFetchMessages,
-  useNewIncomingMessageChatHandler,
-  useReadAllChatMessages,
-} from "./hooks";
+import { useNewIncomingMessageChatHandler } from "./hooks";
 import { Chat } from "@/pages/chat";
-import {
-  ChatMessage,
-  createWsMessage,
-  useChoppTheme,
-  WS_MESSAGE_TYPE,
-  WsMessage,
-} from "@/shared";
+import { ChatMessage, useChoppTheme, WS_MESSAGE_TYPE } from "@/shared";
+import { useChatsContext } from "@/shared/context/chats-context";
 import { useFilterWsMessages } from "@/shared/hooks";
 import { wsSend } from "@/store/slices/ws-slice";
 import { AppDispatch, RootState } from "@/store/store";
-import { useChatsContext } from "@/shared/context/chats-context";
 
 export default function TabSupportChat() {
   const { theme } = useChoppTheme();
   const flatListRef = useRef(null);
   const [text, setText] = useState("");
   const { messages, setMessages } = useChatsContext();
-  
+
   const dispatch = useDispatch<AppDispatch>();
   const { currentUser } = useSelector((state: RootState) => state.user);
   // const { wsConnected } = useSelector((state: RootState) => state.ws);
