@@ -10,7 +10,6 @@ export const useFetchChatStats = () => {
   const { chatsStats } = useSelector((state: RootState) => state.chat);
   const { setChatStats } = useChatsContext();
 
-  console.log('fetchChatStats: ', currentUser?.chatWithAdminId)
   useEffect(() => {
     if (currentUser?.chatWithAdminId) {
       dispatch(fetchChatStats(currentUser?.chatWithAdminId));

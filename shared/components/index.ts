@@ -15,3 +15,5 @@ export * from "./chopp-back-button";
 export * from "./chopp-back-screen-layout";
 export * from "./chopp-big-round-button";
 export * from "./chopp-ws-wrapper";
+export * from "./chopp-view-items";
+export * from "./chopp-view-item";

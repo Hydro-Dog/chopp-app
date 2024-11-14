@@ -40,6 +40,12 @@ export const ru = {
   payment: "Оплата",
   profile: "Профиль",
   setup: "Настроить",
+  order: "Заказ",
+  orderAction: "Заказать",
+  orderComment: "Ваш заказ",
+  orderAddress: "Куда доставить",
+  date: "Дата",
+  orderCreationDate: "Оформлен",
   callStatus: {
     processing: "Обрабатываем",
     processingHint: "Запрос обрабатывается оператором",

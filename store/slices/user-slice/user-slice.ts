@@ -56,9 +56,8 @@ export const userSlice = createSlice({
         fetchCurrentUser.fulfilled,
         (state, action: PayloadAction<User>) => {
           state.currentUserStatus = FETCH_STATUS.SUCCESS;
-          console.log('action.payload: ', action.payload)
+
           state.currentUser = action.payload;
-          console.log('state.currentUser: ', state.currentUser)
         }
       )
       .addCase(fetchCurrentUser.rejected, (state, action) => {
@@ -74,7 +73,7 @@ export const userSlice = createSlice({
         updateCurrentUser.fulfilled,
         (state, action: PayloadAction<User>) => {
           state.updateCurrentUserStatus = FETCH_STATUS.SUCCESS;
-          console.log('action.payload: ', action.payload)
+          console.log("action.payload: ", action.payload);
           state.currentUser = action.payload;
           state.updateCurrentUserStatus = FETCH_STATUS.IDLE;
         }

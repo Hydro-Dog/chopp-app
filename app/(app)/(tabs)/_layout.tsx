@@ -1,22 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Tabs } from "expo-router";
 
-import { useBoolean } from "usehooks-ts";
-import { useFetchChatStats, useFetchMessages, useReadAllChatMessages } from "./hooks";
+import {
+  useFetchChatStats,
+  useFetchMessages,
+  useReadAllChatMessages,
+} from "./hooks";
 import { TabBarIcon } from "@/pages/navigation/TabBarIcon";
 import { ChatMessage, useChoppTheme, WS_MESSAGE_TYPE } from "@/shared";
 import { useChatsContext } from "@/shared/context/chats-context";
-import { fetchCurrentUser } from "@/store/slices/user-slice";
-import { AppDispatch, RootState } from "@/store/store";
 import { useFilterWsMessages } from "@/shared/hooks";
+import { fetchCurrentUser } from "@/store/slices/user-slice";
+import { AppDispatch } from "@/store/store";
 
 export default function TabLayout() {
   const { theme } = useChoppTheme();
   const { t } = useTranslation();
   const { lastMessage: newMessage } = useFilterWsMessages<ChatMessage>(
-    WS_MESSAGE_TYPE.MESSAGE
+    WS_MESSAGE_TYPE.MESSAGE,
   );
   const dispatch = useDispatch<AppDispatch>();
   const { chatStats, setChatStats } = useChatsContext();
@@ -27,26 +30,18 @@ export default function TabLayout() {
 
   //TODO: вынести в хук
   useEffect(() => {
-    console.log('newMessage: ', newMessage)
     setChatStats((prev) => {
-console.log('NEW UNREAD: ', {
-  ...prev,
-  unread: prev.unRead + 1,
-  total: prev.total + 1,
-})
       return {
         ...prev,
         unRead: prev.unRead + 1,
         total: prev.total + 1,
-      }
+      };
     });
   }, [newMessage]);
 
   useEffect(() => {
     dispatch(fetchCurrentUser());
   }, [dispatch]);
-  
-  console.log("chatStats?.unRead: ", chatStats?.unRead);
 
   return (
     <Tabs
@@ -66,7 +61,7 @@ console.log('NEW UNREAD: ', {
           title: t("mainPage"),
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "help-buoy" : "help-buoy-outline"}
+              name={focused ? "home" : "home-outline"}
               color={color}
             />
           ),

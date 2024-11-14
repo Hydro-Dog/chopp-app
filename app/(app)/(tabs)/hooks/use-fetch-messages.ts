@@ -10,7 +10,6 @@ export const useFetchMessages = () => {
   const { chatMessages } = useSelector((state: RootState) => state.chat);
   const { setMessages } = useChatsContext();
 
-  console.log('fetchChatMessages: ', currentUser?.chatWithAdminId)
   useEffect(() => {
     if (currentUser?.chatWithAdminId) {
       dispatch(fetchChatMessages(currentUser?.chatWithAdminId));

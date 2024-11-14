@@ -1,94 +1,122 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { StyleSheet, View } from "react-native";
+import { View, StyleSheet, Image } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { ActivityIndicator } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import { useBoolean } from "usehooks-ts";
+import LogoDark from "@/assets/logo-dark.png";
+import LogoLight from "@/assets/logo-light.png";
+import { ChoppCallStatusScreen } from "@/pages/main";
+import { CurrentOrderDetails } from "@/pages/main/current-order-details";
+import { NewOrderForm } from "@/pages/new-order";
 import {
-  ChoppBigRoundButton,
-  ChoppDialog,
   ChoppThemedText,
-  createWsMessage,
+  FETCH_STATUS,
+  useChoppTheme,
   WS_MESSAGE_TYPE,
 } from "@/shared";
 import { useFilterWsMessages } from "@/shared/hooks";
-import { wsSend } from "@/store/slices/ws-slice";
+import { OrderStatus } from "@/shared/types/order-status";
+import { fetchOrder, Order } from "@/store/slices/order-slice";
 import { AppDispatch, RootState } from "@/store/store";
-import { ChoppCallStatusScreen } from "@/pages/main";
 
-export default function TabMainScreen() {
+export default function MainPage() {
+  const { theme } = useChoppTheme();
   const { t } = useTranslation();
-  const dispatch = useDispatch<AppDispatch>();
-  const onPress = () => showModal();
-  const {
-    value: isModalVisible,
-    setTrue: showModal,
-    setFalse: hideModal,
-  } = useBoolean();
-  const { wsConnected } = useSelector((state: RootState) => state.ws);
-  const { lastMessage } = useFilterWsMessages(WS_MESSAGE_TYPE.CALL_STATUS);
+  const [currentOrderData, setCurrentOrderData] = useState<Order>();
 
-  const onCall = () => {
-    dispatch(
-      wsSend(
-        createWsMessage({
-          type: WS_MESSAGE_TYPE.CALL_STATUS,
-          code: "call",
-        }),
-      ),
-    );
-    hideModal();
-  };
+  const dispatch = useDispatch<AppDispatch>();
+  const { currentOrder, fetchOrderStatus } = useSelector(
+    (state: RootState) => state.order,
+  );
+
+  const { lastMessage } = useFilterWsMessages<OrderStatus>(
+    WS_MESSAGE_TYPE.ORDER_STATUS,
+  );
 
   useEffect(() => {
-    if (wsConnected) {
-      console.log("dispatch: callStatus ");
-      dispatch(
-        wsSend(
-          createWsMessage({
-            type: WS_MESSAGE_TYPE.CALL_STATUS,
-            code: "getCallStatus",
-          }),
-        ),
-      );
+    dispatch(fetchOrder());
+  }, []);
+
+  useEffect(() => {
+    if (lastMessage && currentOrder) {
+      setCurrentOrderData({
+        ...currentOrder,
+        statusData: lastMessage.payload,
+      });
+    } else if (currentOrder) {
+      setCurrentOrderData({
+        ...currentOrder,
+      });
     }
-  }, [dispatch, wsConnected]);
+  }, [currentOrder, lastMessage]);
 
   return (
-    <View style={styles.container}>
-      {!lastMessage ? (
-        <ActivityIndicator size="large" />
-      ) : // TODO: типизация для idle
-
-      lastMessage?.message === "idle" ? (
-        <View style={{ justifyContent: "flex-end", height: 300 }}>
-          <ChoppThemedText type="subtitleBold" style={styles.alarmButtonHint}>
-            {t("alarmButtonHint")}
-          </ChoppThemedText>
-          <ChoppBigRoundButton onPress={onPress} />
-        </View>
-      ) : (
-        <ChoppCallStatusScreen />
+    <KeyboardAwareScrollView
+      contentContainerStyle={{
+        justifyContent: "center",
+        display: "flex",
+        height: "100%",
+        flexDirection: "row",
+      }}
+    >
+      {fetchOrderStatus === FETCH_STATUS.LOADING && (
+        <ActivityIndicator style={styles.activityIndicator} />
       )}
-      <ChoppDialog
-        visible={isModalVisible}
-        onClose={hideModal}
-        onOk={onCall}
-        onCancel={hideModal}
-        title={t("alarmButtonDialogTitle")}
-        text={t("alarmButtonDialogText")}
-      />
-    </View>
+      <View style={styles.container}>
+        {currentOrderData ? (
+          <>
+            <ChoppCallStatusScreen
+              currentStatus={currentOrderData.statusData.status}
+              timeStamp={currentOrderData.statusData.timeStamp}
+            />
+            {currentOrderData && (
+              <CurrentOrderDetails order={currentOrderData} />
+            )}
+          </>
+        ) : (
+          <>
+            <Image
+              style={styles.logo}
+              source={theme.dark ? LogoDark : LogoLight}
+            />
+            <View style={styles.content}>
+              <ChoppThemedText type="subtitleBold">
+                {t("order")}
+              </ChoppThemedText>
+              <NewOrderForm />
+            </View>
+          </>
+        )}
+      </View>
+    </KeyboardAwareScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: "center",
+    width: "90%",
+    display: "flex",
+    // height: "100%",
+    flexDirection: "column",
+    // justifyContent: 'center',
     alignItems: "center",
+    marginTop: 64,
   },
-  alarmButtonHint: {
-    marginBottom: 24,
+  logo: {
+    width: 128,
+    height: 128,
+  },
+  content: {
+    width: "100%",
+  },
+  loginButton: {
+    marginTop: 20,
+    width: "100%",
+  },
+  activityIndicator: {
+    position: "absolute",
+    top: 40,
+    right: 40,
   },
 });

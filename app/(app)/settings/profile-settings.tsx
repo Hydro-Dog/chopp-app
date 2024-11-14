@@ -21,10 +21,6 @@ export default function ProfileSettings() {
     (state: RootState) => state.user,
   );
 
-  // useEffect(() => {
-  //   dispatch(fetchCurrentUser());
-  // }, [dispatch]);
-
   return (
     <ChoppBackScreenLayout loading={currentUserStatus !== FETCH_STATUS.SUCCESS}>
       <View style={styles.content}>

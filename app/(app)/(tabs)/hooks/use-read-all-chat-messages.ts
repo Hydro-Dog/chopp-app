@@ -14,7 +14,6 @@ export const useReadAllChatMessages = () => {
   const { currentUser } = useSelector((state: RootState) => state.user);
   const segments = useSegments();
 
-  console.log('segments.includes("tab-support-chat"): ', segments.includes("tab-support-chat"))
   useEffect(() => {
     if (segments.includes("tab-support-chat")) {
       setChatStats((prev) => {

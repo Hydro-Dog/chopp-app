@@ -1,6 +1,6 @@
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 
-import { ReactElement, type ComponentProps } from "react";
+import { type ComponentProps } from "react";
 import { Badge } from "react-native-paper";
 import { type IconProps } from "@expo/vector-icons/build/createIconSet";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -10,7 +10,9 @@ export function TabBarIcon({
   style,
   badge,
   ...props
-}: IconProps<ComponentProps<typeof Ionicons>["name"]>) {
+}: IconProps<ComponentProps<typeof Ionicons>["name"]> & {
+  badge?: string | number;
+}) {
   return (
     <div style={{ position: "relative" }}>
       {badge && (

@@ -11,6 +11,7 @@ import {
   wsSlice,
   WsState,
 } from "./slices/ws-slice";
+import { orderSlice, OrderState } from "./slices/order-slice";
 
 type WsAction = {
   type: string;
@@ -80,6 +81,7 @@ export const store = configureStore({
     user: userSlice.reducer,
     ws: wsSlice.reducer,
     chat: chatSlice.reducer,
+    order: orderSlice.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware().concat(wsMiddleware);
@@ -90,6 +92,7 @@ export type RootState = {
   user: UserState;
   ws: WsState;
   chat: ChatState;
+  order: OrderState;
 };
 
 export type AppDispatch = typeof store.dispatch;

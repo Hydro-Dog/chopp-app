@@ -1,2 +1,2 @@
-export * from "./profile-item";
+export * from "../../../../shared/components/chopp-view-item";
 export * from "./update-password";

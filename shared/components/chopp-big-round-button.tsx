@@ -6,17 +6,19 @@ import {
   TouchableOpacity,
   Animated,
   Text,
+  ActivityIndicator,
 } from "react-native";
 import { useChoppTheme } from "../context";
 
 type Props = {
   onPress: () => void;
   title?: string;
+  loading?: boolean;
 };
 
 let isHeld: number | null = null;
 
-export const ChoppBigRoundButton = ({ onPress, title }: Props) => {
+export const ChoppBigRoundButton = ({ onPress, title, loading }: Props) => {
   const { t } = useTranslation();
   const { theme } = useChoppTheme();
   const [buttonScale] = useState(new Animated.Value(1));
@@ -69,24 +71,41 @@ export const ChoppBigRoundButton = ({ onPress, title }: Props) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPressIn={pressInHandler}
-        onPressOut={pressOutHandler}
+        onPressIn={!loading ? pressInHandler : () => null}
+        onPressOut={!loading ? pressOutHandler : () => null}
         activeOpacity={1}
         style={{
-          backgroundColor: theme.colors.primary,
+          backgroundColor: loading
+            ? theme.colors.inversePrimary
+            : theme.colors.primary,
           ...styles.touchableArea,
         }}
       >
         <Animated.View
           style={[
-            { backgroundColor: theme.colors.background, ...styles.button },
+            {
+              backgroundColor: loading
+                ? theme.colors.inverseOnSurface
+                : theme.colors.background,
+              ...styles.button,
+            },
             { transform: [{ scale: buttonScale }] },
           ]}
         >
+          {loading && (
+            <ActivityIndicator
+              size="large"
+              animating={true}
+              color={theme.colors.inversePrimary}
+              style={styles.activityIndicator}
+            />
+          )}
           <Animated.View style={fillStyle} />
-          <Text style={{ color: theme.colors.primary, ...styles.buttonText }}>
-            {t("button") || title}
-          </Text>
+          {!loading && (
+            <Text style={{ color: theme.colors.primary, ...styles.buttonText }}>
+              {title || t("button")}
+            </Text>
+          )}
         </Animated.View>
       </TouchableOpacity>
     </View>
@@ -100,26 +119,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   touchableArea: {
-    width: 200,
-    height: 200,
+    width: 150,
+    height: 150,
     borderRadius: 100,
-    // backgroundColor: "#6200ee",
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",
   },
   button: {
-    width: 180,
-    height: 180,
+    width: 130,
+    height: 130,
     borderRadius: 90,
     justifyContent: "center",
     alignItems: "center",
-    // backgroundColor: "white",
     overflow: "hidden",
     position: "relative",
   },
   buttonText: {
-    // color: "#6200ee",
     fontSize: 24,
+  },
+  activityIndicator: {
+    position: "absolute",
+    zIndex: 1,
   },
 });

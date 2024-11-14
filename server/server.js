@@ -67,7 +67,7 @@ const generateUsers = () => {
       email: email,
       fullName: fakerRU.person.fullName(),
       password: faker.internet.password(),
-      phoneNumber: '8-999-888-55-33',
+      phoneNumber: "8-999-888-55-33",
       id: faker.number.float(),
     };
   }
@@ -230,9 +230,56 @@ function generateTokens() {
   };
 }
 
+const sendOrderStatuses = (ws) => {
+  ws.send(
+    JSON.stringify({
+      type: "orderStatus",
+      payload: { status: "processing", timeStamp: new Date().valueOf() },
+    })
+  );
+
+  setTimeout(() => {
+    ws.send(
+      JSON.stringify({
+        type: "orderStatus",
+        payload: { status: "accepted", timeStamp: new Date().valueOf() },
+      })
+    );
+  }, 1000);
+
+  setTimeout(() => {
+    ws.send(
+      JSON.stringify({
+        type: "orderStatus",
+        payload: { status: "onTheWay", timeStamp: new Date().valueOf() },
+      })
+    );
+  }, 3000);
+
+  setTimeout(() => {
+    ws.send(
+      JSON.stringify({
+        type: "orderStatus",
+        payload: { status: "onTheSpot", timeStamp: new Date().valueOf() },
+      })
+    );
+  }, 5000);
+
+  setTimeout(() => {
+    ws.send(
+      JSON.stringify({
+        type: "orderStatus",
+        payload: { status: "completed", timeStamp: new Date().valueOf() },
+      })
+    );
+  }, 7000);
+};
+
 // Обработчик WebSocket соединений
 wss.on("connection", function connection(ws) {
   console.log("WebSocket connection established");
+
+  sendOrderStatuses(ws);
 
   // Отправка приветственного сообщения сразу после подключения
   ws.send(
@@ -254,59 +301,6 @@ wss.on("connection", function connection(ws) {
         })
       );
     }
-
-    // if (
-    //   receivedData.type === "callStatus"
-    //   // && receivedData.code === "call"
-    // ) {
-    //   ws.send(
-    //     JSON.stringify({
-    //       type: "callStatus",
-    //       message: "processing",
-    //       timeStamp: new Date().valueOf(),
-    //     })
-    //   );
-
-    //   setTimeout(() => {
-    //     ws.send(
-    //       JSON.stringify({
-    //         type: "callStatus",
-    //         message: "accepted",
-    //         timeStamp: new Date().valueOf(),
-    //       })
-    //     );
-    //   }, 1000);
-
-    //   setTimeout(() => {
-    //     ws.send(
-    //       JSON.stringify({
-    //         type: "callStatus",
-    //         message: "onTheWay",
-    //         timeStamp: new Date().valueOf(),
-    //       })
-    //     );
-    //   }, 3000);
-
-    //   setTimeout(() => {
-    //     ws.send(
-    //       JSON.stringify({
-    //         type: "callStatus",
-    //         message: "onTheSpot",
-    //         timeStamp: new Date().valueOf(),
-    //       })
-    //     );
-    //   }, 5000);
-
-    //   setTimeout(() => {
-    //     ws.send(
-    //       JSON.stringify({
-    //         type: "callStatus",
-    //         message: "completed",
-    //         timeStamp: new Date().valueOf(),
-    //       })
-    //     );
-    //   }, 7000);
-    // }
 
     if (receivedData.type === "callStatus") {
       ws.send(
@@ -416,7 +410,7 @@ app.get("/api/chats/:id/messages", (req, res) => {
       senderId: DEFAULT_ADMIN.id,
       chatId: chatId,
     },
-  ];  
+  ];
 
   res.json(mockChatHistory);
 });
