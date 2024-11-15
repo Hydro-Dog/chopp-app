@@ -32,6 +32,7 @@ export function ChoppThemedText({
 
   return (
     <Text
+    adjustsFontSizeToFit
       style={[
         { color },
         { fontFamily: "Nunito" },
@@ -43,7 +44,6 @@ export function ChoppThemedText({
         type === "subtitleBold" ? styles.subtitleBold : undefined,
         type === "link" ? styles.link : undefined,
         type === "bold" ? styles.bold : undefined,
-
         style,
       ]}
       {...rest}

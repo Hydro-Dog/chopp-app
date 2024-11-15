@@ -19,19 +19,20 @@ import { useFilterWsMessages } from "@/shared/hooks";
 import { OrderStatus } from "@/shared/types/order-status";
 import { fetchOrder, Order } from "@/store/slices/order-slice";
 import { AppDispatch, RootState } from "@/store/store";
+import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
 
 export default function MainPage() {
   const { theme } = useChoppTheme();
   const { t } = useTranslation();
-  const [currentOrderData, setCurrentOrderData] = useState<Order>();
+  const [currentOrderData, setCurrentOrderData] = useState<Order>({});
 
   const dispatch = useDispatch<AppDispatch>();
   const { currentOrder, fetchOrderStatus } = useSelector(
-    (state: RootState) => state.order,
+    (state: RootState) => state.order
   );
 
   const { lastMessage } = useFilterWsMessages<OrderStatus>(
-    WS_MESSAGE_TYPE.ORDER_STATUS,
+    WS_MESSAGE_TYPE.ORDER_STATUS
   );
 
   useEffect(() => {
@@ -52,56 +53,47 @@ export default function MainPage() {
   }, [currentOrder, lastMessage]);
 
   return (
-    <KeyboardAwareScrollView
-      contentContainerStyle={{
-        justifyContent: "center",
-        display: "flex",
-        height: "100%",
-        flexDirection: "row",
-      }}
-    >
-      {fetchOrderStatus === FETCH_STATUS.LOADING && (
-        <ActivityIndicator style={styles.activityIndicator} />
-      )}
-      <View style={styles.container}>
-        {currentOrderData ? (
-          <>
-            <ChoppCallStatusScreen
-              currentStatus={currentOrderData.statusData.status}
-              timeStamp={currentOrderData.statusData.timeStamp}
-            />
-            {currentOrderData && (
+    <KeyboardAwareScrollView>
+      <ChoppScreenLayout loading={fetchOrderStatus === FETCH_STATUS.LOADING}>
+        <View style={styles.container}>
+          {currentOrderData ? (
+            <>
+              <ChoppCallStatusScreen
+                currentStatus={currentOrderData?.statusData?.status}
+                timeStamp={currentOrderData?.statusData?.timeStamp}
+              />
+
               <CurrentOrderDetails order={currentOrderData} />
-            )}
-          </>
-        ) : (
-          <>
-            <Image
-              style={styles.logo}
-              source={theme.dark ? LogoDark : LogoLight}
-            />
-            <View style={styles.content}>
-              <ChoppThemedText type="subtitleBold">
-                {t("order")}
-              </ChoppThemedText>
-              <NewOrderForm />
-            </View>
-          </>
-        )}
-      </View>
+            </>
+          ) : (
+            <>
+              <Image
+                style={styles.logo}
+                source={theme.dark ? LogoDark : LogoLight}
+              />
+              <View style={styles.content}>
+                <ChoppThemedText type="subtitleBold">
+                  {t("order")}
+                </ChoppThemedText>
+                <NewOrderForm />
+              </View>
+            </>
+          )}
+        </View>
+      </ChoppScreenLayout>
     </KeyboardAwareScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: "90%",
-    display: "flex",
-    // height: "100%",
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    flex: 1,
     flexDirection: "column",
-    // justifyContent: 'center',
+    justifyContent: "space-between",
+    paddingBottom: 64,
     alignItems: "center",
-    marginTop: 64,
   },
   logo: {
     width: 128,

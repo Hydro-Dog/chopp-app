@@ -1,12 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { View, StyleSheet, Image, Animated } from "react-native";
+import { View, StyleSheet, Animated } from "react-native";
 import { Card, Avatar } from "react-native-paper";
 import { TFunction } from "i18next";
 import { useChoppTheme } from "../../shared/context";
 
-import LogoDark from "@/assets/logo-dark.png";
-import LogoLight from "@/assets/logo-light.png";
+//TODO: переделать на хук и не пробрасывать t  З
 
 const getStepsMap = (t: TFunction<"translation", undefined>) => ({
   processing: {
@@ -39,8 +38,8 @@ const getStepsMap = (t: TFunction<"translation", undefined>) => ({
 const steps = ["processing", "accepted", "onTheWay", "onTheSpot", "completed"];
 
 type Props = {
-  currentStatus: string;
-  timeStamp: number;
+  currentStatus?: string;
+  timeStamp?: number;
 };
 
 export const ChoppCallStatusScreen = ({ currentStatus, timeStamp }: Props) => {
@@ -74,14 +73,11 @@ export const ChoppCallStatusScreen = ({ currentStatus, timeStamp }: Props) => {
         <View
           key={index}
           style={{
-            flexDirection: "column",
             width: "100%",
-            marginLeft: 40,
-            marginRight: 40,
           }}
         >
           <Card.Title
-            title={`${step.title} (${new Date(timeStamp).toLocaleTimeString()})`}
+            title={`${step.title} ${timeStamp && `(${new Date(timeStamp).toLocaleTimeString()})`}`}
             subtitle={step.description}
             left={(props) => (
               <Animated.View
@@ -97,8 +93,8 @@ export const ChoppCallStatusScreen = ({ currentStatus, timeStamp }: Props) => {
                 }}
               >
                 <Avatar.Icon
-                  style={{ backgroundColor: "transparent" }}
                   {...props}
+                  style={{ backgroundColor: "transparent" }}
                   icon={step.icon}
                 />
               </Animated.View>
@@ -127,18 +123,9 @@ export const ChoppCallStatusScreen = ({ currentStatus, timeStamp }: Props) => {
 const styles = StyleSheet.create({
   container: {
     display: "flex",
-    // height: "100%",
     flexDirection: "column",
     alignItems: "center",
     marginTop: 64,
-  },
-  card: {
-    marginBottom: 16,
-    overflow: "hidden",
-  },
-  stepContainer: {
-    flexDirection: "row",
-    alignItems: "center",
   },
   iconLineContainer: {
     borderRadius: 100,
@@ -148,24 +135,5 @@ const styles = StyleSheet.create({
     marginLeft: 34,
     width: 2,
     height: 8,
-  },
-  textContainer: {
-    flex: 1,
-    paddingLeft: 16,
-  },
-  activeTitle: {
-    fontWeight: "bold",
-    color: "#6200ee",
-  },
-  inactiveTitle: {
-    color: "#999",
-  },
-  description: {
-    color: "#666",
-  },
-
-  logo: {
-    width: 128,
-    height: 128,
   },
 });

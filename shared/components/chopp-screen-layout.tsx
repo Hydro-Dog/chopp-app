@@ -5,6 +5,7 @@ import { ActivityIndicator } from "react-native-paper";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
 import { ChoppBackButton, useChoppTheme } from "@/shared";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type Props = {
   showLogo?: boolean;
@@ -14,18 +15,18 @@ type Props = {
   showBackButton?: boolean;
 };
 
-export default function ChoppBackScreenLayout({
+export default function ChoppScreenLayout({
   children,
   showLogo,
   customLogo,
   loading,
   containerStyles,
-  showBackButton = true,
+  showBackButton,
 }: Props & PropsWithChildren<object>) {
   const { theme } = useChoppTheme();
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {showLogo && customLogo ? (
         customLogo
       ) : showLogo ? (
@@ -45,17 +46,21 @@ export default function ChoppBackScreenLayout({
           children
         )}
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexBasis: "100%",
+    flex: 1,
+    width: "100%",
+    alignItems: "center",
   },
   content: {
-    alignItems: "center",
-    flexBasis: "100%",
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+    flex: 1
   },
   logo: {
     position: "fixed",
@@ -66,10 +71,11 @@ const styles = StyleSheet.create({
     opacity: 0.2,
   },
   backButton: {
+    width: '100%',
     flexDirection: "row",
     justifyContent: "flex-start",
-    marginTop: 64,
-    marginLeft: 32,
+    marginTop: 24,
+    marginLeft: 24,
     marginBottom: 16,
   },
 });

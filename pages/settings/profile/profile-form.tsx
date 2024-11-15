@@ -100,7 +100,7 @@ export const ProfileForm = ({ user, setViewMode }: Props) => {
                   onChangeText={onChange}
                   error={!!errors.phoneNumber}
                 />
-              )
+              );
             }}
           />
         </ChoppFormField>
@@ -123,37 +123,6 @@ export const ProfileForm = ({ user, setViewMode }: Props) => {
           />
         </ChoppFormField>
 
-        {/* <ChoppFormField
-          // TODO: перевод
-          message="Введите новый пароль"
-          errorMessage={errors.password?.message}
-        >
-          <Controller
-            control={control}
-            name="password"
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                mode="outlined"
-                label={t("password")}
-                secureTextEntry={!passwordVisible}
-                value={value}
-                right={
-                  <TextInput.Icon
-                    icon={passwordVisible ? "eye-off" : "eye"}
-                    color={theme.colors.secondary}
-                    size={20}
-                    forceTextInputFocus={false}
-                    onPress={togglePasswordVisibility}
-                  />
-                }
-                onBlur={onBlur}
-                onChangeText={onChange}
-                error={!!errors.password}
-              />
-            )}
-          />
-        </ChoppFormField> */}
-
         <UpdatePassword mode={passwordMode} setMode={setPasswordMode} />
       </View>
       <View style={styles.buttons}>
@@ -166,9 +135,10 @@ export const ProfileForm = ({ user, setViewMode }: Props) => {
           }
           onPress={handleSubmit(onSubmit)}
         >
-          {t("ok")}
+          {t("save")}
         </Button>
         <Button
+          mode="outlined"
           loading={updateCurrentUserStatus === FETCH_STATUS.LOADING}
           onPress={onClose}
         >
@@ -180,7 +150,14 @@ export const ProfileForm = ({ user, setViewMode }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  container: { justifyContent: "space-between", flexBasis: "100%" },
+  container: {
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "space-between",
+    paddingBottom: 64,
+  },
   buttons: {
     gap: 16,
   },

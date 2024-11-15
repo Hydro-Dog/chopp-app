@@ -12,7 +12,7 @@ export * from "./chopp-code-input";
 export * from "./chopp-dev-bar";
 export * from "./chopp-icon";
 export * from "./chopp-back-button";
-export * from "./chopp-back-screen-layout";
+export * from "./chopp-screen-layout";
 export * from "./chopp-big-round-button";
 export * from "./chopp-ws-wrapper";
 export * from "./chopp-view-items";

@@ -73,7 +73,7 @@ export const UpdatePassword = ({ mode, setMode }: Props) => {
   };
 
   return mode === "view" ? (
-    <Button mode="outlined" onPress={() => setMode("edit")}>
+    <Button mode="contained" onPress={() => setMode("edit")}>
       {t("changePassword")}
     </Button>
   ) : (

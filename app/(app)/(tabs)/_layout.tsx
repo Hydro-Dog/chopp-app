@@ -39,10 +39,6 @@ export default function TabLayout() {
     });
   }, [newMessage]);
 
-  useEffect(() => {
-    dispatch(fetchCurrentUser());
-  }, [dispatch]);
-
   return (
     <Tabs
       screenOptions={{
@@ -81,9 +77,9 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="tab-settings"
+        name="tab-control-panel"
         options={{
-          title: t("settingsPage"),
+          title: t("controlPanel"),
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "settings" : "settings-outline"}

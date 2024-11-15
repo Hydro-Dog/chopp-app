@@ -16,28 +16,37 @@ export const ProfileScreen = ({ user, setEditMode }: Props) => {
   const { t } = useTranslation();
 
   const currentUser = user
-  ? { ...user, phoneNumber: formatPhoneNumber(user.phoneNumber) }
-  : undefined;
+    ? { ...user, phoneNumber: formatPhoneNumber(user.phoneNumber) }
+    : undefined;
 
   return (
     <View style={styles.container}>
       <View style={styles.items}>
         {KEYS.map((item) => (
-          <ChoppViewItem key={item} title={t(item)} label={currentUser?.[item]} />
+          <ChoppViewItem
+            key={item}
+            title={t(item)}
+            label={currentUser?.[item]}
+          />
         ))}
       </View>
-      <Button onPress={setEditMode}>{t("edit")}</Button>
+      <Button mode="contained" onPress={setEditMode}>
+        {t("edit")}
+      </Button>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { justifyContent: "space-between", flexBasis: "100%" },
+  container: {
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "space-between",
+    paddingBottom: 64,
+  },
   items: {
     gap: 16,
-  },
-  button: {
-    position: "absolute",
-    bottom: 64,
   },
 });
