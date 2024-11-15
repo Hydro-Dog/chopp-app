@@ -14,8 +14,8 @@ import {
   ChoppThemedText,
   useChoppTheme,
 } from "@/shared";
-import { ICON_SIZE } from "@/shared/enums";
 import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
+import { ICON_SIZE } from "@/shared/enums";
 
 export default function TabSettings() {
   const { theme } = useChoppTheme();
@@ -41,7 +41,7 @@ export default function TabSettings() {
               <ChoppIcon
                 size={ICON_SIZE.l}
                 style={styles.cardIcon}
-                name="reader-outline"
+                name="receipt-outline"
               />
               <View style={{ display: "flex", flexDirection: "row", gap: 4 }}>
                 <ChoppThemedText style={{ fontSize: 14 }} type="bold">
@@ -50,7 +50,10 @@ export default function TabSettings() {
               </View>
             </Card.Content>
             <Card.Actions>
-              <Button style={styles.cardAction} onPress={onReplenish}>
+              <Button
+                style={styles.cardAction}
+                // onPress={() => router.push("/order-history/order-history")}
+              >
                 {t("open")}
               </Button>
             </Card.Actions>

@@ -25,7 +25,7 @@ export default function ProtectedRoute({
   }, []);
 
   if (loading) {
-    return <ActivityIndicator size="large" />;
+    return <ActivityIndicator  />;
   }
 
   return children;

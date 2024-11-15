@@ -657,6 +657,38 @@ app.post("/api/refresh", (req, res) => {
   }
 });
 
+app.get("/api/orders", (req, res) => {
+  // Функция для создания случайных заказов
+  const generateOrders = (count = 10) => {
+    const orders = [];
+    for (let i = 0; i < count; i++) {
+      const status = randomize([
+        "processing",
+        "accepted",
+        "onTheWay",
+        "onTheSpot",
+        "completed",
+        "canceled",
+      ]);
+      orders.push({
+        id: generateUUID(),
+        address: fakerRU.location.streetAddress(),
+        orderComment: COMMENTS[Math.floor(Math.random() * COMMENTS.length)],
+        createdAt: faker.date.recent(90).getTime(),
+        statusData: {
+          status: status,
+          timeStamp: new Date().getTime() - (100000 - i * 10000), // Ставим случайные метки времени для статуса
+        },
+      });
+    }
+    return orders;
+  };
+
+  // Генерация массива заказов
+  const orders = generateOrders();
+  res.json(orders);
+});
+
 // Запуск сервера
 server.listen(port, () => {
   console.log(`Server is running on port ${port}`);

@@ -54,7 +54,7 @@ export default function TabMainScreen() {
   return (
     <View style={styles.container}>
       {!lastMessage ? (
-        <ActivityIndicator size="large" />
+        <ActivityIndicator />
       ) : // TODO: типизация для idle
 
       lastMessage?.message === "idle" ? (

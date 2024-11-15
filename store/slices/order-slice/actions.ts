@@ -6,11 +6,30 @@ import { ErrorResponse } from "@/shared";
 
 export const fetchOrder = createAsyncThunk<
   Order,
+  string,
+  { rejectValue: ErrorResponse }
+>("/fetchOrder", async (id, thunkAPI) => {
+  try {
+    const response = await axiosPrivate.get<Order>(`/orders/${id}`);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error) && error.response) {
+      return thunkAPI.rejectWithValue(error.response.data as ErrorResponse);
+    } else {
+      return thunkAPI.rejectWithValue({
+        errorMessage: "An unknown error occurred",
+      });
+    }
+  }
+});
+
+export const fetchMyOrders = createAsyncThunk<
+  Order[],
   void,
   { rejectValue: ErrorResponse }
->("/fetchOrder", async (_, thunkAPI) => {
+>("/fetchOrders", async (_, thunkAPI) => {
   try {
-    const response = await axiosPrivate.get<Order>("/order");
+    const response = await axiosPrivate.get<Order[]>("/orders");
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {

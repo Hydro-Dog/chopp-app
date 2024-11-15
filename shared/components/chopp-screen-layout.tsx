@@ -5,7 +5,7 @@ import { ActivityIndicator } from "react-native-paper";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
 import { ChoppBackButton, useChoppTheme } from "@/shared";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
 type Props = {
   showLogo?: boolean;
@@ -26,27 +26,32 @@ export default function ChoppScreenLayout({
   const { theme } = useChoppTheme();
 
   return (
-    <SafeAreaView style={styles.container}>
-      {showLogo && customLogo ? (
-        customLogo
-      ) : showLogo ? (
-        <Image style={styles.logo} source={theme.dark ? LogoDark : LogoLight} />
-      ) : (
-        <></>
-      )}
-      {showBackButton && <ChoppBackButton style={styles.backButton} />}
-      <View style={{ ...styles.content, ...containerStyles }}>
-        {loading ? (
-          <ActivityIndicator
-            style={{ marginTop: 20 }}
-            animating={true}
-            color={theme.colors.primary}
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        {showLogo && customLogo ? (
+          customLogo
+        ) : showLogo ? (
+          <Image
+            style={styles.logo}
+            source={theme.dark ? LogoDark : LogoLight}
           />
         ) : (
-          children
+          <></>
         )}
-      </View>
-    </SafeAreaView>
+        {showBackButton && <ChoppBackButton style={styles.backButton} />}
+        <View style={{ ...styles.content, ...containerStyles }}>
+          {loading ? (
+            <ActivityIndicator
+              style={{ marginTop: 20 }}
+              animating={true}
+              color={theme.colors.primary}
+            />
+          ) : (
+            children
+          )}
+        </View>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
@@ -54,13 +59,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
+    overflow: 'hidden',
     alignItems: "center",
   },
   content: {
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    flex: 1
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    flex: 1,
   },
   logo: {
     position: "fixed",
@@ -71,7 +77,7 @@ const styles = StyleSheet.create({
     opacity: 0.2,
   },
   backButton: {
-    width: '100%',
+    width: "100%",
     flexDirection: "row",
     justifyContent: "flex-start",
     marginTop: 24,

@@ -15,6 +15,7 @@ export const CurrentOrderDetails = ({ order }: Props) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   return (
+    //TODO: использовать ChoppCollapsibleCard
     <Card style={{ width: "100%", marginTop: 24 }}>
       <Card.Title
         title={t("order")}

@@ -94,7 +94,7 @@ export const ChoppBigRoundButton = ({ onPress, title, loading }: Props) => {
         >
           {loading && (
             <ActivityIndicator
-              size="large"
+              
               animating={true}
               color={theme.colors.inversePrimary}
               style={styles.activityIndicator}
