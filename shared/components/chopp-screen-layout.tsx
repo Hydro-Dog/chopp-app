@@ -38,7 +38,7 @@ export default function ChoppScreenLayout({
         ) : (
           <></>
         )}
-        {showBackButton && <ChoppBackButton style={styles.backButton} />}
+{showBackButton && <ChoppBackButton style={styles.backButton} />}
         <View style={{ ...styles.content, ...containerStyles }}>
           {loading ? (
             <ActivityIndicator
@@ -50,6 +50,8 @@ export default function ChoppScreenLayout({
             children
           )}
         </View>
+        {/* TODO: Перенести кнопку Назад вниз? */}
+        {/* {showBackButton && <ChoppBackButton style={styles.backButton} />} */}
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -59,7 +61,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    overflow: 'hidden',
+    overflow: "hidden",
     alignItems: "center",
   },
   content: {
@@ -67,6 +69,7 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     flex: 1,
+    marginBottom: 16
   },
   logo: {
     position: "fixed",
@@ -80,8 +83,8 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     justifyContent: "flex-start",
-    marginTop: 24,
-    marginLeft: 24,
-    marginBottom: 16,
+    marginTop: 12,
+    marginLeft: 16,
+    marginBottom: 12,
   },
 });

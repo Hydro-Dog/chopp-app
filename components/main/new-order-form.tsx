@@ -4,6 +4,7 @@ import { View, StyleSheet } from "react-native";
 import { TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import { NewOrderFormType, newOrderSchema } from "./types";
 import {
   SNACKBAR_VARIANTS,
@@ -37,7 +38,7 @@ export const NewOrderForm = () => {
   const onSubmit: SubmitHandler<NewOrderFormType> = async (data) => {
     try {
       const res = await dispatch(
-        createOrder(data as Omit<Order, "id">)
+        createOrder(data as Omit<Order, "id">),
       ).unwrap();
     } catch (error: any) {
       push({

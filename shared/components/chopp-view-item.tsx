@@ -16,10 +16,10 @@ export const ChoppViewItem = ({
 }: Props) => {
   return (
     <View style={containerStyle}>
-      <ChoppThemedText variant="secondary">{title} </ChoppThemedText>
-      <ChoppThemedText style={labelStyle} type="subtitleBold">
-        {label}
+      <ChoppThemedText type="subtitleBold" variant="secondary">
+        {title}{" "}
       </ChoppThemedText>
+      <ChoppThemedText style={labelStyle}>{label}</ChoppThemedText>
     </View>
   );
 };

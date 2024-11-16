@@ -6,33 +6,36 @@ import { ActivityIndicator } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
-import { ChoppCallStatusScreen } from "@/components/main";
+import { CallStatusScreen, NewOrderForm } from "@/components/main";
 import { CurrentOrderDetails } from "@/components/main/current-order-details";
-import { NewOrderForm } from "@/components/new-order";
 import {
   ChoppThemedText,
   FETCH_STATUS,
   useChoppTheme,
   WS_MESSAGE_TYPE,
 } from "@/shared";
+import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
 import { useFilterWsMessages } from "@/shared/hooks";
 import { OrderStatus } from "@/shared/types/order-status";
 import { fetchOrder, Order } from "@/store/slices/order-slice";
 import { AppDispatch, RootState } from "@/store/store";
-import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
 
 export default function MainPage() {
   const { theme } = useChoppTheme();
   const { t } = useTranslation();
   const [currentOrderData, setCurrentOrderData] = useState<Order>({});
 
+  console.log('currentOrderData: ', currentOrderData)
+
   const dispatch = useDispatch<AppDispatch>();
   const { currentOrder, fetchOrderStatus } = useSelector(
-    (state: RootState) => state.order
+    (state: RootState) => state.order,
   );
 
+  console.log('currentOrder: ', currentOrder)
+
   const { lastMessage } = useFilterWsMessages<OrderStatus>(
-    WS_MESSAGE_TYPE.ORDER_STATUS
+    WS_MESSAGE_TYPE.ORDER_STATUS,
   );
 
   useEffect(() => {
@@ -58,7 +61,7 @@ export default function MainPage() {
         <View style={styles.container}>
           {currentOrderData ? (
             <>
-              <ChoppCallStatusScreen
+              <CallStatusScreen
                 currentStatus={currentOrderData?.statusData?.status}
                 timeStamp={currentOrderData?.statusData?.timeStamp}
               />

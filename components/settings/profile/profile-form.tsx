@@ -152,11 +152,11 @@ export const ProfileForm = ({ user, setViewMode }: Props) => {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
-    paddingVertical: 20,
+    // paddingVertical: 20,
     flex: 1,
     flexDirection: "column",
     justifyContent: "space-between",
-    paddingBottom: 64,
+    // paddingBottom: 64,
   },
   buttons: {
     gap: 16,

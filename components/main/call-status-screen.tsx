@@ -42,7 +42,7 @@ type Props = {
   timeStamp?: number;
 };
 
-export const ChoppCallStatusScreen = ({ currentStatus, timeStamp }: Props) => {
+export const CallStatusScreen = ({ currentStatus, timeStamp }: Props) => {
   const { t } = useTranslation();
   const { theme } = useChoppTheme();
 
