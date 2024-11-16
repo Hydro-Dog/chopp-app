@@ -5,7 +5,7 @@ import { Button } from "react-native-paper";
 import { useRouter } from "expo-router";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
-import { RegistrationForm } from "@/pages/registration";
+import { RegistrationForm } from "@/components/registration";
 import { ChoppThemedText, useChoppTheme } from "@/shared";
 
 export default function RegistrationPage() {

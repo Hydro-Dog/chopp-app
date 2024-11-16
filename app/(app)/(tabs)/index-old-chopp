@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, View } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { useBoolean } from "usehooks-ts";
-import { ChoppCallStatusScreen } from "@/pages/main";
+import { ChoppCallStatusScreen } from "@/components/main";
 import {
   ChoppBigRoundButton,
   ChoppDialog,

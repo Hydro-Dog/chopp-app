@@ -52,7 +52,7 @@ export default function TabSettings() {
             <Card.Actions>
               <Button
                 style={styles.cardAction}
-                // onPress={() => router.push("/order-history/order-history")}
+                onPress={() => router.push("/order-history/order-history")}
               >
                 {t("open")}
               </Button>

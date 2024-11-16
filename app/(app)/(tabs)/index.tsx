@@ -6,9 +6,9 @@ import { ActivityIndicator } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
-import { ChoppCallStatusScreen } from "@/pages/main";
-import { CurrentOrderDetails } from "@/pages/main/current-order-details";
-import { NewOrderForm } from "@/pages/new-order";
+import { ChoppCallStatusScreen } from "@/components/main";
+import { CurrentOrderDetails } from "@/components/main/current-order-details";
+import { NewOrderForm } from "@/components/new-order";
 import {
   ChoppThemedText,
   FETCH_STATUS,

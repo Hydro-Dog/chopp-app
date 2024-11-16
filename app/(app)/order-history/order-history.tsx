@@ -12,8 +12,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { Item } from "react-native-paper/lib/typescript/components/List/List";
 import { useBoolean } from "usehooks-ts";
-import { ProfileScreen } from "@/pages/settings/profile/profile";
-import { ProfileForm } from "@/pages/settings/profile/profile-form";
+import { ProfileScreen } from "@/components/settings/profile/profile";
+import { ProfileForm } from "@/components/settings/profile/profile-form";
 import {
   ChoppAnimatedList,
   ChoppCollapsible,

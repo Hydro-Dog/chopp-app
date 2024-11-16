@@ -11,7 +11,7 @@ import {
 import { IconButton, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { useNewIncomingMessageChatHandler } from "./hooks";
-import { Chat } from "@/pages/chat";
+import { Chat } from "@/components/chat";
 import { ChatMessage, useChoppTheme, WS_MESSAGE_TYPE } from "@/shared";
 import { useChatsContext } from "@/shared/context/chats-context";
 import { useFilterWsMessages } from "@/shared/hooks";

@@ -1,5 +1,5 @@
 import { View, StyleSheet } from "react-native";
-import { ChoppViewItem } from "@/pages/settings/profile/components";
+import { ChoppViewItem } from "@/components/settings/profile/components";
 
 export const ChoppViewItems = ({ items }: Record<string, any>) => {
   return (

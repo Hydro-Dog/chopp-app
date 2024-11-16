@@ -8,7 +8,7 @@ import {
   useFetchMessages,
   useReadAllChatMessages,
 } from "./hooks";
-import { TabBarIcon } from "@/pages/navigation/TabBarIcon";
+import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { ChatMessage, useChoppTheme, WS_MESSAGE_TYPE } from "@/shared";
 import { useChatsContext } from "@/shared/context/chats-context";
 import { useFilterWsMessages } from "@/shared/hooks";

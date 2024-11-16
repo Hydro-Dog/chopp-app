@@ -1,55 +1,28 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Animated, View } from "react-native";
-import { Card, IconButton } from "react-native-paper";
+import { useState } from "react";
+import { Card, Avatar, IconButton } from "react-native-paper";
+import { t } from "i18next";
+import { ChoppThemedText } from "./chopp-themed-text";
+import { ChoppViewItem } from "./chopp-view-item";
 
-export const ChoppCollapsibleCard = ({ children, ...props }) => {
+type Props = {};
+
+export const ChoppCollapsibleCard = ({
+  children,
+  ...props
+}: typeof Card.Title) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [contentHeight, setContentHeight] = useState(0);
-  const animationHeight = useRef(new Animated.Value(0)).current;  // Контролирует высоту и прозрачность
-
-  const handleLayout = event => {
-    const { height } = event.nativeEvent.layout;
-    if (height > 0 && contentHeight !== height) {
-      setContentHeight(height);
-    }
-  };
-
-  useEffect(() => {
-    Animated.timing(animationHeight, {
-      toValue: isExpanded ? 1 : 0,
-      duration: 300,
-      useNativeDriver: false
-    }).start();
-  }, [isExpanded, contentHeight]);
-
-  const animatedStyle = {
-    overflow: 'hidden',
-    height: animationHeight.interpolate({
-      inputRange: [0, 1],
-      outputRange: [0, contentHeight]  // Анимация до измеренной высоты контента
-    }),
-    opacity: animationHeight
-  };
 
   return (
     <Card style={{ width: "100%", marginTop: 24 }}>
-      <Card.Title
-        right={(props) => (
+      <Card.Title right={(props) => (
           <IconButton
             {...props}
+            animated
             icon={isExpanded ? "chevron-down" : "chevron-up"}
             onPress={() => setIsExpanded(!isExpanded)}
           />
-        )}
-        {...props}
-      />
-      <Animated.View style={animatedStyle}>
-        <View onLayout={handleLayout}>
-          <Card.Content>
-            {children}
-          </Card.Content>
-        </View>
-      </Animated.View>
+        )} {...props} />
+      {isExpanded && <Card.Content>{children}</Card.Content>}
     </Card>
   );
 };

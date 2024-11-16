@@ -5,7 +5,7 @@ import { Button } from "react-native-paper";
 import { useRouter } from "expo-router";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
-import { LoginForm } from "@/pages/login/login-form";
+import { LoginForm } from "@/components/login/login-form";
 import { ChoppThemedText, useChoppTheme } from "@/shared";
 
 export default function LoginPage() {

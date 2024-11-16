@@ -1,14 +1,12 @@
-import { useEffect } from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import { Ionicons } from "@expo/vector-icons";
 import { useBoolean } from "usehooks-ts";
-import { ProfileScreen } from "@/pages/settings/profile/profile";
-import { ProfileForm } from "@/pages/settings/profile/profile-form";
+import { ProfileScreen } from "@/components/settings/profile/profile";
+import { ProfileForm } from "@/components/settings/profile/profile-form";
 import { FETCH_STATUS, useChoppTheme } from "@/shared";
 import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
-import { fetchCurrentUser } from "@/store/slices/user-slice";
 import { AppDispatch, RootState } from "@/store/store";
-import { Ionicons } from "@expo/vector-icons";
 
 export default function ProfileSettings() {
   const { theme } = useChoppTheme();
@@ -19,9 +17,8 @@ export default function ProfileSettings() {
     setFalse: setViewMode,
   } = useBoolean();
 
-  const { currentUser, fetchCurrentUserStatus: currentUserStatus } = useSelector(
-    (state: RootState) => state.user
-  );
+  const { currentUser, fetchCurrentUserStatus: currentUserStatus } =
+    useSelector((state: RootState) => state.user);
 
   return (
     <ChoppScreenLayout
