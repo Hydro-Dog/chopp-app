@@ -9,24 +9,35 @@ import {
   useReadAllChatMessages,
 } from "./hooks";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import { ChatMessage, useChoppTheme, WS_MESSAGE_TYPE } from "@/shared";
+import { ChatMessage, WS_MESSAGE_TYPE } from "@/shared";
 import { useChatsContext } from "@/shared/context/chats-context";
 import { useFilterWsMessages } from "@/shared/hooks";
-import { fetchCurrentUser } from "@/store/slices/user-slice";
+import { fetchCurrentUser } from "@/store/slices/user-slice/index";
 import { AppDispatch } from "@/store/store";
+import { useAuth } from "@/shared/context/auth-context";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 
 export default function TabLayout() {
   const { theme } = useChoppTheme();
   const { t } = useTranslation();
   const { lastMessage: newMessage } = useFilterWsMessages<ChatMessage>(
-    WS_MESSAGE_TYPE.MESSAGE,
+    WS_MESSAGE_TYPE.MESSAGE
   );
   const dispatch = useDispatch<AppDispatch>();
   const { chatStats, setChatStats } = useChatsContext();
+  const { isLoaded } = useAuth();
 
   useFetchMessages();
   useFetchChatStats();
   useReadAllChatMessages();
+
+  useEffect(() => {
+    // if (isLoaded) {
+      dispatch(fetchCurrentUser());
+      dispatch(fetchCurrentUser());
+      console.log('fetchCurrentUser')
+    // }
+  }, [dispatch]);
 
   //TODO: вынести в хук
   useEffect(() => {

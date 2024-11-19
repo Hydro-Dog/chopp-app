@@ -6,7 +6,8 @@ import { useRouter } from "expo-router";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
 import { RegistrationForm } from "@/components/registration";
-import { ChoppThemedText, useChoppTheme } from "@/shared";
+import { ChoppThemedText } from "@/shared";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 
 export default function RegistrationPage() {
   const { theme } = useChoppTheme();
@@ -27,7 +28,7 @@ export default function RegistrationPage() {
             style={styles.loginButton}
             onPress={() => router.push("/login")}
           >
-            {t("actions.login")}
+            {t("actions.toSignIn")}
           </Button>
         </View>
       </View>
@@ -37,18 +38,17 @@ export default function RegistrationPage() {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     display: "flex",
-    height: "100%",
     flexDirection: "column",
     alignItems: "center",
-    marginTop: 64,
   },
   logo: {
     width: 128,
     height: 128,
   },
   content: {
-    width: "80%",
+    width: "90%",
   },
   loginButton: {
     marginTop: 20,

@@ -13,11 +13,13 @@ import {
   ChoppFormField,
   FETCH_STATUS,
   addToStorage,
-  useAuth,
-  useChoppTheme,
+  ErrorResponse,
 } from "@/shared";
-import { login } from "@/store/slices/user-slice";
+import { formatPhoneNumber } from "@/shared/utils/format-phone-number";
+import { login } from "@/store/slices/user-slice/index";
 import { RootState, AppDispatch } from "@/store/store";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
+import { useAuth } from "@/shared/context/auth-context";
 
 export const LoginForm = () => {
   const { theme } = useChoppTheme();
@@ -36,52 +38,52 @@ export const LoginForm = () => {
   } = useForm<LoginFormType>({
     resolver: zodResolver(loginSchema(t)),
     defaultValues: {
-      login: "",
+      phoneNumber: "",
       password: "",
     },
   });
 
-  const { push } = useChoppSnackbar();
+  const { pushNewNotification } = useChoppSnackbar();
 
   const onSubmit: SubmitHandler<LoginFormType> = async (data) => {
     try {
       const res = await dispatch(login(data)).unwrap();
       setAuth(res);
-      addToStorage("accessToken", res.accessToken);
-      addToStorage("refreshToken", res.refreshToken);
+      await addToStorage("accessToken", res.accessToken);
+      await addToStorage("refreshToken", res.refreshToken);
       router.push("/");
-
-      //TODO: убрать any
-    } catch (error: any) {
-      console.log("login error: ", error);
-      push({
+    } catch (error: unknown) {
+      pushNewNotification({
         id: String(Math.random()),
         variant: SNACKBAR_VARIANTS.ERROR,
-        text: error.errorMessage,
+        text: (error as ErrorResponse).message,
       });
     }
   };
 
   return (
     <View>
-      <ChoppFormField errorMessage={errors.login?.message}>
+      <ChoppFormField errorMessage={errors.phoneNumber?.message}>
         <Controller
           control={control}
-          name="login"
+          name="phoneNumber"
           render={({ field: { onChange, onBlur, value } }) => (
             <TextInput
               mode="outlined"
-              label={t("login")}
+              label={t("phoneNumber")}
               value={value}
               onBlur={onBlur}
-              onChangeText={onChange}
-              error={!!errors.login}
+              onChangeText={(text) => onChange(formatPhoneNumber(text))}
+              error={!!errors.phoneNumber}
             />
           )}
         />
       </ChoppFormField>
 
-      <ChoppFormField errorMessage={errors.password?.message} styles={{width: ''}}>
+      <ChoppFormField
+        errorMessage={errors.password?.message}
+        styles={{ width: "" }}
+      >
         <Controller
           control={control}
           name="password"
@@ -115,7 +117,7 @@ export const LoginForm = () => {
         disabled={loginStatus === FETCH_STATUS.LOADING}
         onPress={handleSubmit(onSubmit)}
       >
-        {t("actions.login")}
+        {t("actions.signIn")}
       </Button>
     </View>
   );

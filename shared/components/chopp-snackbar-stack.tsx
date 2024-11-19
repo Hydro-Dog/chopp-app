@@ -7,14 +7,14 @@ import React, {
 } from "react";
 import { View, Text } from "react-native";
 import { Snackbar } from "react-native-paper";
-import { useChoppTheme } from "../context";
+import { useChoppTheme } from "../context/chopp-theme-context";
 
 type ChoppSnackbarContextType = {
-  push: (item: ChoppSnackbarProps) => void;
+  pushNewNotification: (item: ChoppSnackbarProps) => void;
 };
 
 export const ChoppSnackbarContext = createContext<ChoppSnackbarContextType>({
-  push: function (item: ChoppSnackbarProps): void {
+  pushNewNotification: function (item: ChoppSnackbarProps): void {
     throw new Error("Function not implemented.");
   },
 });
@@ -82,7 +82,7 @@ export const ChoppSnackbarStack = ({ children }: PropsWithChildren<object>) => {
     };
 
   return (
-    <ChoppSnackbarContext.Provider value={{ push: pushSnackbar }}>
+    <ChoppSnackbarContext.Provider value={{ pushNewNotification: pushSnackbar }}>
       {children}
       <View>
         {Object.values(snackbarMessages)?.map((item, index) => {

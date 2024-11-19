@@ -7,7 +7,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import { getFromStorage } from "../utils";
+import { getStorageAuthData } from "../utils";
 import { useSetInterceptors } from "@/services";
 
 export type AuthContextType = {
@@ -36,16 +36,15 @@ export const AuthProvider = ({ children }: PropsWithChildren<object>) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const getStorageData = async () => {
-      const accessToken = await getFromStorage("accessToken");
-      const refreshToken = await getFromStorage("refreshToken");
+    const setStorageData = async () => {
+      const { accessToken, refreshToken } = await getStorageAuthData();
       setAuth({ accessToken, refreshToken });
       setIsLoaded(true);
     };
 
-    getStorageData();
-  }, [isLoaded]);
-
+    setStorageData();
+  }, []);
+debugger
   useSetInterceptors({ auth, setAuth });
 
   return (

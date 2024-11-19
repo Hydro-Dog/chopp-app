@@ -12,11 +12,12 @@ import { IconButton, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { useNewIncomingMessageChatHandler } from "./hooks";
 import { Chat } from "@/components/chat";
-import { ChatMessage, useChoppTheme, WS_MESSAGE_TYPE } from "@/shared";
+import { ChatMessage, WS_MESSAGE_TYPE } from "@/shared";
 import { useChatsContext } from "@/shared/context/chats-context";
 import { useFilterWsMessages } from "@/shared/hooks";
 import { wsSend } from "@/store/slices/ws-slice";
 import { AppDispatch, RootState } from "@/store/store";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 
 export default function TabSupportChat() {
   const { theme } = useChoppTheme();

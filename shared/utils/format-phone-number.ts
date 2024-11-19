@@ -16,7 +16,3 @@ export const formatPhoneNumber = (value: string) => {
   // Собираем части в одну строку
   return parts.join("-");
 };
-
-export const revertPhoneNumberFormating = (number: string) => {
-  return number.replaceAll('-', '');
-};

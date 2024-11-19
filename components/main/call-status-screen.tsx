@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { View, StyleSheet, Animated } from "react-native";
 import { Card, Avatar } from "react-native-paper";
 import { TFunction } from "i18next";
-import { useChoppTheme } from "../../shared/context";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 
 //TODO: переделать на хук и не пробрасывать t  З
 

@@ -9,13 +9,13 @@ import {
   ChoppThemedText,
   ChoppViewItems,
   FETCH_STATUS,
-  useChoppTheme,
 } from "@/shared";
 import { ChoppChip } from "@/shared/components/chopp-chip";
 import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
 import { fetchMyOrders } from "@/store/slices/order-slice";
 import { AppDispatch, RootState } from "@/store/store";
 import { useTranslation } from "react-i18next";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 
 export default function OrderHistory() {
   const { theme } = useChoppTheme();

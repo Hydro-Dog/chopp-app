@@ -10,7 +10,7 @@ import {
   ChoppDialog,
   ChoppThemedText,
   WS_MESSAGE_TYPE,
-} from "@/shared";
+} from "@/shared/index";
 import { useFilterWsMessages } from "@/shared/hooks";
 import { AppDispatch, RootState } from "@/store/store";
 

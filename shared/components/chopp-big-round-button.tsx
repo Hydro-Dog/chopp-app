@@ -8,7 +8,7 @@ import {
   Text,
   ActivityIndicator,
 } from "react-native";
-import { useChoppTheme } from "../context";
+import { useChoppTheme } from "../context/chopp-theme-context";
 
 type Props = {
   onPress: () => void;

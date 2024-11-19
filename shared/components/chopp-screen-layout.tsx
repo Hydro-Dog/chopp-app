@@ -4,8 +4,9 @@ import { Image } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
-import { ChoppBackButton, useChoppTheme } from "@/shared";
+import { ChoppBackButton } from "@/shared";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { useChoppTheme } from "../context/chopp-theme-context";
 
 type Props = {
   showLogo?: boolean;

@@ -1,6 +1,7 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useChoppTheme } from "../context";
+
 import { ICON_SIZE } from "../enums";
+import { useChoppTheme } from "../context/chopp-theme-context";
 
 type Props = { size: ICON_SIZE; style: Record<string, any>; name?: string };
 

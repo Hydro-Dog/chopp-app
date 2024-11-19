@@ -3,7 +3,7 @@ import { View, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { ChoppViewItem } from "../../../shared/components/chopp-view-item";
 import { ChoppViewItems, formatPhoneNumber } from "@/shared";
-import { User } from "@/store/slices/user-slice";
+import { User } from "@/store/slices/user-slice/index";
 
 const KEYS: (keyof User)[] = ["fullName", "phoneNumber", "email"];
 

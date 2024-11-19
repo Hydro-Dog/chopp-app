@@ -11,7 +11,6 @@ import { CurrentOrderDetails } from "@/components/main/current-order-details";
 import {
   ChoppThemedText,
   FETCH_STATUS,
-  useChoppTheme,
   WS_MESSAGE_TYPE,
 } from "@/shared";
 import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
@@ -19,20 +18,17 @@ import { useFilterWsMessages } from "@/shared/hooks";
 import { OrderStatus } from "@/shared/types/order-status";
 import { fetchOrder, Order } from "@/store/slices/order-slice";
 import { AppDispatch, RootState } from "@/store/store";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 
 export default function MainPage() {
   const { theme } = useChoppTheme();
   const { t } = useTranslation();
-  const [currentOrderData, setCurrentOrderData] = useState<Order>({});
-
-  console.log('currentOrderData: ', currentOrderData)
+  const [currentOrderData, setCurrentOrderData] = useState<Order>();
 
   const dispatch = useDispatch<AppDispatch>();
   const { currentOrder, fetchOrderStatus } = useSelector(
     (state: RootState) => state.order,
   );
-
-  console.log('currentOrder: ', currentOrder)
 
   const { lastMessage } = useFilterWsMessages<OrderStatus>(
     WS_MESSAGE_TYPE.ORDER_STATUS,

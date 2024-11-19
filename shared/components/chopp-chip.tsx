@@ -1,7 +1,7 @@
 import { PropsWithChildren } from "react";
 import { Chip } from "react-native-paper";
 import { Ionicons } from "@expo/vector-icons";
-import { useChoppTheme } from "../context";
+import { useChoppTheme } from "../context/chopp-theme-context";
 
 type Props = {
   backgroundColor?: string;

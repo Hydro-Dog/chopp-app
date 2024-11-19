@@ -12,7 +12,7 @@ import {
   ChoppFormField,
   ChoppBigRoundButton,
   FETCH_STATUS,
-} from "@/shared";
+} from "@/shared/index";
 import { createOrder, Order } from "@/store/slices/order-slice";
 import { AppDispatch, RootState } from "@/store/store";
 
@@ -33,7 +33,7 @@ export const NewOrderForm = () => {
     },
   });
 
-  const { push } = useChoppSnackbar();
+  const { pushNewNotification } = useChoppSnackbar();
 
   const onSubmit: SubmitHandler<NewOrderFormType> = async (data) => {
     try {
@@ -41,7 +41,7 @@ export const NewOrderForm = () => {
         createOrder(data as Omit<Order, "id">),
       ).unwrap();
     } catch (error: any) {
-      push({
+      pushNewNotification({
         id: String(Math.random()),
         variant: SNACKBAR_VARIANTS.ERROR,
         text: error.errorMessage,

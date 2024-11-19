@@ -1,7 +1,8 @@
 import { useTranslation } from "react-i18next";
-import { useChoppTheme } from "../context";
+
 import { ChoppChip } from "./chopp-chip";
 import { CALL_STATUS } from "../enums/call-status";
+import { useChoppTheme } from "../context/chopp-theme-context";
 
 type Props = {
   status?: CALL_STATUS;

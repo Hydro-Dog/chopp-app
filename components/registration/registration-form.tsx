@@ -11,16 +11,17 @@ import { RegistrationFormType, registrationSchema } from "./types";
 import {
   ChoppDialog,
   FETCH_STATUS,
-  formatPhoneNumber,
   SNACKBAR_VARIANTS,
   useChoppSnackbar,
   ChoppFormField,
   ChoppCheckbox,
   ChoppThemedText,
-  useChoppTheme,
-} from "@/shared";
-import { createUser } from "@/store/slices/user-slice";
+  ErrorResponse,
+} from "@/shared/index";
+import { formatPhoneNumber } from "@/shared/utils/format-phone-number";
+import { createUser } from "@/store/slices/user-slice/index";
 import { AppDispatch, RootState } from "@/store/store";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 
 export const RegistrationForm = () => {
   const { theme } = useChoppTheme();
@@ -47,19 +48,19 @@ export const RegistrationForm = () => {
     },
   });
 
-  const { push } = useChoppSnackbar();
+  const { pushNewNotification } = useChoppSnackbar();
 
   const onSubmit: SubmitHandler<RegistrationFormType> = async (data) => {
+    //TODO: вынести конструкцию по обработке ошибок запроса отдельно Часто переиспользуется
     try {
       const res = await dispatch(createUser(data)).unwrap();
       console.log("Redirect ", res);
       router.push("/login");
-      //TODO: убрать any
-    } catch (error: any) {
-      push({
+    } catch (error: unknown) {
+      pushNewNotification({
         id: String(Math.random()),
         variant: SNACKBAR_VARIANTS.ERROR,
-        text: error.errorMessage,
+        text: (error as ErrorResponse).message,
       });
     }
   };
@@ -231,7 +232,7 @@ export const RegistrationForm = () => {
         disabled={createUserStatus === FETCH_STATUS.LOADING}
         onPress={handleSubmit(onSubmit)}
       >
-        {t("actions.register")}
+        {t("actions.createAccount")}
       </Button>
       <ChoppDialog
         visible={isModalVisible}

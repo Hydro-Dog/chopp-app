@@ -7,9 +7,10 @@ import {
   useNewIncomingMessageChatHandler,
   useReadAllChatMessages,
 } from "../../app/(app)/(tabs)/hooks";
-import { ChatMessage, ChoppThemedText, useChoppTheme } from "@/shared";
+import { ChatMessage, ChoppThemedText } from "@/shared";
 import { RootState } from "@/store/store";
 import { useChatsContext } from "@/shared/context/chats-context";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 
 type Props = {
   // messages?: WsMessage[];

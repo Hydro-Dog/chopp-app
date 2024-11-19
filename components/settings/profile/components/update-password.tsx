@@ -8,10 +8,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TFunction } from "i18next";
 import { useBoolean } from "usehooks-ts";
 import { z } from "zod";
-import { FETCH_STATUS, SNACKBAR_VARIANTS, useChoppSnackbar } from "@/shared";
-import { ChoppFormField, useChoppTheme } from "@/shared";
-import { updateCurrentUser } from "@/store/slices/user-slice";
+import { FETCH_STATUS, SNACKBAR_VARIANTS, useChoppSnackbar } from "@/shared/index";
+import { ChoppFormField } from "@/shared/index";
+import { updateCurrentUser } from "@/store/slices/user-slice/index";
 import { AppDispatch, RootState } from "@/store/store";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 
 export const passwordSchema = (t: TFunction<"translation", undefined>) =>
   z.object({
@@ -50,7 +51,7 @@ export const UpdatePassword = ({ mode, setMode }: Props) => {
     },
   });
 
-  const { push } = useChoppSnackbar();
+  const { pushNewNotification } = useChoppSnackbar();
 
   const onClose = () => {
     reset();
@@ -64,7 +65,7 @@ export const UpdatePassword = ({ mode, setMode }: Props) => {
 
       //TODO: убрать any
     } catch (error: any) {
-      push({
+      pushNewNotification({
         id: String(Math.random()),
         variant: SNACKBAR_VARIANTS.ERROR,
         text: error.errorMessage,

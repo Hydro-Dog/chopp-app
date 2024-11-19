@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useRouter } from "expo-router";
-import { useAuth } from "@/shared";
+import { useAuth } from "@/shared/context/auth-context";
 
 export const useAuthGuard = () => {
   const { auth, isLoaded } = useAuth();
@@ -8,7 +8,7 @@ export const useAuthGuard = () => {
 
   useEffect(() => {
     if (!auth?.accessToken && isLoaded) {
-      router.push("/login");
+      // router.push("/login");
     }
   }, [isLoaded, auth?.accessToken, router]);
 };

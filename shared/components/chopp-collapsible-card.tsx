@@ -11,8 +11,6 @@ export const ChoppCollapsibleCard = ({
 >) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  console.log("children: ", children);
-
   // TODO: добавить анимацию раскрытия
   return (
     <Card style={{ width: "100%", marginTop: 24 }}>

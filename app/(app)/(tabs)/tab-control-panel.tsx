@@ -12,10 +12,10 @@ import {
   ChoppDialog,
   ChoppIcon,
   ChoppThemedText,
-  useChoppTheme,
 } from "@/shared";
 import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
 import { ICON_SIZE } from "@/shared/enums";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 
 export default function TabSettings() {
   const { theme } = useChoppTheme();

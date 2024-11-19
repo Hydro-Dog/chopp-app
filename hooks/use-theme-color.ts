@@ -4,7 +4,7 @@
  */
 
 import { COLORS } from "@/constants/colors";
-import { useChoppTheme } from "@/shared";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 import { LIGHT_THEME } from "@/theme";
 
 //TODO: отрефакторить, выяснить нужен ли вообще этот компонент

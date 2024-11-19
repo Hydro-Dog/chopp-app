@@ -7,9 +7,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UpdatePassword } from "./components";
 import { ProfileFormType, profileSchema } from "./types";
-import { FETCH_STATUS, SNACKBAR_VARIANTS, useChoppSnackbar } from "@/shared";
-import { formatPhoneNumber, ChoppFormField } from "@/shared";
-import { updateCurrentUser, User } from "@/store/slices/user-slice";
+import { FETCH_STATUS, SNACKBAR_VARIANTS, useChoppSnackbar } from "@/shared/index";
+import { formatPhoneNumber, ChoppFormField } from "@/shared/index";
+import { updateCurrentUser, User } from "@/store/slices/user-slice/index";
 import { AppDispatch, RootState } from "@/store/store";
 
 type Props = {
@@ -39,7 +39,7 @@ export const ProfileForm = ({ user, setViewMode }: Props) => {
     },
   });
 
-  const { push } = useChoppSnackbar();
+  const { pushNewNotification } = useChoppSnackbar();
 
   const onSubmit: SubmitHandler<ProfileFormType> = async (data) => {
     try {
@@ -48,7 +48,7 @@ export const ProfileForm = ({ user, setViewMode }: Props) => {
 
       //TODO: убрать any
     } catch (error: any) {
-      push({
+      pushNewNotification({
         id: String(Math.random()),
         variant: SNACKBAR_VARIANTS.ERROR,
         text: error.errorMessage,

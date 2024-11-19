@@ -10,10 +10,7 @@ export const addToStorage = async (key: string, value: string) => {
 
 export const getFromStorage = async (key: string) => {
   try {
-    const value = await AsyncStorage.getItem(key);
-    if (value !== null) {
-      return value;
-    }
+    return await AsyncStorage.getItem(key);
   } catch (error) {
     console.error("Error retrieving data: ", String(error));
   }
@@ -21,4 +18,11 @@ export const getFromStorage = async (key: string) => {
 
 export const clearStorage = async () => {
   await AsyncStorage.clear();
+};
+
+export const getStorageAuthData = async () => {
+  const accessToken = await getFromStorage("accessToken");
+  const refreshToken = await getFromStorage("refreshToken");
+
+  return { accessToken: accessToken || "", refreshToken: refreshToken || "" };
 };

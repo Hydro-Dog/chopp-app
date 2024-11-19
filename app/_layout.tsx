@@ -12,7 +12,7 @@ import { WsWrapper } from "@/shared/components/chopp-ws-wrapper";
 import { ChoppGlobalProvider } from "@/shared/context/chopp-global-context";
 import { AppDispatch, RootState, store } from "@/store/store";
 import { initI18n } from "@/translation/i18n";
-import { fetchCurrentUser } from "@/store/slices/user-slice";
+import { fetchCurrentUser } from "@/store/slices/user-slice/index";
 import { useBoolean } from "usehooks-ts";
 import { ChatsContextProvider } from "@/shared/context/chats-context";
 
