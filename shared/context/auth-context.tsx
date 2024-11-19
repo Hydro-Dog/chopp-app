@@ -1,19 +1,9 @@
-import {
-  Dispatch,
-  PropsWithChildren,
-  SetStateAction,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-import { getStorageAuthData } from "../utils";
+import { PropsWithChildren, createContext, useContext, useEffect } from "react";
 import { useSetInterceptors } from "@/services";
 
 export type AuthContextType = {
   auth?: AuthType;
-  setAuth: Dispatch<SetStateAction<AuthType | undefined>>;
-  isLoaded: boolean;
+  isAsyncStorageLoaded: boolean;
 };
 
 export type AuthType = {
@@ -23,36 +13,27 @@ export type AuthType = {
 
 const AuthContext = createContext<AuthContextType>({
   auth: undefined,
-  setAuth: function (): void {
-    throw new Error("setToken Function not implemented.");
-  },
-  isLoaded: false,
+  isAsyncStorageLoaded: false,
 });
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: PropsWithChildren<object>) => {
-  const [auth, setAuth] = useState<AuthType>();
-  const [isLoaded, setIsLoaded] = useState(false);
+  const { clearInterceptors, isAsyncStorageLoaded, auth } =
+    useSetInterceptors();
 
   useEffect(() => {
-    const setStorageData = async () => {
-      const { accessToken, refreshToken } = await getStorageAuthData();
-      setAuth({ accessToken, refreshToken });
-      setIsLoaded(true);
+    return () => {
+      console.log("clearInterceptors");
+      clearInterceptors();
     };
-
-    setStorageData();
-  }, []);
-debugger
-  useSetInterceptors({ auth, setAuth });
+  }, [clearInterceptors]);
 
   return (
     <AuthContext.Provider
       value={{
         auth,
-        setAuth,
-        isLoaded,
+        isAsyncStorageLoaded,
       }}
     >
       {children}

@@ -1,17 +1,13 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import axios from "axios";
 import { CONFIG } from "@/my-config";
-import {
-  addToStorage,
-  AuthType,
-  getFromStorage,
-  getStorageAuthData,
-} from "@/shared";
+import { addToStorage, getFromStorage, getStorageAuthData } from "@/shared";
+import { AuthType } from "@/shared/context/auth-context";
 
 export const axiosDefault = axios.create({ baseURL: CONFIG.apiUrl });
 
 const refresh = async (
-  setAuth: Dispatch<SetStateAction<AuthType | undefined>>
+  setAuth: Dispatch<SetStateAction<AuthType | undefined>>,
 ) => {
   const refreshToken = await getFromStorage("refreshToken");
   const response = await axiosDefault.post("auth/refresh", {
@@ -77,12 +73,14 @@ export const useSetInterceptors = () => {
         setAuth({ accessToken, refreshToken });
       }
 
+      setIsAsyncStorageLoaded(true);
+
       return config;
     },
-    (error) => Promise.reject(error)
+    (error) => Promise.reject(error),
   );
 
-  const res = axiosPrivate.interceptors.response.use(
+  const responseInterceptor = axiosPrivate.interceptors.response.use(
     (response) => response,
     async (error) => {
       if (error.response && error.response.status === 401) {
@@ -101,78 +99,15 @@ export const useSetInterceptors = () => {
         }
       }
       return Promise.reject(error);
-    }
+    },
   );
+
+  return {
+    isAsyncStorageLoaded,
+    auth,
+    clearInterceptors: () => {
+      axiosPrivate.interceptors.request.eject(requestInterceptor);
+      axiosPrivate.interceptors.response.eject(responseInterceptor);
+    },
+  };
 };
-
-// const useRefreshToken = ({ auth, setAuth }: Args) => {
-//   const refresh = async () => {
-//     const response = await axios.post("/api/refresh", {
-//       refreshToken: auth?.refreshToken,
-//     });
-
-//     setAuth({
-//       accessToken: response.data.accessToken,
-//       refreshToken: response.data.refreshToken,
-//     });
-//     return response.data.accessToken;
-//   };
-//   return refresh;
-// };
-
-// let isAsyncStorageLoaded = false;
-// let auth: AuthType = {};
-
-// export const useSetInterceptors = () => {
-//   // const [auth, setAuth] = useState<AuthType>();
-//   // const [isAsyncStorageLoaded, setIsAsyncStorageLoaded] = useState(false);
-
-//   const requestInterceptor = axiosPrivate.interceptors.request.use(
-//     async (config) => {
-//       console.log("isLocalStorageLoaded: ", isAsyncStorageLoaded);
-//       if (!isAsyncStorageLoaded) {
-//         const { accessToken, refreshToken } = await getStorageAuthData();
-//         auth = { accessToken, refreshToken };
-//         isAsyncStorageLoaded = true;
-//       }
-
-//       if (isAsyncStorageLoaded && !config.headers["Authorization"]) {
-//         if (!auth?.accessToken) {
-//           console.warn(
-//             'HEADERS: "Authorization" was not provided with accessToken value'
-//           );
-//         } else {
-//           config.headers["Authorization"] = `Bearer ${auth?.accessToken}`;
-//         }
-//       }
-
-//       return config;
-//     },
-//     (error) => Promise.reject(error)
-//   );
-
-//   const responseInterceptor = axiosPrivate.interceptors.response.use(
-//     (response) => response,
-//     async (error) => {
-//       console.log("error?.response: ", error?.response);
-//       const prevRequest = error?.config;
-//       if (error?.response?.status === 401 && !prevRequest?.sent) {
-//         prevRequest.sent = true;
-//         const newAccessToken = await refresh();
-//         prevRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-//         return axiosPrivate(prevRequest);
-//       }
-//       return Promise.reject(error);
-//     }
-//   );
-
-//   // Функция для очистки интерцепторов
-//   return {
-//     isAsyncStorageLoaded,
-//     auth,
-//     clearInterceptors: () => {
-//       axiosPrivate.interceptors.request.eject(requestInterceptor);
-//       // axiosPrivate.interceptors.response.eject(responseInterceptor);
-//     },
-//   };
-// };
