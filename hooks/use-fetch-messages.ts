@@ -22,3 +22,5 @@ export const useFetchMessages = () => {
     }
   }, [chatMessages]);
 };
+
+export default useFetchMessages

@@ -2,6 +2,7 @@ import "dotenv/config";
 
 export default ({ config }) => ({
   expo: {
+    newArchEnabled: true,
     name: "chopp-app",
     slug: "chopp-app",
     version: "1.0.0",

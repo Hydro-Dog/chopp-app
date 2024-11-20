@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -10,16 +10,17 @@ import {
 } from "react-native";
 import { IconButton, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import { useNewIncomingMessageChatHandler } from "./hooks";
 import { Chat } from "@/components/chat";
+import useNewIncomingMessageChatHandler from "@/hooks/use-new-incoming-message-chat-handler";
+import ProtectedComponent from "@/services/auth/protected-component";
 import { ChatMessage, WS_MESSAGE_TYPE } from "@/shared";
 import { useChatsContext } from "@/shared/context/chats-context";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 import { useFilterWsMessages } from "@/shared/hooks";
 import { wsSend } from "@/store/slices/ws-slice";
 import { AppDispatch, RootState } from "@/store/store";
-import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 
-export default function TabSupportChat() {
+function TabSupportChat() {
   const { theme } = useChoppTheme();
   const flatListRef = useRef(null);
   const [text, setText] = useState("");
@@ -119,3 +120,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+const TabSupportChatProtected = () => (
+  <ProtectedComponent>
+    <TabSupportChat />
+  </ProtectedComponent>
+);
+
+export default TabSupportChatProtected;

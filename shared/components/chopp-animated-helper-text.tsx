@@ -1,7 +1,8 @@
 import { useRef, useEffect, PropsWithChildren } from "react";
 import { FieldError, Merge, FieldErrorsImpl } from "react-hook-form";
 import { StyleSheet, Animated } from "react-native";
-import { ChoppThemedText } from "@/shared";
+import { ChoppThemedText } from "./chopp-themed-text";
+
 
 type Props = {
   errorMessage?: string | FieldError | Merge<FieldError, FieldErrorsImpl<any>>;

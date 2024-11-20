@@ -1,32 +1,18 @@
-import React, { PropsWithChildren, useEffect, useState } from "react";
-import { View, ActivityIndicator } from "react-native";
-import { useRouter } from "expo-router";
-import { isUserAuthenticated } from "./utils";
+import { useEffect } from 'react';
+import { useRouter } from 'expo-router';
+import { useAuthContext } from '@/shared/context/auth-context';
 
-export default function ProtectedRoute({
-  children,
-}: PropsWithChildren<object>) {
-    console.log('ProtectedRoute!!')
-  const [loading, setLoading] = useState(true);
+const ProtectedRoute = ({ children }) => {
+  const { auth } = useAuthContext();
   const router = useRouter();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const authenticated = await isUserAuthenticated();
-      console.log('authenticated: ', authenticated)
-      if (!authenticated) {
-        router.replace("/signin");
-      } else {
-        setLoading(false);
-      }
-    };
+    if (!auth?.accessToken) {
+      router.replace('/login');
+    }
+  }, [auth, router]);
 
-    checkAuth();
-  }, []);
+  return auth?.accessToken ? children : null; // Render children or null while checking
+};
 
-  if (loading) {
-    return <ActivityIndicator  />;
-  }
-
-  return children;
-}
+export default ProtectedRoute;

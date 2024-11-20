@@ -8,16 +8,13 @@ import BankMockNoBgPng from "@/assets/bank-mock-np-bg.png";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
 
-import {
-  ChoppDialog,
-  ChoppIcon,
-  ChoppThemedText,
-} from "@/shared";
+import ProtectedComponent from "@/services/auth/protected-component";
+import { ChoppDialog, ChoppIcon, ChoppThemedText } from "@/shared";
 import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
-import { ICON_SIZE } from "@/shared/enums";
 import { useChoppTheme } from "@/shared/context/chopp-theme-context";
+import { ICON_SIZE } from "@/shared/enums";
 
-export default function TabSettings() {
+function TabControlPanel() {
   const { theme } = useChoppTheme();
   const router = useRouter();
   const {
@@ -149,3 +146,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
+
+const TabControlPanelProtected = () => (
+  <ProtectedComponent>
+    <TabControlPanel />
+  </ProtectedComponent>
+);
+
+export default TabControlPanelProtected;

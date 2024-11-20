@@ -1,20 +1,14 @@
 import React, { useEffect } from "react";
-import {
-  Provider as StoreProvider,
-  useDispatch,
-  useSelector,
-} from "react-redux";
+import { Provider as StoreProvider } from "react-redux";
 import { useFonts } from "expo-font";
 import { Slot } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
 import { WsWrapper } from "@/shared/components/chopp-ws-wrapper";
-import { ChoppGlobalProvider } from "@/shared/context/chopp-global-context";
-import { AppDispatch, RootState, store } from "@/store/store";
-import { initI18n } from "@/translation/i18n";
-import { fetchCurrentUser } from "@/store/slices/user-slice/index";
-import { useBoolean } from "usehooks-ts";
 import { ChatsContextProvider } from "@/shared/context/chats-context";
+import { ChoppGlobalProvider } from "@/shared/context/chopp-global-context";
+import { store } from "@/store/store";
+import { initI18n } from "@/translation/i18n";
 
 initI18n();
 

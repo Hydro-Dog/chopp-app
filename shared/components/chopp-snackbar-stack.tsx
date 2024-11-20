@@ -86,7 +86,7 @@ export const ChoppSnackbarStack = ({ children }: PropsWithChildren<object>) => {
       {children}
       <View>
         {Object.values(snackbarMessages)?.map((item, index) => {
-          console.log('item.duration: ', item.duration, item.duration || 3000)
+          console.log('item.duration: ', item, item.duration, item.duration || 3000)
           return (
             <Snackbar
               duration={item.duration || 3000}

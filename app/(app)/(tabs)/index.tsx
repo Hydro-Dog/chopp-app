@@ -8,30 +8,27 @@ import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
 import { CallStatusScreen, NewOrderForm } from "@/components/main";
 import { CurrentOrderDetails } from "@/components/main/current-order-details";
-import {
-  ChoppThemedText,
-  FETCH_STATUS,
-  WS_MESSAGE_TYPE,
-} from "@/shared";
+import { ChoppThemedText, FETCH_STATUS, WS_MESSAGE_TYPE } from "@/shared";
 import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
 import { useFilterWsMessages } from "@/shared/hooks";
 import { OrderStatus } from "@/shared/types/order-status";
 import { fetchOrder, Order } from "@/store/slices/order-slice";
 import { AppDispatch, RootState } from "@/store/store";
 import { useChoppTheme } from "@/shared/context/chopp-theme-context";
+import ProtectedComponent from "@/services/auth/protected-component";
 
-export default function MainPage() {
+function TabHome() {
   const { theme } = useChoppTheme();
   const { t } = useTranslation();
   const [currentOrderData, setCurrentOrderData] = useState<Order>();
 
   const dispatch = useDispatch<AppDispatch>();
   const { currentOrder, fetchOrderStatus } = useSelector(
-    (state: RootState) => state.order,
+    (state: RootState) => state.order
   );
 
   const { lastMessage } = useFilterWsMessages<OrderStatus>(
-    WS_MESSAGE_TYPE.ORDER_STATUS,
+    WS_MESSAGE_TYPE.ORDER_STATUS
   );
 
   useEffect(() => {
@@ -111,3 +108,11 @@ const styles = StyleSheet.create({
     right: 40,
   },
 });
+
+const TabHomeProtected = () => (
+  <ProtectedComponent>
+    <TabHome />
+  </ProtectedComponent>
+);
+
+export default TabHomeProtected;

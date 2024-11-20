@@ -1,9 +1,18 @@
-import { PropsWithChildren, createContext, useContext, useEffect } from "react";
+import {
+  Dispatch,
+  PropsWithChildren,
+  SetStateAction,
+  createContext,
+  useContext,
+  useEffect,
+} from "react";
 import { useSetInterceptors } from "@/services";
 
 export type AuthContextType = {
   auth?: AuthType;
-  isAsyncStorageLoaded: boolean;
+  isAsyncStorageLoaded?: boolean;
+  setAuth?: Dispatch<SetStateAction<AuthType | undefined>>;
+  setIsAsyncStorageLoaded?: Dispatch<SetStateAction<boolean>>;
 };
 
 export type AuthType = {
@@ -14,17 +23,23 @@ export type AuthType = {
 const AuthContext = createContext<AuthContextType>({
   auth: undefined,
   isAsyncStorageLoaded: false,
+  setAuth: undefined,
+  setIsAsyncStorageLoaded: undefined,
 });
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuthContext = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }: PropsWithChildren<object>) => {
-  const { clearInterceptors, isAsyncStorageLoaded, auth } =
-    useSetInterceptors();
+  const {
+    clearInterceptors,
+    isAsyncStorageLoaded,
+    setIsAsyncStorageLoaded,
+    auth,
+    setAuth,
+  } = useSetInterceptors();
 
   useEffect(() => {
     return () => {
-      console.log("clearInterceptors");
       clearInterceptors();
     };
   }, [clearInterceptors]);
@@ -34,6 +49,8 @@ export const AuthProvider = ({ children }: PropsWithChildren<object>) => {
       value={{
         auth,
         isAsyncStorageLoaded,
+        setIsAsyncStorageLoaded,
+        setAuth,
       }}
     >
       {children}

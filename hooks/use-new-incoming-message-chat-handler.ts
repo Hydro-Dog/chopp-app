@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect } from "react";
 import { ChatMessage, WS_MESSAGE_TYPE } from "@/shared";
-import { useFilterWsMessages } from "@/shared/hooks";
-import { RootState } from "@/store/store";
 import { useChatsContext } from "@/shared/context/chats-context";
+import { useFilterWsMessages } from "@/shared/hooks";
 
 type Args = {
   flatListRef: any;
@@ -12,7 +10,7 @@ type Args = {
 export const useNewIncomingMessageChatHandler = ({ flatListRef }: Args) => {
   const { setMessages, setChatStats } = useChatsContext();
   const { lastMessage: newMessage } = useFilterWsMessages<ChatMessage>(
-    WS_MESSAGE_TYPE.MESSAGE
+    WS_MESSAGE_TYPE.MESSAGE,
   );
 
   useEffect(() => {
@@ -25,3 +23,5 @@ export const useNewIncomingMessageChatHandler = ({ flatListRef }: Args) => {
     }, 100);
   }, [newMessage]);
 };
+
+export default useNewIncomingMessageChatHandler;

@@ -22,3 +22,5 @@ export const useFetchChatStats = () => {
     }
   }, [chatsStats]);
 };
+
+export default useFetchChatStats

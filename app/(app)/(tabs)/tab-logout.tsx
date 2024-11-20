@@ -6,8 +6,9 @@ import { useRouter } from "expo-router";
 import { ChoppThemedText, clearStorage } from "@/shared";
 import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
 import { useChoppTheme } from "@/shared/context/chopp-theme-context";
+import ProtectedComponent from "@/services/auth/protected-component";
 
-export default function TabLogout() {
+function TabLogout() {
   const router = useRouter();
   const { theme } = useChoppTheme();
   const { t } = useTranslation();
@@ -70,3 +71,11 @@ const styles = StyleSheet.create({
     gap: 8,
   },
 });
+
+const TabLogoutProtected = () => (
+  <ProtectedComponent>
+    <TabLogout />
+  </ProtectedComponent>
+);
+
+export default TabLogoutProtected;

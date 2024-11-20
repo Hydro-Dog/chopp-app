@@ -2,30 +2,28 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { Tabs } from "expo-router";
-
-import {
-  useFetchChatStats,
-  useFetchMessages,
-  useReadAllChatMessages,
-} from "./hooks";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
+import useFetchChatStats from "@/hooks/use-fetch-chat-stats";
+import useFetchMessages from "@/hooks/use-fetch-messages";
+import useReadAllChatMessages from "@/hooks/use-read-all-chat-messages";
+import ProtectedRoute from "@/services/auth/protected-route";
 import { ChatMessage, WS_MESSAGE_TYPE } from "@/shared";
+import { useAuthContext } from "@/shared/context/auth-context";
 import { useChatsContext } from "@/shared/context/chats-context";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 import { useFilterWsMessages } from "@/shared/hooks";
 import { fetchCurrentUser } from "@/store/slices/user-slice/index";
 import { AppDispatch } from "@/store/store";
-import { useAuth } from "@/shared/context/auth-context";
-import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 
 export default function TabLayout() {
   const { theme } = useChoppTheme();
   const { t } = useTranslation();
   const { lastMessage: newMessage } = useFilterWsMessages<ChatMessage>(
-    WS_MESSAGE_TYPE.MESSAGE
+    WS_MESSAGE_TYPE.MESSAGE,
   );
   const dispatch = useDispatch<AppDispatch>();
   const { chatStats, setChatStats } = useChatsContext();
-  const { isLoaded } = useAuth();
+  const { isLoaded } = useAuthContext();
 
   useFetchMessages();
   useFetchChatStats();
@@ -33,9 +31,10 @@ export default function TabLayout() {
 
   useEffect(() => {
     // if (isLoaded) {
-      dispatch(fetchCurrentUser());
-      dispatch(fetchCurrentUser());
-      console.log('fetchCurrentUser')
+    dispatch(fetchCurrentUser());
+    dispatch(fetchCurrentUser());
+    dispatch(fetchCurrentUser());
+    console.log("fetchCurrentUser");
     // }
   }, [dispatch]);
 

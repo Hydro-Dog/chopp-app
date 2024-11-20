@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useRouter } from "expo-router";
-import { useAuth } from "@/shared/context/auth-context";
+import { useAuthContext } from "@/shared/context/auth-context";
 
 export const useAuthGuard = () => {
-  const { auth, isLoaded } = useAuth();
+  const { auth, isLoaded } = useAuthContext();
   const router = useRouter();
 
   useEffect(() => {

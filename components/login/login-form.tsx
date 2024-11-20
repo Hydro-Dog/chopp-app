@@ -15,21 +15,22 @@ import {
   addToStorage,
   ErrorResponse,
 } from "@/shared";
+import { useAuthContext } from "@/shared/context/auth-context";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 import { formatPhoneNumber } from "@/shared/utils/format-phone-number";
 import { login } from "@/store/slices/user-slice/index";
 import { RootState, AppDispatch } from "@/store/store";
-import { useChoppTheme } from "@/shared/context/chopp-theme-context";
-import { useAuth } from "@/shared/context/auth-context";
 
 export const LoginForm = () => {
   const { theme } = useChoppTheme();
   const { t } = useTranslation();
-  const { setAuth } = useAuth();
+  // const { setAuth } = useAuth();
   const router = useRouter();
   const { value: passwordVisible, toggle: togglePasswordVisibility } =
     useBoolean();
   const { loginStatus } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
+  const {} = useAuthContext();
 
   const {
     control,
@@ -45,18 +46,25 @@ export const LoginForm = () => {
 
   const { pushNewNotification } = useChoppSnackbar();
 
+  const { setAuth, setIsAsyncStorageLoaded } = useAuthContext();
+
   const onSubmit: SubmitHandler<LoginFormType> = async (data) => {
     try {
+      setIsAsyncStorageLoaded?.(false);
       const res = await dispatch(login(data)).unwrap();
-      setAuth(res);
+      setAuth?.(res);
+      console.log("LOGIN setAuth: ", res);
       await addToStorage("accessToken", res.accessToken);
       await addToStorage("refreshToken", res.refreshToken);
+      setIsAsyncStorageLoaded?.(true);
       router.push("/");
     } catch (error: unknown) {
       pushNewNotification({
         id: String(Math.random()),
         variant: SNACKBAR_VARIANTS.ERROR,
-        text: (error as ErrorResponse).message,
+        text:
+          (error as ErrorResponse).message ||
+          JSON.stringify(error as ErrorResponse),
       });
     }
   };

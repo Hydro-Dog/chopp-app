@@ -1,11 +1,10 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useSegments } from "expo-router";
 import { WS_MESSAGE_TYPE } from "@/shared";
 import { useChatsContext } from "@/shared/context/chats-context";
 import { wsSend } from "@/store/slices/ws-slice";
 import { AppDispatch, RootState } from "@/store/store";
-import { useRoute } from "@react-navigation/native";
-import { useLocalSearchParams, useSegments } from "expo-router";
 
 export const useReadAllChatMessages = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -17,9 +16,8 @@ export const useReadAllChatMessages = () => {
   useEffect(() => {
     if (segments.includes("tab-support-chat")) {
       setChatStats((prev) => {
-
         console.log("READ ALL", { ...prev, read: prev.total, unRead: 0 });
-        return { ...prev, read: prev.total, unRead: 0 }
+        return { ...prev, read: prev.total, unRead: 0 };
       });
 
       setMessages((prev) => {
@@ -45,7 +43,7 @@ export const useReadAllChatMessages = () => {
         wsSend({
           type: WS_MESSAGE_TYPE.MESSAGES_READ,
           payload: { currentChatId: currentUser?.chatWithAdminId },
-        })
+        }),
       );
     }
   };
@@ -56,3 +54,5 @@ export const useReadAllChatMessages = () => {
     // }
   }, [currentUser?.chatWithAdminId]);
 };
+
+export default useReadAllChatMessages;
