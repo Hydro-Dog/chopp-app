@@ -10,7 +10,7 @@ import { ErrorResponse, FETCH_STATUS } from "@/shared";
 
 export type UserState = {
   currentUser?: User;
-  currentUserStatus: FETCH_STATUS;
+  fetchCurrentUserStatus: FETCH_STATUS;
   currentUserError: ErrorResponse | null;
   updateCurrentUserStatus: FETCH_STATUS;
   updateCurrentUserError: ErrorResponse | null;
@@ -24,7 +24,7 @@ export type UserState = {
 
 const initialState: UserState = {
   currentUser: undefined,
-  currentUserStatus: FETCH_STATUS.IDLE,
+  fetchCurrentUserStatus: FETCH_STATUS.IDLE,
   currentUserError: null,
   updateCurrentUserStatus: FETCH_STATUS.IDLE,
   updateCurrentUserError: null,
@@ -50,19 +50,18 @@ export const userSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchCurrentUser.pending, (state) => {
-        state.currentUserStatus = FETCH_STATUS.LOADING;
+        state.fetchCurrentUserStatus = FETCH_STATUS.LOADING;
       })
       .addCase(
         fetchCurrentUser.fulfilled,
         (state, action: PayloadAction<User>) => {
-          state.currentUserStatus = FETCH_STATUS.SUCCESS;
-          console.log('action.payload: ', action.payload)
+          state.fetchCurrentUserStatus = FETCH_STATUS.SUCCESS;
+
           state.currentUser = action.payload;
-          console.log('state.currentUser: ', state.currentUser)
         }
       )
       .addCase(fetchCurrentUser.rejected, (state, action) => {
-        state.currentUserStatus = FETCH_STATUS.ERROR;
+        state.fetchCurrentUserStatus = FETCH_STATUS.ERROR;
         state.currentUserError = action.payload ?? {
           errorMessage: "Failed to fetch user information",
         };
@@ -74,7 +73,7 @@ export const userSlice = createSlice({
         updateCurrentUser.fulfilled,
         (state, action: PayloadAction<User>) => {
           state.updateCurrentUserStatus = FETCH_STATUS.SUCCESS;
-          console.log('action.payload: ', action.payload)
+          console.log("action.payload: ", action.payload);
           state.currentUser = action.payload;
           state.updateCurrentUserStatus = FETCH_STATUS.IDLE;
         }

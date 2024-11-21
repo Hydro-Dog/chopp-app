@@ -12,8 +12,16 @@ export const ChoppBackButton = ({ title, ...props }: Props) => {
   const { t } = useTranslation();
   const { back } = useRouter();
 
+  const goBack = () => {
+    try {
+      back();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
-    <Button icon="arrow-left" onPress={back} {...props}>
+    <Button icon="arrow-left" onPress={goBack} {...props}>
       {title || t("back")}
     </Button>
   );

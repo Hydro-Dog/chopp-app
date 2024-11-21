@@ -35,7 +35,10 @@ export const updateCurrentUser = createAsyncThunk<
   { rejectValue: ErrorResponse }
 >("/updateCurrentUser", async (userData, thunkAPI) => {
   try {
-    const response = await axiosPrivate.put<User>("/users/currentUser", sanitizedUser(userData));
+    const response = await axiosPrivate.put<User>(
+      "/users/currentUser",
+      sanitizedUser(userData),
+    );
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
@@ -43,7 +46,7 @@ export const updateCurrentUser = createAsyncThunk<
       return thunkAPI.rejectWithValue(
         error.response.data?.errorMessage
           ? (error.response.data as ErrorResponse)
-          : { errorMessage: error.response.data }
+          : { errorMessage: error.response.data },
       );
     } else {
       console.log("ELSE errorMessage");
@@ -60,7 +63,10 @@ export const createUser = createAsyncThunk<
   { rejectValue: ErrorResponse }
 >("/createUser", async (data, thunkAPI) => {
   try {
-    const response = await axiosDefault.post<User>(`/auth/registration`, sanitizedUser(data));
+    const response = await axiosDefault.post<User>(
+      `/auth/registration`,
+      sanitizedUser(data),
+    );
     return response.data;
   } catch (error) {
     console.log("axios error: ", error);
@@ -82,7 +88,7 @@ export const login = createAsyncThunk<
   try {
     const response = await axiosDefault.post<UserAuthorization>(
       `/auth/login`,
-      userData
+      sanitizedUser(userData),
     );
     return response.data;
   } catch (error) {

@@ -12,10 +12,10 @@ import { useColorScheme } from "react-native";
 import { DefaultTheme, PaperProvider } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemeProvider } from "@react-navigation/native";
-import { ChoppDevBar } from "../components";
+import { ChoppDevBar } from "../components/chopp-dev-bar";
 import { THEME } from "../enums";
 import { ChopThemeType } from "../types";
-import { DARK_THEME, LIGHT_THEME } from "@/theme";
+import { DARK_THEME, LIGHT_THEME } from "@/theme/colors";
 
 type ChoppThemeContextType = {
   theme: ChopThemeType;

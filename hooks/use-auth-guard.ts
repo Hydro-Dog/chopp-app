@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 import { useRouter } from "expo-router";
-import { useAuth } from "@/shared";
+import { useAuthContext } from "@/shared/context/auth-context";
 
 export const useAuthGuard = () => {
-  const { auth, isLoaded } = useAuth();
+  const { auth, isAsyncStorageLoaded } = useAuthContext();
   const router = useRouter();
 
   useEffect(() => {
-    if (!auth?.accessToken && isLoaded) {
+    if (!auth?.accessToken && isAsyncStorageLoaded) {
       router.push("/login");
     }
-  }, [isLoaded, auth?.accessToken, router]);
+  }, [isAsyncStorageLoaded, auth?.accessToken, router]);
 };

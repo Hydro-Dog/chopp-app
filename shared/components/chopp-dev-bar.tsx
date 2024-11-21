@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import { Button, Switch } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useChoppTheme } from "../context";
+import { useChoppTheme } from "../context/chopp-theme-context";
 
 export const ChoppDevBar = () => {
   const { isDarkTheme, toggleTheme } = useChoppTheme();

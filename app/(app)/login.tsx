@@ -5,8 +5,9 @@ import { Button } from "react-native-paper";
 import { useRouter } from "expo-router";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
-import { LoginForm } from "@/pages/login/login-form";
-import { ChoppThemedText, useChoppTheme } from "@/shared";
+import { LoginForm } from "@/components/login/login-form";
+import { ChoppThemedText } from "@/shared";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 
 export default function LoginPage() {
   const { theme } = useChoppTheme();
@@ -18,9 +19,7 @@ export default function LoginPage() {
       <View style={styles.container}>
         <Image style={styles.logo} source={theme.dark ? LogoDark : LogoLight} />
         <View style={styles.content}>
-          <ChoppThemedText type="subtitleBold">
-            {t("registration")}
-          </ChoppThemedText>
+          <ChoppThemedText type="subtitleBold">{t("signIn")}</ChoppThemedText>
           <LoginForm />
 
           <Button

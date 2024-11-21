@@ -6,8 +6,9 @@ import {
   StyleSheet,
 } from "react-native";
 import Svg, { Path } from "react-native-svg";
+
+import { useChoppTheme } from "../context/chopp-theme-context";
 import { ChoppThemedText } from "./chopp-themed-text";
-import { useChoppTheme } from "../context";
 
 type Props = {
   value: boolean;

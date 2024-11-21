@@ -1,6 +1,6 @@
 import { Text, type TextProps, StyleSheet } from "react-native";
-import { LIGHT_THEME } from "@/theme";
 import { useThemeColor } from "@/hooks/use-theme-color";
+import { LIGHT_THEME } from "@/theme";
 
 export type ThemedTextProps = TextProps & {
   lightColor?: string;
@@ -32,6 +32,7 @@ export function ChoppThemedText({
 
   return (
     <Text
+      adjustsFontSizeToFit
       style={[
         { color },
         { fontFamily: "Nunito" },
@@ -43,7 +44,6 @@ export function ChoppThemedText({
         type === "subtitleBold" ? styles.subtitleBold : undefined,
         type === "link" ? styles.link : undefined,
         type === "bold" ? styles.bold : undefined,
-
         style,
       ]}
       {...rest}

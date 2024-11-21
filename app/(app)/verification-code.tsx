@@ -5,7 +5,8 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { Button } from "react-native-paper";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
-import { ChoppCodeInput, ChoppThemedText, useChoppTheme } from "@/shared";
+import { ChoppCodeInput, ChoppThemedText } from "@/shared";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 
 export default function VerificationCodePage() {
   const { theme } = useChoppTheme();

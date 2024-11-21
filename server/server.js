@@ -41,8 +41,8 @@ const DEFAULT_USER = {
   id: "0",
   email: "a@a.a",
   fullName: "Иван Петров",
-  password: "11111111",
-  phoneNumber: "8-989-898-98-98",
+  password: "qqqqqqqq",
+  phoneNumber: "89934479975",
   chatWithAdminId: "0000",
 };
 
@@ -57,8 +57,8 @@ const DEFAULT_ADMIN = {
 const generateUsers = () => {
   const users = {};
   // Добавление администратора
-  // users["admin@admin.ru"] = DEFAULT_ADMIN;
-  // users["a@a.a"] = DEFAULT_USER;
+  users["admin@admin.ru"] = DEFAULT_ADMIN;
+  users["89934479975"] = DEFAULT_USER;
 
   // Генерация 20 пользователей
   for (let i = 0; i < 20; i++) {
@@ -67,7 +67,7 @@ const generateUsers = () => {
       email: email,
       fullName: fakerRU.person.fullName(),
       password: faker.internet.password(),
-      phoneNumber: '8-999-888-55-33',
+      phoneNumber: "8-999-888-55-33",
       id: faker.number.float(),
     };
   }
@@ -230,9 +230,56 @@ function generateTokens() {
   };
 }
 
+const sendOrderStatuses = (ws) => {
+  ws.send(
+    JSON.stringify({
+      type: "orderStatus",
+      payload: { status: "processing", timeStamp: new Date().valueOf() },
+    })
+  );
+
+  setTimeout(() => {
+    ws.send(
+      JSON.stringify({
+        type: "orderStatus",
+        payload: { status: "accepted", timeStamp: new Date().valueOf() },
+      })
+    );
+  }, 1000);
+
+  setTimeout(() => {
+    ws.send(
+      JSON.stringify({
+        type: "orderStatus",
+        payload: { status: "onTheWay", timeStamp: new Date().valueOf() },
+      })
+    );
+  }, 3000);
+
+  setTimeout(() => {
+    ws.send(
+      JSON.stringify({
+        type: "orderStatus",
+        payload: { status: "onTheSpot", timeStamp: new Date().valueOf() },
+      })
+    );
+  }, 5000);
+
+  setTimeout(() => {
+    ws.send(
+      JSON.stringify({
+        type: "orderStatus",
+        payload: { status: "completed", timeStamp: new Date().valueOf() },
+      })
+    );
+  }, 7000);
+};
+
 // Обработчик WebSocket соединений
 wss.on("connection", function connection(ws) {
   console.log("WebSocket connection established");
+
+  sendOrderStatuses(ws);
 
   // Отправка приветственного сообщения сразу после подключения
   ws.send(
@@ -254,59 +301,6 @@ wss.on("connection", function connection(ws) {
         })
       );
     }
-
-    // if (
-    //   receivedData.type === "callStatus"
-    //   // && receivedData.code === "call"
-    // ) {
-    //   ws.send(
-    //     JSON.stringify({
-    //       type: "callStatus",
-    //       message: "processing",
-    //       timeStamp: new Date().valueOf(),
-    //     })
-    //   );
-
-    //   setTimeout(() => {
-    //     ws.send(
-    //       JSON.stringify({
-    //         type: "callStatus",
-    //         message: "accepted",
-    //         timeStamp: new Date().valueOf(),
-    //       })
-    //     );
-    //   }, 1000);
-
-    //   setTimeout(() => {
-    //     ws.send(
-    //       JSON.stringify({
-    //         type: "callStatus",
-    //         message: "onTheWay",
-    //         timeStamp: new Date().valueOf(),
-    //       })
-    //     );
-    //   }, 3000);
-
-    //   setTimeout(() => {
-    //     ws.send(
-    //       JSON.stringify({
-    //         type: "callStatus",
-    //         message: "onTheSpot",
-    //         timeStamp: new Date().valueOf(),
-    //       })
-    //     );
-    //   }, 5000);
-
-    //   setTimeout(() => {
-    //     ws.send(
-    //       JSON.stringify({
-    //         type: "callStatus",
-    //         message: "completed",
-    //         timeStamp: new Date().valueOf(),
-    //       })
-    //     );
-    //   }, 7000);
-    // }
 
     if (receivedData.type === "callStatus") {
       ws.send(
@@ -416,7 +410,7 @@ app.get("/api/chats/:id/messages", (req, res) => {
       senderId: DEFAULT_ADMIN.id,
       chatId: chatId,
     },
-  ];  
+  ];
 
   res.json(mockChatHistory);
 });
@@ -608,15 +602,15 @@ app.get("/api/users/:id", (req, res) => {
 });
 
 app.post("/api/auth/login", (req, res) => {
-  const { login, password } = req.body;
+  const { phoneNumber, password } = req.body;
   if (
-    users[login.toLocaleLowerCase()] &&
-    users[login.toLocaleLowerCase()].password.toLocaleLowerCase() ===
+    users[phoneNumber.toLocaleLowerCase()] &&
+    users[phoneNumber.toLocaleLowerCase()].password.toLocaleLowerCase() ===
       password.toLocaleLowerCase()
   ) {
     const tokens = generateTokens();
-    users[login.toLocaleLowerCase()] = {
-      ...users[login.toLocaleLowerCase()],
+    users[phoneNumber.toLocaleLowerCase()] = {
+      ...users[phoneNumber.toLocaleLowerCase()],
       ...tokens,
     };
     res.json(tokens);
@@ -661,6 +655,38 @@ app.post("/api/refresh", (req, res) => {
   } else {
     res.status(403).json({ errorMessage: "Неверный refresh token" });
   }
+});
+
+app.get("/api/orders", (req, res) => {
+  // Функция для создания случайных заказов
+  const generateOrders = (count = 10) => {
+    const orders = [];
+    for (let i = 0; i < count; i++) {
+      const status = randomize([
+        "processing",
+        "accepted",
+        "onTheWay",
+        "onTheSpot",
+        "completed",
+        "canceled",
+      ]);
+      orders.push({
+        id: generateUUID(),
+        address: fakerRU.location.streetAddress(),
+        orderComment: COMMENTS[Math.floor(Math.random() * COMMENTS.length)],
+        createdAt: faker.date.recent(90).getTime(),
+        statusData: {
+          status: status,
+          timeStamp: new Date().getTime() - (100000 - i * 10000), // Ставим случайные метки времени для статуса
+        },
+      });
+    }
+    return orders;
+  };
+
+  // Генерация массива заказов
+  const orders = generateOrders();
+  res.json(orders);
 });
 
 // Запуск сервера

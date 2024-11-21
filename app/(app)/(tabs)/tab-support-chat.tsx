@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -10,10 +10,11 @@ import {
 } from "react-native";
 import { IconButton, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import { useNewIncomingMessageChatHandler } from "./hooks";
-import { Chat } from "@/pages/chat";
-import { ChatMessage, useChoppTheme, WS_MESSAGE_TYPE } from "@/shared";
+import { Chat } from "@/components/chat";
+import useNewIncomingMessageChatHandler from "@/hooks/use-new-incoming-message-chat-handler";
+import { ChatMessage, WS_MESSAGE_TYPE } from "@/shared";
 import { useChatsContext } from "@/shared/context/chats-context";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 import { useFilterWsMessages } from "@/shared/hooks";
 import { wsSend } from "@/store/slices/ws-slice";
 import { AppDispatch, RootState } from "@/store/store";
@@ -107,6 +108,7 @@ export default function TabSupportChat() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    // width: '100%'
   },
   inputContainer: {
     flexDirection: "row",

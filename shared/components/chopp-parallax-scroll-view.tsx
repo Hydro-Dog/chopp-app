@@ -6,8 +6,7 @@ import Animated, {
   useAnimatedStyle,
   useScrollViewOffset,
 } from "react-native-reanimated";
-
-import { ChoppThemedView } from "@/shared";
+import { ChoppThemedView } from "./chopp-themed-view";
 
 const HEADER_HEIGHT = 250;
 

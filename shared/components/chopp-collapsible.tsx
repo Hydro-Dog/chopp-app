@@ -27,7 +27,7 @@ export function ChoppCollapsible({
         <ChoppThemedText type="defaultSemiBold">{title}</ChoppThemedText>
       </TouchableOpacity>
       {isOpen && (
-        <ChoppThemedView style={styles.content}>{children}</ChoppThemedView>
+        <ChoppThemedView style={styles.content}>ccc{children}</ChoppThemedView>
       )}
     </ChoppThemedView>
   );
