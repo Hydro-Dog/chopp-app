@@ -4,9 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useBoolean } from "usehooks-ts";
 import { ProfileScreen } from "@/components/settings/profile/profile";
 import { ProfileForm } from "@/components/settings/profile/profile-form";
-import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
-import { useChoppTheme } from "@/shared/context/chopp-theme-context";
-import { FETCH_STATUS } from "@/shared/types/fetch-status";
+import { useChoppTheme, ChoppScreenLayout, FETCH_STATUS } from "@/shared";
 import { RootState } from "@/store/store";
 
 export default function ProfileSettings() {

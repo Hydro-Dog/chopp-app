@@ -1,9 +1,9 @@
 import * as React from "react";
 import { useTranslation } from "react-i18next";
 import { Avatar } from "react-native-paper";
-import { Order } from "@/store/slices/order-slice";
 import { ChoppCollapsibleCard } from "@/shared/components/chopp-collapsible-card";
 import { ChoppViewItems } from "@/shared/components/chopp-view-items";
+import { Order } from "@/store/slices/order-slice";
 
 type Props = {
   order: Order;

@@ -53,7 +53,7 @@ export const CallStatusScreen = ({ currentStatus, timeStamp }: Props) => {
   // Создаем анимированные значения для каждого шага
   const backgroundColors = steps.map(
     (step) =>
-      useRef(new Animated.Value(completedSteps.includes(step) ? 1 : 0)).current
+      useRef(new Animated.Value(completedSteps.includes(step) ? 1 : 0)).current,
   );
 
   // Анимируем изменение фона

@@ -16,7 +16,7 @@ type Props = {
   showBackButton?: boolean;
 };
 
-export default function ChoppScreenLayout({
+export function ChoppScreenLayout({
   children,
   showLogo,
   customLogo,

@@ -4,9 +4,8 @@ import { useFonts } from "expo-font";
 import { Slot } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import "react-native-reanimated";
+import { ChoppGlobalProvider, ChatsContextProvider } from "@/shared";
 import { WsWrapper } from "@/shared/components/chopp-ws-wrapper";
-import { ChatsContextProvider } from "@/shared/context/chats-context";
-import { ChoppGlobalProvider } from "@/shared/context/chopp-global-context";
 import { store } from "@/store/store";
 import { initI18n } from "@/translation/i18n";
 

@@ -3,7 +3,11 @@ import axios from "axios";
 import { CONFIG } from "@/my-config";
 
 import { AuthType } from "@/shared/context/auth-context";
-import { getFromStorage, clearStorage, addToStorage } from "@/shared/utils/async-storage-methods";
+import {
+  getFromStorage,
+  clearStorage,
+  addToStorage,
+} from "@/shared/utils/async-storage-methods";
 
 type FailedQueRequest = {
   resolve: (val: unknown) => void;
@@ -17,7 +21,9 @@ export const axiosPrivate = axios.create({
   //   headers: { "Content-Type": "application/json" },
 });
 
-const refresh = async (setAuth) => {
+const refresh = async (
+  setAuth: Dispatch<SetStateAction<AuthType | undefined>>,
+) => {
   const refreshToken = await getFromStorage("refreshToken");
   try {
     const response = await axiosDefault.post("auth/refresh", {
@@ -26,9 +32,9 @@ const refresh = async (setAuth) => {
 
     return response.data.accessToken;
   } catch (error) {
-    if (error.status === 401) {
+    if ((error as any).status === 401) {
       await clearStorage();
-      setAuth({})
+      setAuth({});
     }
   }
 };

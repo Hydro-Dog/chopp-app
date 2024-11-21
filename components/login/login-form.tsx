@@ -7,27 +7,30 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { useBoolean } from "usehooks-ts";
 import { LoginFormType, loginSchema } from ".";
+import { ChoppFormField } from "@/shared/components/chopp-form-field";
+import {
+  useChoppSnackbar,
+  SNACKBAR_VARIANTS,
+} from "@/shared/components/chopp-snackbar-stack";
 import { useAuthContext } from "@/shared/context/auth-context";
 import { useChoppTheme } from "@/shared/context/chopp-theme-context";
-import { formatPhoneNumber } from "@/shared/utils/format-phone-number";
-import { login } from "@/store/slices/user-slice/index";
-import { RootState, AppDispatch } from "@/store/store";
-import { ChoppFormField } from "@/shared/components/chopp-form-field";
-import { useChoppSnackbar, SNACKBAR_VARIANTS } from "@/shared/components/chopp-snackbar-stack";
 import { FETCH_STATUS } from "@/shared/types/fetch-status";
 import { ErrorResponse } from "@/shared/types/response-error";
 import { addToStorage } from "@/shared/utils/async-storage-methods";
+import { formatPhoneNumber } from "@/shared/utils/format-phone-number";
+import { login, UserLoginDTO } from "@/store/slices/user-slice/index";
+import { RootState, AppDispatch } from "@/store/store";
 
 export const LoginForm = () => {
+  const { setAuth, setIsAsyncStorageLoaded } = useAuthContext();
   const { theme } = useChoppTheme();
   const { t } = useTranslation();
-  // const { setAuth } = useAuth();
   const router = useRouter();
   const { value: passwordVisible, toggle: togglePasswordVisibility } =
     useBoolean();
   const { loginStatus } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
-  const {} = useAuthContext();
+  const { pushNewNotification } = useChoppSnackbar();
 
   const {
     control,
@@ -41,18 +44,21 @@ export const LoginForm = () => {
     },
   });
 
-  const { pushNewNotification } = useChoppSnackbar();
-
-  const { setAuth, setIsAsyncStorageLoaded } = useAuthContext();
-
   const onSubmit: SubmitHandler<LoginFormType> = async (data) => {
     try {
       setIsAsyncStorageLoaded?.(false);
-      const res = await dispatch(login(data)).unwrap();
+
+      const res = await dispatch(
+        login(data as unknown as UserLoginDTO),
+      ).unwrap();
+
       setAuth?.(res);
+
       await addToStorage("accessToken", res.accessToken);
       await addToStorage("refreshToken", res.refreshToken);
+
       setIsAsyncStorageLoaded?.(true);
+
       router.push("/");
     } catch (error: unknown) {
       pushNewNotification({

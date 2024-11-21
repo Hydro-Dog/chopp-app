@@ -13,11 +13,13 @@ import { IconButton, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { Chat } from "@/components/chat";
 import useNewIncomingMessageChatHandler from "@/hooks/use-new-incoming-message-chat-handler";
-import { useChatsContext } from "@/shared/context/chats-context";
-import { useChoppTheme } from "@/shared/context/chopp-theme-context";
-import { useFilterWsMessages } from "@/shared/hooks/use-filter-ws-messagse";
-import { ChatMessage } from "@/shared/types/chat-message";
-import { WS_MESSAGE_TYPE } from "@/shared/types/ws-message-type";
+import {
+  useChoppTheme,
+  ChatMessage,
+  useChatsContext,
+  useFilterWsMessages,
+  WS_MESSAGE_TYPE,
+} from "@/shared";
 import { wsSend } from "@/store/slices/ws-slice";
 import { AppDispatch, RootState } from "@/store/store";
 

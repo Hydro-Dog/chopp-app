@@ -1,7 +1,6 @@
 import { StyleSheet } from "react-native";
 import { Link, Stack } from "expo-router";
-import { ChoppThemedText } from "@/shared/components/chopp-themed-text";
-import { ChoppThemedView } from "@/shared/components/chopp-themed-view";
+import { ChoppThemedView, ChoppThemedText } from "@/shared";
 
 export default function NotFoundScreen() {
   return (

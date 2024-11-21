@@ -3,13 +3,15 @@ import { useTranslation } from "react-i18next";
 import { StyleSheet, SafeAreaView, StatusBar } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import { ChoppAnimatedList } from "@/shared/components/chopp-animated-list";
-import { ChoppChip } from "@/shared/components/chopp-chip";
-import { ChoppCollapsibleCard } from "@/shared/components/chopp-collapsible-card";
+import {
+  ChoppScreenLayout,
+  FETCH_STATUS,
+  ChoppAnimatedList,
+  ChoppCollapsibleCard,
+  ChoppChip,
+  ChoppViewItems,
+} from "@/shared";
 import { ChoppOrderStatusChip } from "@/shared/components/chopp-order-status-chip";
-import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
-import { ChoppViewItems } from "@/shared/components/chopp-view-items";
-import { FETCH_STATUS } from "@/shared/types/fetch-status";
 import { fetchMyOrders } from "@/store/slices/order-slice";
 import { AppDispatch, RootState } from "@/store/store";
 

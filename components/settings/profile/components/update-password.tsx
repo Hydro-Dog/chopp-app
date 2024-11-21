@@ -8,12 +8,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { TFunction } from "i18next";
 import { useBoolean } from "usehooks-ts";
 import { z } from "zod";
+import { ChoppFormField } from "@/shared/components/chopp-form-field";
+import {
+  useChoppSnackbar,
+  SNACKBAR_VARIANTS,
+} from "@/shared/components/chopp-snackbar-stack";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
+import { FETCH_STATUS } from "@/shared/types/fetch-status";
 import { updateCurrentUser } from "@/store/slices/user-slice/index";
 import { AppDispatch, RootState } from "@/store/store";
-import { useChoppTheme } from "@/shared/context/chopp-theme-context";
-import { ChoppFormField } from "@/shared/components/chopp-form-field";
-import { useChoppSnackbar, SNACKBAR_VARIANTS } from "@/shared/components/chopp-snackbar-stack";
-import { FETCH_STATUS } from "@/shared/types/fetch-status";
 
 export const passwordSchema = (t: TFunction<"translation", undefined>) =>
   z.object({

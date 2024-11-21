@@ -6,7 +6,11 @@ export const ChoppCollapsibleCard = ({
   title,
   small,
   ...props
-}: PropsWithChildren<{ small?: boolean; title?: ReactElement }>) => {
+}: PropsWithChildren<{
+  small?: boolean;
+  title?: ReactElement | string;
+  left: (props: unknown) => React.JSX.Element;
+}>) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   // TODO: добавить анимацию раскрытия

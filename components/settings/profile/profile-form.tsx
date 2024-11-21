@@ -7,13 +7,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UpdatePassword } from "./components";
 import { ProfileFormType, profileSchema } from "./types";
-
-import { updateCurrentUser, User } from "@/store/slices/user-slice/index";
-import { AppDispatch, RootState } from "@/store/store";
 import { ChoppFormField } from "@/shared/components/chopp-form-field";
-import { useChoppSnackbar, SNACKBAR_VARIANTS } from "@/shared/components/chopp-snackbar-stack";
+import {
+  useChoppSnackbar,
+  SNACKBAR_VARIANTS,
+} from "@/shared/components/chopp-snackbar-stack";
 import { FETCH_STATUS } from "@/shared/types/fetch-status";
 import { formatPhoneNumber } from "@/shared/utils/format-phone-number";
+import { updateCurrentUser, User } from "@/store/slices/user-slice/index";
+import { AppDispatch, RootState } from "@/store/store";
 
 type Props = {
   user?: User;
@@ -24,7 +26,7 @@ export const ProfileForm = ({ user, setViewMode }: Props) => {
   const [passwordMode, setPasswordMode] = useState<"view" | "edit">("view");
   const { t } = useTranslation();
   const { updateCurrentUserStatus } = useSelector(
-    (state: RootState) => state.user
+    (state: RootState) => state.user,
   );
   const dispatch = useDispatch<AppDispatch>();
 

@@ -2,19 +2,18 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { Tabs } from "expo-router";
-
 import useFetchChatStats from "@/hooks/use-fetch-chat-stats";
 import useFetchMessages from "@/hooks/use-fetch-messages";
 import useReadAllChatMessages from "@/hooks/use-read-all-chat-messages";
-
+import {
+  useChatsContext,
+  useFilterWsMessages,
+  useChoppTheme,
+  ChatMessage,
+  WS_MESSAGE_TYPE,
+} from "@/shared";
 import { TabBarIcon } from "@/shared/components/chopp-tab-bar-icon";
-import { useAuthContext } from "@/shared/context/auth-context";
-import { useChatsContext } from "@/shared/context/chats-context";
-import { useChoppTheme } from "@/shared/context/chopp-theme-context";
-import { useFilterWsMessages } from "@/shared/hooks/use-filter-ws-messagse";
-import { ChatMessage } from "@/shared/types/chat-message";
-import { WS_MESSAGE_TYPE } from "@/shared/types/ws-message-type";
-import { fetchCurrentUser } from "@/store/slices/user-slice/index";
+import { fetchCurrentUser } from "@/store/slices/user-slice";
 import { AppDispatch } from "@/store/store";
 
 export default function TabLayout() {

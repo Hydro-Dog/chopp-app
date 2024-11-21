@@ -4,14 +4,16 @@ import { View, StyleSheet } from "react-native";
 import { TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import { NewOrderFormType, newOrderSchema } from "./types";
-import { createOrder, Order } from "@/store/slices/order-slice";
-import { AppDispatch, RootState } from "@/store/store";
 import { ChoppBigRoundButton } from "@/shared/components/chopp-big-round-button";
 import { ChoppFormField } from "@/shared/components/chopp-form-field";
-import { useChoppSnackbar, SNACKBAR_VARIANTS } from "@/shared/components/chopp-snackbar-stack";
+import {
+  useChoppSnackbar,
+  SNACKBAR_VARIANTS,
+} from "@/shared/components/chopp-snackbar-stack";
 import { FETCH_STATUS } from "@/shared/types/fetch-status";
+import { createOrder, Order } from "@/store/slices/order-slice";
+import { AppDispatch, RootState } from "@/store/store";
 
 export const NewOrderForm = () => {
   const { t } = useTranslation();
@@ -34,9 +36,7 @@ export const NewOrderForm = () => {
 
   const onSubmit: SubmitHandler<NewOrderFormType> = async (data) => {
     try {
-      const res = await dispatch(
-        createOrder(data as Omit<Order, "id">),
-      ).unwrap();
+      await dispatch(createOrder(data as Omit<Order, "id">)).unwrap();
     } catch (error: any) {
       pushNewNotification({
         id: String(Math.random()),
@@ -92,9 +92,3 @@ export const NewOrderForm = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  registerButton: {
-    marginTop: 24,
-  },
-});

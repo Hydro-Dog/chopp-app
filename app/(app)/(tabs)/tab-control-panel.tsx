@@ -7,12 +7,14 @@ import { useBoolean } from "usehooks-ts";
 import BankMockNoBgPng from "@/assets/bank-mock-np-bg.png";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
-import { ChoppDialog } from "@/shared/components/chopp-dialog";
-import { ChoppIcon } from "@/shared/components/chopp-icon";
-import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
-import { ChoppThemedText } from "@/shared/components/chopp-themed-text";
-import { useChoppTheme } from "@/shared/context/chopp-theme-context";
-import { ICON_SIZE } from "@/shared/enums/size";
+import {
+  useChoppTheme,
+  ChoppScreenLayout,
+  ChoppIcon,
+  ICON_SIZE,
+  ChoppThemedText,
+  ChoppDialog,
+} from "@/shared";
 
 export default function TabControlPanel() {
   const { theme } = useChoppTheme();

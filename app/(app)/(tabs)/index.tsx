@@ -7,13 +7,15 @@ import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
 import { CallStatusScreen, NewOrderForm } from "@/components/main";
 import { CurrentOrderDetails } from "@/components/main/current-order-details";
-import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
-import { ChoppThemedText } from "@/shared/components/chopp-themed-text";
-import { useChoppTheme } from "@/shared/context/chopp-theme-context";
-import { useFilterWsMessages } from "@/shared/hooks/use-filter-ws-messagse";
-import { FETCH_STATUS } from "@/shared/types/fetch-status";
-import { OrderStatus } from "@/shared/types/order-status";
-import { WS_MESSAGE_TYPE } from "@/shared/types/ws-message-type";
+import {
+  ChoppThemedText,
+  FETCH_STATUS,
+  OrderStatus,
+  useChoppTheme,
+  useFilterWsMessages,
+  WS_MESSAGE_TYPE,
+  ChoppScreenLayout,
+} from "@/shared";
 import { fetchOrder, Order } from "@/store/slices/order-slice";
 import { AppDispatch, RootState } from "@/store/store";
 

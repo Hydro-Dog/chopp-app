@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useChatsContext } from "@/shared/context/chats-context";
 import { fetchChatMessages } from "@/store/slices/chat-slice";
 import { AppDispatch, RootState } from "@/store/store";
-import { useChatsContext } from "@/shared/context/chats-context";
 
 export const useFetchMessages = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -23,4 +23,4 @@ export const useFetchMessages = () => {
   }, [chatMessages]);
 };
 
-export default useFetchMessages
+export default useFetchMessages;

@@ -3,10 +3,12 @@ import { StyleSheet, View } from "react-native";
 import { Button } from "react-native-paper";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
-import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
-import { ChoppThemedText } from "@/shared/components/chopp-themed-text";
-import { useChoppTheme } from "@/shared/context/chopp-theme-context";
-import { clearStorage } from "@/shared/utils/async-storage-methods";
+import {
+  useChoppTheme,
+  clearStorage,
+  ChoppScreenLayout,
+  ChoppThemedText,
+} from "@/shared";
 
 export default function TabLogout() {
   const router = useRouter();
