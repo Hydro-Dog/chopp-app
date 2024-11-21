@@ -1,14 +1,13 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import axios from "axios";
-import axiosRetry from "axios-retry";
 import { CONFIG } from "@/my-config";
-import {
-  addToStorage,
-  clearStorage,
-  getFromStorage,
-  getStorageAuthData,
-} from "@/shared";
+import { addToStorage, clearStorage, getFromStorage } from "@/shared";
 import { AuthType } from "@/shared/context/auth-context";
+
+type FailedQueRequest = {
+  resolve: (val: unknown) => void;
+  reject: (val: unknown) => void;
+};
 
 export const axiosDefault = axios.create({ baseURL: CONFIG.apiUrl });
 
@@ -17,22 +16,26 @@ export const axiosPrivate = axios.create({
   //   headers: { "Content-Type": "application/json" },
 });
 
-const refresh = async () => {
+const refresh = async (setAuth) => {
   const refreshToken = await getFromStorage("refreshToken");
-  const response = await axiosDefault.post("auth/refresh", {
-    refreshToken,
-  });
+  try {
+    const response = await axiosDefault.post("auth/refresh", {
+      refreshToken,
+    });
 
-  // addToStorage("accessToken", response.data.accessToken);
-  // addToStorage("refreshToken", response.data.refreshToken);
-
-  return response.data.accessToken;
+    return response.data.accessToken;
+  } catch (error) {
+    if (error.status === 401) {
+      await clearStorage();
+      setAuth({})
+    }
+  }
 };
 
 let isRefreshing = false;
-let failedQueue = [];
+let failedQueue: FailedQueRequest[] = [];
 
-const processQueue = (error, token = null) => {
+const processQueue = (error: unknown, token = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
       prom.reject(error);
@@ -41,11 +44,6 @@ const processQueue = (error, token = null) => {
     }
   });
   failedQueue = [];
-};
-
-type Args = {
-  auth?: AuthType;
-  setAuth: Dispatch<SetStateAction<AuthType | undefined>>;
 };
 
 const useInitAuth = ({
@@ -88,13 +86,14 @@ export const useSetInterceptors = () => {
 
       return config;
     },
-    (error) => Promise.reject(error)
+    (error) => Promise.reject(error),
   );
 
   const responseInterceptor = axiosPrivate.interceptors.response.use(
     (response) => response,
     async (error) => {
       const originalRequest = error.config;
+
       if (
         error.response &&
         [401, 403].includes(error.response.status) &&
@@ -117,7 +116,7 @@ export const useSetInterceptors = () => {
         isRefreshing = true;
 
         try {
-          const newToken = await refresh(); // Получаем новый токен
+          const newToken = await refresh(setAuth); // Получаем новый токен
           await addToStorage("accessToken", newToken); // Обновляем токен в хранилище
           axiosPrivate.defaults.headers.common["Authorization"] =
             "Bearer " + newToken; // Обновляем токен в axios
@@ -133,7 +132,7 @@ export const useSetInterceptors = () => {
       }
 
       return Promise.reject(error);
-    }
+    },
   );
 
   return {

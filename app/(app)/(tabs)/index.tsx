@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { View, StyleSheet, Image } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { ActivityIndicator } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
@@ -10,25 +9,24 @@ import { CallStatusScreen, NewOrderForm } from "@/components/main";
 import { CurrentOrderDetails } from "@/components/main/current-order-details";
 import { ChoppThemedText, FETCH_STATUS, WS_MESSAGE_TYPE } from "@/shared";
 import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 import { useFilterWsMessages } from "@/shared/hooks";
 import { OrderStatus } from "@/shared/types/order-status";
 import { fetchOrder, Order } from "@/store/slices/order-slice";
 import { AppDispatch, RootState } from "@/store/store";
-import { useChoppTheme } from "@/shared/context/chopp-theme-context";
-import ProtectedComponent from "@/services/auth/protected-component";
 
-function TabHome() {
+export default function TabHome() {
   const { theme } = useChoppTheme();
   const { t } = useTranslation();
   const [currentOrderData, setCurrentOrderData] = useState<Order>();
 
   const dispatch = useDispatch<AppDispatch>();
   const { currentOrder, fetchOrderStatus } = useSelector(
-    (state: RootState) => state.order
+    (state: RootState) => state.order,
   );
 
   const { lastMessage } = useFilterWsMessages<OrderStatus>(
-    WS_MESSAGE_TYPE.ORDER_STATUS
+    WS_MESSAGE_TYPE.ORDER_STATUS,
   );
 
   useEffect(() => {
@@ -108,11 +106,3 @@ const styles = StyleSheet.create({
     right: 40,
   },
 });
-
-const TabHomeProtected = () => (
-  <ProtectedComponent>
-    <TabHome />
-  </ProtectedComponent>
-);
-
-export default TabHomeProtected;

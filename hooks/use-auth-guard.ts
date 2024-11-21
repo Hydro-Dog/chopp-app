@@ -3,12 +3,12 @@ import { useRouter } from "expo-router";
 import { useAuthContext } from "@/shared/context/auth-context";
 
 export const useAuthGuard = () => {
-  const { auth, isLoaded } = useAuthContext();
+  const { auth, isAsyncStorageLoaded } = useAuthContext();
   const router = useRouter();
 
   useEffect(() => {
-    if (!auth?.accessToken && isLoaded) {
-      // router.push("/login");
+    if (!auth?.accessToken && isAsyncStorageLoaded) {
+      router.push("/login");
     }
-  }, [isLoaded, auth?.accessToken, router]);
+  }, [isAsyncStorageLoaded, auth?.accessToken, router]);
 };

@@ -41,8 +41,8 @@ const DEFAULT_USER = {
   id: "0",
   email: "a@a.a",
   fullName: "Иван Петров",
-  password: "11111111",
-  phoneNumber: "8-989-898-98-98",
+  password: "qqqqqqqq",
+  phoneNumber: "89934479975",
   chatWithAdminId: "0000",
 };
 
@@ -57,8 +57,8 @@ const DEFAULT_ADMIN = {
 const generateUsers = () => {
   const users = {};
   // Добавление администратора
-  // users["admin@admin.ru"] = DEFAULT_ADMIN;
-  // users["a@a.a"] = DEFAULT_USER;
+  users["admin@admin.ru"] = DEFAULT_ADMIN;
+  users["89934479975"] = DEFAULT_USER;
 
   // Генерация 20 пользователей
   for (let i = 0; i < 20; i++) {
@@ -602,15 +602,15 @@ app.get("/api/users/:id", (req, res) => {
 });
 
 app.post("/api/auth/login", (req, res) => {
-  const { login, password } = req.body;
+  const { phoneNumber, password } = req.body;
   if (
-    users[login.toLocaleLowerCase()] &&
-    users[login.toLocaleLowerCase()].password.toLocaleLowerCase() ===
+    users[phoneNumber.toLocaleLowerCase()] &&
+    users[phoneNumber.toLocaleLowerCase()].password.toLocaleLowerCase() ===
       password.toLocaleLowerCase()
   ) {
     const tokens = generateTokens();
-    users[login.toLocaleLowerCase()] = {
-      ...users[login.toLocaleLowerCase()],
+    users[phoneNumber.toLocaleLowerCase()] = {
+      ...users[phoneNumber.toLocaleLowerCase()],
       ...tokens,
     };
     res.json(tokens);

@@ -53,7 +53,6 @@ export const LoginForm = () => {
       setIsAsyncStorageLoaded?.(false);
       const res = await dispatch(login(data)).unwrap();
       setAuth?.(res);
-      console.log("LOGIN setAuth: ", res);
       await addToStorage("accessToken", res.accessToken);
       await addToStorage("refreshToken", res.refreshToken);
       setIsAsyncStorageLoaded?.(true);
