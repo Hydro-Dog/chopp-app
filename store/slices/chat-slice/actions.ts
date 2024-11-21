@@ -1,9 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { axiosPrivate } from "@/services";
-import { WsMessage, ChatMessage, ErrorResponse } from "@/shared";
+
 import { ChatData } from "@/shared/types/chat-data";
 import { ChatStats } from "@/shared/types/chat-stats";
+import { ChatMessage } from "@/shared/types/chat-message";
+import { ErrorResponse } from "@/shared/types/response-error";
+import { WsMessage } from "@/shared/types/ws-message";
 
 export const fetchChatMessages = createAsyncThunk<
   WsMessage<ChatMessage>[],
@@ -20,7 +23,7 @@ export const fetchChatMessages = createAsyncThunk<
       return thunkAPI.rejectWithValue(error.response.data as ErrorResponse);
     } else {
       return thunkAPI.rejectWithValue({
-        errorMessage: "An unknown error occurred",
+        message: "An unknown error occurred",
       });
     }
   }
@@ -41,7 +44,7 @@ export const fetchChatStats = createAsyncThunk<
       return thunkAPI.rejectWithValue(error.response.data as ErrorResponse);
     } else {
       return thunkAPI.rejectWithValue({
-        errorMessage: "An unknown error occurred",
+        message: "An unknown error occurred",
       });
     }
   }

@@ -1,7 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { fetchChatMessages, fetchChatStats } from "./actions";
-import { WsMessage, ChatMessage, FETCH_STATUS, ErrorResponse } from "@/shared";
+import { ChatMessage } from "@/shared/types/chat-message";
 import { ChatStats } from "@/shared/types/chat-stats";
+import { FETCH_STATUS } from "@/shared/types/fetch-status";
+import { ErrorResponse } from "@/shared/types/response-error";
+import { WsMessage } from "@/shared/types/ws-message";
 
 export type ChatState = {
   chatMessages: ChatMessage[] | null;
@@ -46,7 +49,7 @@ export const chatSlice = createSlice({
       .addCase(fetchChatMessages.rejected, (state, action) => {
         state.fetchChatMessagesStatus = FETCH_STATUS.ERROR;
         state.fetchChatMessagesError = action.payload ?? {
-          errorMessage: "Failed to fetch chat information",
+          message: "Failed to fetch chat information",
         };
       })
       .addCase(fetchChatStats.pending, (state) => {
@@ -62,7 +65,7 @@ export const chatSlice = createSlice({
       .addCase(fetchChatStats.rejected, (state, action) => {
         state.fetchChatsStatsStatus = FETCH_STATUS.ERROR;
         state.fetchChatStatsError = action.payload ?? {
-          errorMessage: "Failed to fetch chat information",
+          message: "Failed to fetch chat information",
         };
       });
   },

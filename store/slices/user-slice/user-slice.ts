@@ -6,7 +6,8 @@ import {
   updateCurrentUser,
 } from "./actions";
 import { User, UserAuthorization } from ".";
-import { ErrorResponse, FETCH_STATUS } from "@/shared";
+import { FETCH_STATUS } from "@/shared/types/fetch-status";
+import { ErrorResponse } from "@/shared/types/response-error";
 
 export type UserState = {
   currentUser?: User;
@@ -63,7 +64,7 @@ export const userSlice = createSlice({
       .addCase(fetchCurrentUser.rejected, (state, action) => {
         state.fetchCurrentUserStatus = FETCH_STATUS.ERROR;
         state.currentUserError = action.payload ?? {
-          errorMessage: "Failed to fetch user information",
+          message: "Failed to fetch user information",
         };
       })
       .addCase(updateCurrentUser.pending, (state) => {
@@ -81,7 +82,7 @@ export const userSlice = createSlice({
       .addCase(updateCurrentUser.rejected, (state, action) => {
         state.updateCurrentUserStatus = FETCH_STATUS.ERROR;
         state.updateCurrentUserError = action.payload ?? {
-          errorMessage: "Failed to fetch user information",
+          message: "Failed to fetch user information",
         };
         state.updateCurrentUserStatus = FETCH_STATUS.IDLE;
       })
@@ -108,7 +109,7 @@ export const userSlice = createSlice({
       .addCase(login.rejected, (state, action) => {
         state.loginStatus = FETCH_STATUS.ERROR;
         state.loginError = action.payload ?? {
-          errorMessage: "Failed to login user",
+          message: "Failed to login user",
         };
       });
     // .addCase(logoutUser.pending, (state) => {

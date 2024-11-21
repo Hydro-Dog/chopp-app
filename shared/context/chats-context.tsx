@@ -6,8 +6,8 @@ import {
   useContext,
   useState,
 } from "react";
-import { ChatMessage } from "../types";
 import { ChatStats } from "../types/chat-stats";
+import { ChatMessage } from "../types/chat-message";
 
 export type ChatsContextType = {
   messages: ChatMessage[];

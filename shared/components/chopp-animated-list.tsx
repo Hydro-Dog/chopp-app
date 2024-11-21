@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, Animated, FlatListProps, ViewStyle } from "react-native";
-import { ChoppThemedText } from "./chopp-themed-text";
+import { FlatList, Animated, FlatListProps } from "react-native";
 
 // Определение новых типов пропсов
 interface ChoppAnimatedListProps<ItemT>

@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-
 import { ChoppChip } from "./chopp-chip";
 import { CALL_STATUS } from "../enums/call-status";
 import { useChoppTheme } from "../context/chopp-theme-context";

@@ -1,7 +1,9 @@
 import { useEffect } from "react";
-import { ChatMessage, WS_MESSAGE_TYPE } from "@/shared";
 import { useChatsContext } from "@/shared/context/chats-context";
-import { useFilterWsMessages } from "@/shared/hooks";
+import { useFilterWsMessages } from "@/shared/hooks/use-filter-ws-messagse";
+import { ChatMessage } from "@/shared/types/chat-message";
+import { WS_MESSAGE_TYPE } from "@/shared/types/ws-message-type";
+
 
 type Args = {
   flatListRef: any;

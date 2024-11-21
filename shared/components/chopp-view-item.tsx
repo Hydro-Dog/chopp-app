@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { ChoppThemedText } from "@/shared";
+import { ChoppThemedText } from "./chopp-themed-text";
 
 type Props = {
   title: string;

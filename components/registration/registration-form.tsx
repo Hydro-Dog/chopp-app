@@ -8,20 +8,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { useBoolean } from "usehooks-ts";
 import { RegistrationFormType, registrationSchema } from "./types";
-import {
-  ChoppDialog,
-  FETCH_STATUS,
-  SNACKBAR_VARIANTS,
-  useChoppSnackbar,
-  ChoppFormField,
-  ChoppCheckbox,
-  ChoppThemedText,
-  ErrorResponse,
-} from "@/shared/index";
+
 import { formatPhoneNumber } from "@/shared/utils/format-phone-number";
 import { createUser } from "@/store/slices/user-slice/index";
 import { AppDispatch, RootState } from "@/store/store";
 import { useChoppTheme } from "@/shared/context/chopp-theme-context";
+import { ChoppCheckbox } from "@/shared/components/chopp-checkbox";
+import { ChoppDialog } from "@/shared/components/chopp-dialog";
+import { ChoppFormField } from "@/shared/components/chopp-form-field";
+import { useChoppSnackbar, SNACKBAR_VARIANTS } from "@/shared/components/chopp-snackbar-stack";
+import { ChoppThemedText } from "@/shared/components/chopp-themed-text";
+import { FETCH_STATUS } from "@/shared/types/fetch-status";
+import { ErrorResponse } from "@/shared/types/response-error";
 
 export const RegistrationForm = () => {
   const { theme } = useChoppTheme();

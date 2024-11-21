@@ -3,7 +3,6 @@ import { FieldError, Merge, FieldErrorsImpl } from "react-hook-form";
 import { StyleSheet, Animated } from "react-native";
 import { ChoppThemedText } from "./chopp-themed-text";
 
-
 type Props = {
   errorMessage?: string | FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
   message?: string | FieldError | Merge<FieldError, FieldErrorsImpl<any>>;

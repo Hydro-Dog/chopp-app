@@ -1,8 +1,9 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import axios from "axios";
 import { CONFIG } from "@/my-config";
-import { addToStorage, clearStorage, getFromStorage } from "@/shared";
+
 import { AuthType } from "@/shared/context/auth-context";
+import { getFromStorage, clearStorage, addToStorage } from "@/shared/utils/async-storage-methods";
 
 type FailedQueRequest = {
   resolve: (val: unknown) => void;

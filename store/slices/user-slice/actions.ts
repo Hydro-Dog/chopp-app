@@ -8,7 +8,8 @@ import {
 } from "./types";
 
 import { axiosDefault, axiosPrivate } from "@/services";
-import { ErrorResponse, sanitizedUser } from "@/shared";
+import { ErrorResponse } from "@/shared/types/response-error";
+import { sanitizedUser } from "@/shared/utils/sanitize-user-number";
 
 export const fetchCurrentUser = createAsyncThunk<
   User,
@@ -23,7 +24,7 @@ export const fetchCurrentUser = createAsyncThunk<
       return thunkAPI.rejectWithValue(error.response.data as ErrorResponse);
     } else {
       return thunkAPI.rejectWithValue({
-        errorMessage: "An unknown error occurred",
+        message: "An unknown error occurred",
       });
     }
   }
@@ -46,12 +47,12 @@ export const updateCurrentUser = createAsyncThunk<
       return thunkAPI.rejectWithValue(
         error.response.data?.errorMessage
           ? (error.response.data as ErrorResponse)
-          : { errorMessage: error.response.data },
+          : { message: error.response.data },
       );
     } else {
       console.log("ELSE errorMessage");
       return thunkAPI.rejectWithValue({
-        errorMessage: "An unknown error occurred",
+        message: "An unknown error occurred",
       });
     }
   }
@@ -74,7 +75,7 @@ export const createUser = createAsyncThunk<
       return thunkAPI.rejectWithValue(error.response.data as ErrorResponse);
     } else {
       return thunkAPI.rejectWithValue({
-        errorMessage: "An unknown error occurred",
+        message: "An unknown error occurred",
       });
     }
   }
@@ -96,7 +97,7 @@ export const login = createAsyncThunk<
       return thunkAPI.rejectWithValue(error.response.data as ErrorResponse);
     } else {
       return thunkAPI.rejectWithValue({
-        errorMessage: "An unknown error occurred",
+        message: "An unknown error occurred",
       });
     }
   }

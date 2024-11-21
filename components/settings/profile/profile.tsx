@@ -2,8 +2,9 @@ import { useTranslation } from "react-i18next";
 import { View, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 import { ChoppViewItem } from "../../../shared/components/chopp-view-item";
-import { ChoppViewItems, formatPhoneNumber } from "@/shared";
 import { User } from "@/store/slices/user-slice/index";
+import { formatPhoneNumber } from "@/shared/utils/format-phone-number";
+import { ChoppViewItems } from "@/shared/components/chopp-view-items";
 
 const KEYS: (keyof User)[] = ["fullName", "phoneNumber", "email"];
 

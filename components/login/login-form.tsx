@@ -7,19 +7,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { useBoolean } from "usehooks-ts";
 import { LoginFormType, loginSchema } from ".";
-import {
-  useChoppSnackbar,
-  SNACKBAR_VARIANTS,
-  ChoppFormField,
-  FETCH_STATUS,
-  addToStorage,
-  ErrorResponse,
-} from "@/shared";
 import { useAuthContext } from "@/shared/context/auth-context";
 import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 import { formatPhoneNumber } from "@/shared/utils/format-phone-number";
 import { login } from "@/store/slices/user-slice/index";
 import { RootState, AppDispatch } from "@/store/store";
+import { ChoppFormField } from "@/shared/components/chopp-form-field";
+import { useChoppSnackbar, SNACKBAR_VARIANTS } from "@/shared/components/chopp-snackbar-stack";
+import { FETCH_STATUS } from "@/shared/types/fetch-status";
+import { ErrorResponse } from "@/shared/types/response-error";
+import { addToStorage } from "@/shared/utils/async-storage-methods";
 
 export const LoginForm = () => {
   const { theme } = useChoppTheme();

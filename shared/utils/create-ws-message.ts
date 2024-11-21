@@ -1,4 +1,4 @@
-import { WsMessage } from "../types";
+import { WsMessage } from "../types/ws-message";
 
 export const createWsMessage = ({
   type,

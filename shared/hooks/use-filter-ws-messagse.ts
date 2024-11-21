@@ -1,6 +1,7 @@
 import { useSelector } from "react-redux";
-import { WS_MESSAGE_TYPE, WsMessage } from "../types";
 import { RootState } from "@/store/store";
+import { WsMessage } from "../types/ws-message";
+import { WS_MESSAGE_TYPE } from "../types/ws-message-type";
 
 export const useFilterWsMessages = <T>(type: WS_MESSAGE_TYPE) => {
   // Используем селектор с указанием, что messages это массив WsMessage<T>

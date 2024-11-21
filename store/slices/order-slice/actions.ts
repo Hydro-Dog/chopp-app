@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { Order } from "./types";
 import { axiosDefault, axiosPrivate } from "@/services";
-import { ErrorResponse } from "@/shared";
+import { ErrorResponse } from "@/shared/types/response-error";
 
 export const fetchOrder = createAsyncThunk<
   Order,
@@ -17,7 +17,7 @@ export const fetchOrder = createAsyncThunk<
       return thunkAPI.rejectWithValue(error.response.data as ErrorResponse);
     } else {
       return thunkAPI.rejectWithValue({
-        errorMessage: "An unknown error occurred",
+        message: "An unknown error occurred",
       });
     }
   }
@@ -36,7 +36,7 @@ export const fetchMyOrders = createAsyncThunk<
       return thunkAPI.rejectWithValue(error.response.data as ErrorResponse);
     } else {
       return thunkAPI.rejectWithValue({
-        errorMessage: "An unknown error occurred",
+        message: "An unknown error occurred",
       });
     }
   }
@@ -56,7 +56,7 @@ export const createOrder = createAsyncThunk<
       return thunkAPI.rejectWithValue(error.response.data as ErrorResponse);
     } else {
       return thunkAPI.rejectWithValue({
-        errorMessage: "An unknown error occurred",
+        message: "An unknown error occurred",
       });
     }
   }

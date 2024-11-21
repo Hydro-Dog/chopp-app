@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createOrder, fetchMyOrders, fetchOrder } from "./actions";
 import { Order } from ".";
-import { ErrorResponse, FETCH_STATUS } from "@/shared";
+import { FETCH_STATUS } from "@/shared/types/fetch-status";
+import { ErrorResponse } from "@/shared/types/response-error";
 
 export type OrderState = {
   currentOrder?: Order | null;
@@ -41,7 +42,7 @@ export const orderSlice = createSlice({
       .addCase(fetchOrder.rejected, (state, action) => {
         state.fetchOrderStatus = FETCH_STATUS.ERROR;
         state.fetchOrderError = action.payload ?? {
-          errorMessage: "Failed to fetch user information",
+          message: "Failed to fetch user information",
         };
       })
       .addCase(fetchMyOrders.pending, (state) => {
@@ -57,7 +58,7 @@ export const orderSlice = createSlice({
       .addCase(fetchMyOrders.rejected, (state, action) => {
         state.fetchMyOrdersStatus = FETCH_STATUS.ERROR;
         state.fetchMyOrdersError = action.payload ?? {
-          errorMessage: "Failed to fetch user information",
+          message: "Failed to fetch user information",
         };
       })
       .addCase(createOrder.pending, (state) => {
@@ -70,7 +71,7 @@ export const orderSlice = createSlice({
       .addCase(createOrder.rejected, (state, action) => {
         state.createOrderStatus = FETCH_STATUS.ERROR;
         state.createOrderError = action.payload ?? {
-          errorMessage: "Failed to fetch user information",
+          message: "Failed to fetch user information",
         };
       });
   },

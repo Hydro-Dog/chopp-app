@@ -7,13 +7,15 @@ import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
 import { CallStatusScreen, NewOrderForm } from "@/components/main";
 import { CurrentOrderDetails } from "@/components/main/current-order-details";
-import { ChoppThemedText, FETCH_STATUS, WS_MESSAGE_TYPE } from "@/shared";
 import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
 import { useChoppTheme } from "@/shared/context/chopp-theme-context";
-import { useFilterWsMessages } from "@/shared/hooks";
 import { OrderStatus } from "@/shared/types/order-status";
 import { fetchOrder, Order } from "@/store/slices/order-slice";
 import { AppDispatch, RootState } from "@/store/store";
+import { ChoppThemedText } from "@/shared/components/chopp-themed-text";
+import { useFilterWsMessages } from "@/shared/hooks/use-filter-ws-messagse";
+import { FETCH_STATUS } from "@/shared/types/fetch-status";
+import { WS_MESSAGE_TYPE } from "@/shared/types/ws-message-type";
 
 export default function TabHome() {
   const { theme } = useChoppTheme();

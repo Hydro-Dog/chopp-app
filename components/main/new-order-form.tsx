@@ -6,15 +6,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { NewOrderFormType, newOrderSchema } from "./types";
-import {
-  SNACKBAR_VARIANTS,
-  useChoppSnackbar,
-  ChoppFormField,
-  ChoppBigRoundButton,
-  FETCH_STATUS,
-} from "@/shared/index";
 import { createOrder, Order } from "@/store/slices/order-slice";
 import { AppDispatch, RootState } from "@/store/store";
+import { ChoppBigRoundButton } from "@/shared/components/chopp-big-round-button";
+import { ChoppFormField } from "@/shared/components/chopp-form-field";
+import { useChoppSnackbar, SNACKBAR_VARIANTS } from "@/shared/components/chopp-snackbar-stack";
+import { FETCH_STATUS } from "@/shared/types/fetch-status";
 
 export const NewOrderForm = () => {
   const { t } = useTranslation();

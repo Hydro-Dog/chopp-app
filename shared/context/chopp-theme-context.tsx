@@ -12,9 +12,8 @@ import { useColorScheme } from "react-native";
 import { DefaultTheme, PaperProvider } from "react-native-paper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemeProvider } from "@react-navigation/native";
-import { ChoppDevBar } from "../components/chopp-dev-bar";
-import { THEME } from "../enums";
-import { ChopThemeType } from "../types";
+import { THEME } from "../enums/theme";
+import { ChopThemeType } from "../types/chopp-theme-type";
 import { DARK_THEME, LIGHT_THEME } from "@/theme/colors";
 
 type ChoppThemeContextType = {
@@ -82,10 +81,7 @@ export const ChoppThemeProvider = ({ children }: PropsWithChildren<object>) => {
       value={{ setIsDarkTheme, isDarkTheme, theme, toggleTheme }}
     >
       <ThemeProvider value={{ ...theme }}>
-        <PaperProvider theme={theme}>
-          {children}
-          <ChoppDevBar />
-        </PaperProvider>
+        <PaperProvider theme={theme}>{children}</PaperProvider>
       </ThemeProvider>
     </ChoppThemeContext.Provider>
   );

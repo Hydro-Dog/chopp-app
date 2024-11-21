@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSegments } from "expo-router";
-import { WS_MESSAGE_TYPE } from "@/shared";
 import { useChatsContext } from "@/shared/context/chats-context";
 import { wsSend } from "@/store/slices/ws-slice";
 import { AppDispatch, RootState } from "@/store/store";
+import { WS_MESSAGE_TYPE } from "@/shared/types/ws-message-type";
 
 export const useReadAllChatMessages = () => {
   const dispatch = useDispatch<AppDispatch>();

@@ -2,11 +2,11 @@ import React, { PropsWithChildren, ReactNode } from "react";
 import { StyleSheet, View } from "react-native";
 import { Image } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { ChoppBackButton } from "./chopp-back-button";
+import { useChoppTheme } from "../context/chopp-theme-context";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
-import { ChoppBackButton } from "@/shared";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { useChoppTheme } from "../context/chopp-theme-context";
 
 type Props = {
   showLogo?: boolean;
@@ -39,7 +39,7 @@ export default function ChoppScreenLayout({
         ) : (
           <></>
         )}
-{showBackButton && <ChoppBackButton style={styles.backButton} />}
+        {showBackButton && <ChoppBackButton style={styles.backButton} />}
         <View style={{ ...styles.content, ...containerStyles }}>
           {loading ? (
             <ActivityIndicator
@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     flex: 1,
-    marginBottom: 16
+    marginBottom: 16,
   },
   logo: {
     position: "fixed",

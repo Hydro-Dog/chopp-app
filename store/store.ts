@@ -1,5 +1,6 @@
 import { configureStore, Middleware } from "@reduxjs/toolkit";
 import { chatSlice, ChatState } from "./slices/chat-slice/index";
+import { orderSlice, OrderState } from "./slices/order-slice/index";
 import { userSlice, UserState } from "./slices/user-slice/index";
 import {
   pushWsMessage,
@@ -11,7 +12,6 @@ import {
   wsSlice,
   WsState,
 } from "./slices/ws-slice";
-import { orderSlice, OrderState } from "./slices/order-slice/index";
 
 type WsAction = {
   type: string;

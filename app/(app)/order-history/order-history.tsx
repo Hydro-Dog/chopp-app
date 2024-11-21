@@ -2,20 +2,17 @@ import { useEffect } from "react";
 import { StyleSheet, SafeAreaView, StatusBar } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  ChoppAnimatedList,
-  ChoppCollapsibleCard,
-  ChoppOrderStatusChip,
-  ChoppThemedText,
-  ChoppViewItems,
-  FETCH_STATUS,
-} from "@/shared";
 import { ChoppChip } from "@/shared/components/chopp-chip";
 import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
 import { fetchMyOrders } from "@/store/slices/order-slice";
 import { AppDispatch, RootState } from "@/store/store";
 import { useTranslation } from "react-i18next";
 import { useChoppTheme } from "@/shared/context/chopp-theme-context";
+import { ChoppAnimatedList } from "@/shared/components/chopp-animated-list";
+import { ChoppCollapsibleCard } from "@/shared/components/chopp-collapsible-card";
+import { ChoppOrderStatusChip } from "@/shared/components/chopp-order-status-chip";
+import { ChoppViewItems } from "@/shared/components/chopp-view-items";
+import { FETCH_STATUS } from "@/shared/types/fetch-status";
 
 export default function OrderHistory() {
   const { theme } = useChoppTheme();

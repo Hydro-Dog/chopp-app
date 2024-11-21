@@ -2,15 +2,11 @@ import React, { forwardRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { View, StyleSheet, FlatList, Animated } from "react-native";
 import { useSelector } from "react-redux";
-import {
-  useFetchMessages,
-  useNewIncomingMessageChatHandler,
-  useReadAllChatMessages,
-} from "../../app/(app)/(tabs)/hooks";
-import { ChatMessage, ChoppThemedText } from "@/shared";
 import { RootState } from "@/store/store";
 import { useChatsContext } from "@/shared/context/chats-context";
 import { useChoppTheme } from "@/shared/context/chopp-theme-context";
+import { ChoppThemedText } from "@/shared/components/chopp-themed-text";
+import { ChatMessage } from "@/shared/types/chat-message";
 
 type Props = {
   // messages?: WsMessage[];

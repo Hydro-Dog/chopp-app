@@ -7,10 +7,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UpdatePassword } from "./components";
 import { ProfileFormType, profileSchema } from "./types";
-import { FETCH_STATUS, SNACKBAR_VARIANTS, useChoppSnackbar } from "@/shared/index";
-import { formatPhoneNumber, ChoppFormField } from "@/shared/index";
+
 import { updateCurrentUser, User } from "@/store/slices/user-slice/index";
 import { AppDispatch, RootState } from "@/store/store";
+import { ChoppFormField } from "@/shared/components/chopp-form-field";
+import { useChoppSnackbar, SNACKBAR_VARIANTS } from "@/shared/components/chopp-snackbar-stack";
+import { FETCH_STATUS } from "@/shared/types/fetch-status";
+import { formatPhoneNumber } from "@/shared/utils/format-phone-number";
 
 type Props = {
   user?: User;

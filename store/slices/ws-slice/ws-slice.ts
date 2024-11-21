@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { WsMessage } from "@/shared";
+import { WsMessage } from "@/shared/types/ws-message";
 
 export type WsState = {
   wsConnected: boolean;
