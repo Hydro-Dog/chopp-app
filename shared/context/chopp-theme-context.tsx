@@ -80,6 +80,7 @@ export const ChoppThemeProvider = ({ children }: PropsWithChildren<object>) => {
     <ChoppThemeContext.Provider
       value={{ setIsDarkTheme, isDarkTheme, theme, toggleTheme }}
     >
+      {/* @ts-ignore */}
       <ThemeProvider value={{ ...theme }}>
         <PaperProvider theme={theme}>{children}</PaperProvider>
       </ThemeProvider>

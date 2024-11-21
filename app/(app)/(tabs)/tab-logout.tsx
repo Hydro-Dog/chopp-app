@@ -3,10 +3,9 @@ import { StyleSheet, View } from "react-native";
 import { Button } from "react-native-paper";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
-
 import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
-import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 import { ChoppThemedText } from "@/shared/components/chopp-themed-text";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 import { clearStorage } from "@/shared/utils/async-storage-methods";
 
 export default function TabLogout() {

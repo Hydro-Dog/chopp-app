@@ -8,7 +8,9 @@ export default function NotFoundScreen() {
     <>
       <Stack.Screen options={{ title: "Oops!" }} />
       <ChoppThemedView style={styles.container}>
-        <ChoppThemedText type="title">This screen doesn't exist.!</ChoppThemedText>
+        <ChoppThemedText type="title">
+          This screen doesn&apos;t exist.!
+        </ChoppThemedText>
         <Link href="/" style={styles.link}>
           <ChoppThemedText type="link">Go to home screen!</ChoppThemedText>
         </Link>

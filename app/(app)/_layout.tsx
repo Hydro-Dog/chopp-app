@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import { Stack } from "expo-router";
-import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 import { useAuthGuard } from "@/hooks/use-auth-guard";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 
 export default function AppLayout() {
   const { theme } = useChoppTheme();

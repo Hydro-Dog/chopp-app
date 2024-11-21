@@ -1,26 +1,24 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, SafeAreaView, StatusBar } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import { ChoppChip } from "@/shared/components/chopp-chip";
-import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
-import { fetchMyOrders } from "@/store/slices/order-slice";
-import { AppDispatch, RootState } from "@/store/store";
-import { useTranslation } from "react-i18next";
-import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 import { ChoppAnimatedList } from "@/shared/components/chopp-animated-list";
+import { ChoppChip } from "@/shared/components/chopp-chip";
 import { ChoppCollapsibleCard } from "@/shared/components/chopp-collapsible-card";
 import { ChoppOrderStatusChip } from "@/shared/components/chopp-order-status-chip";
+import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
 import { ChoppViewItems } from "@/shared/components/chopp-view-items";
 import { FETCH_STATUS } from "@/shared/types/fetch-status";
+import { fetchMyOrders } from "@/store/slices/order-slice";
+import { AppDispatch, RootState } from "@/store/store";
 
 export default function OrderHistory() {
-  const { theme } = useChoppTheme();
   const { t } = useTranslation();
   const dispatch = useDispatch<AppDispatch>();
 
   const { myOrders, fetchMyOrdersStatus } = useSelector(
-    (state: RootState) => state.order
+    (state: RootState) => state.order,
   );
 
   useEffect(() => {
@@ -49,7 +47,7 @@ export default function OrderHistory() {
                       <ChoppChip clear>
                         {item.statusData?.timeStamp &&
                           new Date(
-                            item.statusData?.timeStamp
+                            item.statusData?.timeStamp,
                           ).toLocaleDateString()}
                       </ChoppChip>
                     </>

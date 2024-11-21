@@ -7,24 +7,23 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
+  FlatList,
 } from "react-native";
 import { IconButton, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { Chat } from "@/components/chat";
 import useNewIncomingMessageChatHandler from "@/hooks/use-new-incoming-message-chat-handler";
-
 import { useChatsContext } from "@/shared/context/chats-context";
 import { useChoppTheme } from "@/shared/context/chopp-theme-context";
-
-import { wsSend } from "@/store/slices/ws-slice";
-import { AppDispatch, RootState } from "@/store/store";
 import { useFilterWsMessages } from "@/shared/hooks/use-filter-ws-messagse";
 import { ChatMessage } from "@/shared/types/chat-message";
 import { WS_MESSAGE_TYPE } from "@/shared/types/ws-message-type";
+import { wsSend } from "@/store/slices/ws-slice";
+import { AppDispatch, RootState } from "@/store/store";
 
 export default function TabSupportChat() {
   const { theme } = useChoppTheme();
-  const flatListRef = useRef(null);
+  const flatListRef = useRef<FlatList<ChatMessage> | null>(null);
   const [text, setText] = useState("");
   const { messages, setMessages } = useChatsContext();
 
@@ -65,7 +64,7 @@ export default function TabSupportChat() {
       });
 
       setTimeout(() => {
-        flatListRef.current.scrollToEnd({ animated: true });
+        flatListRef.current?.scrollToEnd({ animated: true });
       }, 100);
     }
   };
@@ -84,7 +83,9 @@ export default function TabSupportChat() {
             <TextInput
               onFocus={() => {
                 setTimeout(() => {
-                  flatListRef.current.scrollToEnd({ animated: true });
+                  if (flatListRef.current) {
+                    flatListRef.current.scrollToEnd({ animated: true });
+                  }
                 }, 100);
               }}
               multiline

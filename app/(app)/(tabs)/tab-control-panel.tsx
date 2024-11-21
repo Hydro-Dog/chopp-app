@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, View, Image,  } from "react-native";
+import { StyleSheet, View, Image } from "react-native";
 import { Button, Card } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { t } from "i18next";
@@ -7,14 +7,12 @@ import { useBoolean } from "usehooks-ts";
 import BankMockNoBgPng from "@/assets/bank-mock-np-bg.png";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
-
-import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
-import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 import { ChoppDialog } from "@/shared/components/chopp-dialog";
 import { ChoppIcon } from "@/shared/components/chopp-icon";
+import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
 import { ChoppThemedText } from "@/shared/components/chopp-themed-text";
+import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 import { ICON_SIZE } from "@/shared/enums/size";
-
 
 export default function TabControlPanel() {
   const { theme } = useChoppTheme();

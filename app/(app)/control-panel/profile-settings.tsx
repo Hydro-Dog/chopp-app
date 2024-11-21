@@ -1,17 +1,16 @@
 import { StyleSheet } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { useBoolean } from "usehooks-ts";
 import { ProfileScreen } from "@/components/settings/profile/profile";
 import { ProfileForm } from "@/components/settings/profile/profile-form";
 import ChoppScreenLayout from "@/shared/components/chopp-screen-layout";
-import { AppDispatch, RootState } from "@/store/store";
 import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 import { FETCH_STATUS } from "@/shared/types/fetch-status";
+import { RootState } from "@/store/store";
 
 export default function ProfileSettings() {
   const { theme } = useChoppTheme();
-  const dispatch = useDispatch<AppDispatch>();
   const {
     value: isEditMode,
     setTrue: setEditMode,
