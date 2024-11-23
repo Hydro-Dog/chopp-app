@@ -14,6 +14,7 @@ type Props = {
   customLogo?: ReactNode;
   loading?: boolean;
   showBackButton?: boolean;
+  redirectToRoot?: boolean;
 };
 
 export function ChoppScreenLayout({
@@ -23,6 +24,7 @@ export function ChoppScreenLayout({
   loading,
   containerStyles,
   showBackButton,
+  redirectToRoot,
 }: Props & PropsWithChildren<object>) {
   const { theme } = useChoppTheme();
 
@@ -39,7 +41,12 @@ export function ChoppScreenLayout({
         ) : (
           <></>
         )}
-        {showBackButton && <ChoppBackButton style={styles.backButton} />}
+        {showBackButton && (
+          <ChoppBackButton
+            redirectToRoot={redirectToRoot}
+            style={styles.backButton}
+          />
+        )}
         <View style={{ ...styles.content, ...containerStyles }}>
           {loading ? (
             <ActivityIndicator

@@ -31,8 +31,6 @@ export default function TabLayout() {
 
   useEffect(() => {
     dispatch(fetchCurrentUser());
-    dispatch(fetchCurrentUser());
-    dispatch(fetchCurrentUser());
   }, [dispatch]);
 
   //TODO: вынести в хук

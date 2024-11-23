@@ -6,15 +6,20 @@ import { useRouter } from "expo-router";
 type Props = {
   title?: string;
   style?: Record<string, any>;
+  redirectToRoot?: boolean;
 };
 
-export const ChoppBackButton = ({ title, ...props }: Props) => {
+export const ChoppBackButton = ({ title, redirectToRoot, ...props }: Props) => {
   const { t } = useTranslation();
-  const { back } = useRouter();
+  const { back, push } = useRouter();
 
   const goBack = () => {
     try {
-      back();
+      if (redirectToRoot) {
+        push("/");
+      } else {
+        back();
+      }
     } catch (error) {
       console.error(error);
     }

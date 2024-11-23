@@ -1,4 +1,4 @@
-export const formatPhoneNumber = (value: string) => {
+export const formatPhoneNumber = (value = '') => {
   // Удаляем все нецифровые символы
   let numbers = value.replace(/\D/g, "");
 

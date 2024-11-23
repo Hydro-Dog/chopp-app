@@ -1,26 +1,36 @@
+import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { useBoolean } from "usehooks-ts";
-import { ProfileScreen } from "@/components/settings/profile/profile";
-import { ProfileForm } from "@/components/settings/profile/profile-form";
-import { useChoppTheme, ChoppScreenLayout, FETCH_STATUS } from "@/shared";
-import { RootState } from "@/store/store";
+import { useChoppTheme, ChoppScreenLayout } from "@/shared";
+import { fetchCurrentUser } from "@/store/slices/user-slice";
+import { AppDispatch, RootState } from "@/store/store";
+import { UserProfileForm } from "@/components/settings/profile/user-profile-form";
+import { UserProfile } from "@/components/settings/profile/user-profile";
 
 export default function ProfileSettings() {
   const { theme } = useChoppTheme();
+  const dispatch = useDispatch<AppDispatch>();
   const {
     value: isEditMode,
     setTrue: setEditMode,
     setFalse: setViewMode,
   } = useBoolean();
 
-  const { currentUser, fetchCurrentUserStatus: currentUserStatus } =
-    useSelector((state: RootState) => state.user);
+  const { fetchCurrentUserStatus } = useSelector(
+    (state: RootState) => state.user,
+  );
+
+  useEffect(() => {
+    dispatch(fetchCurrentUser());
+  }, [dispatch]);
 
   return (
     <ChoppScreenLayout
+      redirectToRoot
       showLogo
+      showBackButton
       customLogo={
         <Ionicons
           size={310}
@@ -28,13 +38,11 @@ export default function ProfileSettings() {
           style={{ color: theme.colors.secondary, ...styles.backgroundIcon }}
         />
       }
-      showBackButton
-      loading={currentUserStatus === FETCH_STATUS.LOADING}
     >
       {isEditMode ? (
-        <ProfileForm setViewMode={setViewMode} user={currentUser} />
+        <UserProfileForm setViewMode={setViewMode} />
       ) : (
-        <ProfileScreen setEditMode={setEditMode} user={currentUser} />
+        <UserProfile setEditMode={setEditMode} />
       )}
     </ChoppScreenLayout>
   );

@@ -18,17 +18,16 @@ import { updateCurrentUser, User } from "@/store/slices/user-slice/index";
 import { AppDispatch, RootState } from "@/store/store";
 
 type Props = {
-  user?: User;
   setViewMode: () => void;
 };
 
-export const ProfileForm = ({ user, setViewMode }: Props) => {
+export const UserProfileForm = ({ setViewMode }: Props) => {
   const [passwordMode, setPasswordMode] = useState<"view" | "edit">("view");
+  const dispatch = useDispatch<AppDispatch>();
   const { t } = useTranslation();
-  const { updateCurrentUserStatus } = useSelector(
+  const { currentUser, updateCurrentUserStatus } = useSelector(
     (state: RootState) => state.user,
   );
-  const dispatch = useDispatch<AppDispatch>();
 
   const {
     control,
@@ -38,9 +37,9 @@ export const ProfileForm = ({ user, setViewMode }: Props) => {
   } = useForm<ProfileFormType>({
     resolver: zodResolver(profileSchema(t)),
     defaultValues: {
-      fullName: user?.fullName,
-      phoneNumber: user?.phoneNumber,
-      email: user?.email,
+      fullName: currentUser?.fullName,
+      phoneNumber: currentUser?.phoneNumber,
+      email: currentUser?.email,
     },
   });
 
@@ -145,6 +144,7 @@ export const ProfileForm = ({ user, setViewMode }: Props) => {
         <Button
           mode="outlined"
           loading={updateCurrentUserStatus === FETCH_STATUS.LOADING}
+          disabled={updateCurrentUserStatus === FETCH_STATUS.LOADING}
           onPress={onClose}
         >
           {t("cancel")}

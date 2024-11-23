@@ -1,11 +1,21 @@
 import { View, StyleSheet } from "react-native";
-import { ChoppViewItem } from "@/components/settings/profile/components";
+import { ChoppViewItem } from "./chopp-view-item";
 
-export const ChoppViewItems = ({ items }: Record<string, any>) => {
+type Props = {
+  items: Record<string, any>;
+  loading?: boolean;
+};
+
+export const ChoppViewItems = ({ items, loading }: Props) => {
   return (
     <View style={styles.items}>
       {Object.entries(items).map(([key, val]) => (
-        <ChoppViewItem key={key} title={key} label={String(val)} />
+        <ChoppViewItem
+          loading={loading}
+          key={key}
+          title={key}
+          label={String(val)}
+        />
       ))}
     </View>
   );
