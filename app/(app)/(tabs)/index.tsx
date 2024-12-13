@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { View, StyleSheet, Image } from "react-native";
+import { View, StyleSheet, Image, FlatList } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useDispatch, useSelector } from "react-redux";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
 import { CallStatusScreen, NewOrderForm } from "@/components/main";
 import { CurrentOrderDetails } from "@/components/main/current-order-details";
+import { TextInput, Appbar  } from 'react-native-paper';
+
 import {
   ChoppThemedText,
   FETCH_STATUS,
@@ -18,6 +20,42 @@ import {
 } from "@/shared";
 import { fetchOrder, Order } from "@/store/slices/order-slice";
 import { AppDispatch, RootState } from "@/store/store";
+import {CardForProducts} from "@/components/main"
+
+//-------------------------------МОКИ---------------------
+const moks = [
+  {
+    title:'Лимонад из черной головки',
+    description:'Самый вкусный лимонад который вы пробовали',
+    URL:'https://s3.02.coolclever.tech/img/0000000090027171/1000/19891.webp',
+    price:'190'
+  },
+  {
+    title:'Лимонад из черной головки',
+    description:'Самый вкусный лимонад который вы пробовали',
+    URL:'https://s3.02.coolclever.tech/img/0000000090027171/1000/19891.webp',
+    price:'190'
+  },
+  {
+    title:'Лимонад из черной головки',
+    description:'Самый вкусный лимонад который вы пробовали',
+    URL:'https://s3.02.coolclever.tech/img/0000000090027171/1000/19891.webp',
+    price:'190'
+  },
+  {
+    title:'Лимонад из черной головки',
+    description:'Самый вкусный лимонад который вы пробовали',
+    URL:'https://s3.02.coolclever.tech/img/0000000090027171/1000/19891.webp',
+    price:'190'
+  },
+  {
+    title:'Лимонад из черной головки',
+    description:'Самый вкусный лимонад который вы пробовали',
+    URL:'https://s3.02.coolclever.tech/img/0000000090027171/1000/19891.webp',
+    price:'190'
+  },
+]
+//--------------------------------------------------------
 
 export default function TabHome() {
   const { theme } = useChoppTheme();
@@ -51,35 +89,49 @@ export default function TabHome() {
   }, [currentOrder, lastMessage]);
 
   return (
-    <KeyboardAwareScrollView>
-      <ChoppScreenLayout loading={fetchOrderStatus === FETCH_STATUS.LOADING}>
-        <View style={styles.container}>
-          {currentOrderData ? (
-            <>
-              <CallStatusScreen
-                currentStatus={currentOrderData?.statusData?.status}
-                timeStamp={currentOrderData?.statusData?.timeStamp}
-              />
+    <>
+      <Appbar.Header>
+        <TextInput
+        label="Поиск"
+        value={''}
+        activeUnderlineColor="grey"
+        style={{width:"100%"}}
+      />
+      </Appbar.Header>
+      <KeyboardAwareScrollView>
+        <ChoppScreenLayout loading={fetchOrderStatus === FETCH_STATUS.LOADING}>
+          <View style={styles.container}>
+            {currentOrderData ? (
+              <>
+                <CallStatusScreen
+                  currentStatus={currentOrderData?.statusData?.status}
+                  timeStamp={currentOrderData?.statusData?.timeStamp}
+                />
 
-              <CurrentOrderDetails order={currentOrderData} />
-            </>
-          ) : (
-            <>
-              <Image
-                style={styles.logo}
-                source={theme.dark ? LogoDark : LogoLight}
-              />
-              <View style={styles.content}>
-                <ChoppThemedText type="subtitleBold">
-                  {t("order")}
-                </ChoppThemedText>
-                <NewOrderForm />
-              </View>
-            </>
-          )}
-        </View>
-      </ChoppScreenLayout>
-    </KeyboardAwareScrollView>
+                <CurrentOrderDetails order={currentOrderData} />
+              </>
+            ) : (
+              <>
+              <FlatList
+                  data={moks}
+                  keyExtractor={(item) => item.title}
+                  numColumns={2}
+                  renderItem={({ item }) => (
+                    <CardForProducts
+                      title={item.title}
+                      description={item.description}
+                      URL={item.URL}
+                      price={item.price}
+                    />
+                  )}
+                  />
+              </>
+            )}
+          </View>
+        </ChoppScreenLayout>
+      </KeyboardAwareScrollView>
+    </>
+    
   );
 }
 
