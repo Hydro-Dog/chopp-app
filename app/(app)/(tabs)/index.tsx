@@ -5,7 +5,7 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { useDispatch, useSelector } from "react-redux";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
-import { CallStatusScreen, NewOrderForm } from "@/components/main";
+import { CallStatusScreen, NewOrderForm, useGetProducts } from "@/components/main";
 import { CurrentOrderDetails } from "@/components/main/current-order-details";
 import { TextInput, Appbar  } from 'react-native-paper';
 
@@ -17,47 +17,15 @@ import {
   useFilterWsMessages,
   WS_MESSAGE_TYPE,
   ChoppScreenLayout,
+  URLs,
 } from "@/shared";
 import { fetchOrder, Order } from "@/store/slices/order-slice";
 import { AppDispatch, RootState } from "@/store/store";
 import {CardForProducts} from "@/components/main"
-
-//-------------------------------МОКИ---------------------
-const moks = [
-  {
-    title:'Лимонад из черной головки',
-    description:'Самый вкусный лимонад который вы пробовали',
-    URL:'https://s3.02.coolclever.tech/img/0000000090027171/1000/19891.webp',
-    price:'190'
-  },
-  {
-    title:'Лимонад из черной головки',
-    description:'Самый вкусный лимонад который вы пробовали',
-    URL:'https://s3.02.coolclever.tech/img/0000000090027171/1000/19891.webp',
-    price:'190'
-  },
-  {
-    title:'Лимонад из черной головки',
-    description:'Самый вкусный лимонад который вы пробовали',
-    URL:'https://s3.02.coolclever.tech/img/0000000090027171/1000/19891.webp',
-    price:'190'
-  },
-  {
-    title:'Лимонад из черной головки',
-    description:'Самый вкусный лимонад который вы пробовали',
-    URL:'https://s3.02.coolclever.tech/img/0000000090027171/1000/19891.webp',
-    price:'190'
-  },
-  {
-    title:'Лимонад из черной головки',
-    description:'Самый вкусный лимонад который вы пробовали',
-    URL:'https://s3.02.coolclever.tech/img/0000000090027171/1000/19891.webp',
-    price:'190'
-  },
-]
-//--------------------------------------------------------
+import { fetchImages, ImageItem } from "@/store/slices/images-slice";
 
 export default function TabHome() {
+  const images = useSelector<RootState, ImageItem[]>((state) => state.images.items);
   const { theme } = useChoppTheme();
   const { t } = useTranslation();
   const [currentOrderData, setCurrentOrderData] = useState<Order>();
@@ -87,7 +55,10 @@ export default function TabHome() {
       });
     }
   }, [currentOrder, lastMessage]);
-
+  useEffect(()=>{
+    dispatch(fetchImages())
+  },[])
+  
   return (
     <>
       <Appbar.Header>
@@ -113,15 +84,15 @@ export default function TabHome() {
             ) : (
               <>
               <FlatList
-                  data={moks}
+                  data={images}
                   keyExtractor={(item) => item.title}
                   numColumns={2}
                   renderItem={({ item }) => (
                     <CardForProducts
                       title={item.title}
                       description={item.description}
-                      URL={item.URL}
-                      price={item.price}
+                      URL={ `${URLs.urlForImages+item.images}`}
+                      price={String(item.price)}
                     />
                   )}
                   />
