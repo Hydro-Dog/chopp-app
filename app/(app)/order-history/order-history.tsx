@@ -32,7 +32,6 @@ export default function OrderHistory() {
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         <ChoppScreenLayout
-          redirectToRoot
           showBackButton
           loading={fetchMyOrdersStatus === FETCH_STATUS.LOADING}
         >
