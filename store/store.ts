@@ -1,8 +1,8 @@
 import { configureStore, Middleware } from "@reduxjs/toolkit";
 import { chatSlice, ChatState } from "./slices/chat-slice/index";
 import { orderSlice, OrderState } from "./slices/order-slice/index";
+import { productSlice, ProductsState } from "./slices/product-slice";
 import { userSlice, UserState } from "./slices/user-slice/index";
-import { imagesSlice, ImagesState } from "./slices/images-slice";
 import {
   pushWsMessage,
   setWsConnected,
@@ -83,7 +83,7 @@ export const store = configureStore({
     ws: wsSlice.reducer,
     chat: chatSlice.reducer,
     order: orderSlice.reducer,
-    images: imagesSlice.reducer,
+    products: productSlice.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware().concat(wsMiddleware);
@@ -95,7 +95,7 @@ export type RootState = {
   ws: WsState;
   chat: ChatState;
   order: OrderState;
-  images: ImagesState;
+  products: ProductsState;
 };
 
 export type AppDispatch = typeof store.dispatch;

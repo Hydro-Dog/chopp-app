@@ -1,78 +1,92 @@
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { View, StyleSheet, Image, FlatList } from "react-native";
+import { View, StyleSheet, FlatList } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { TextInput, Appbar } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import LogoDark from "@/assets/logo-dark.png";
-import LogoLight from "@/assets/logo-light.png";
-import { CallStatusScreen, NewOrderForm, useGetProducts } from "@/components/main";
-import { CurrentOrderDetails } from "@/components/main/current-order-details";
-import { TextInput, Appbar  } from 'react-native-paper';
-
+import { ProductGridItem } from "@/components/main";
 import {
-  ChoppThemedText,
   FETCH_STATUS,
-  OrderStatus,
-  useChoppTheme,
-  useFilterWsMessages,
-  WS_MESSAGE_TYPE,
   ChoppScreenLayout,
   URLs,
+  Pagination,
+  useSuperDispatch,
 } from "@/shared";
-import { fetchOrder, Order } from "@/store/slices/order-slice";
+import { fetchProducts, Product } from "@/store/slices/product-slice";
 import { AppDispatch, RootState } from "@/store/store";
-import {CardForProducts} from "@/components/main"
-import { fetchImages, ImageItem } from "@/store/slices/images-slice";
+import { CONFIG } from "@/my-config";
+
+const { Header } = Appbar;
+const LIMIT = 2; //Количество элеменов на странице, 2 взято в качестве примера
+const FIRST_PAGE_NUMBER = 1;
 
 export default function TabHome() {
-  const images = useSelector<RootState, ImageItem[]>((state) => state.images.items);
-  const { theme } = useChoppTheme();
-  const { t } = useTranslation();
-  const [currentOrderData, setCurrentOrderData] = useState<Order>();
-
   const dispatch = useDispatch<AppDispatch>();
-  const { currentOrder, fetchOrderStatus } = useSelector(
-    (state: RootState) => state.order,
+  const superDispatch = useSuperDispatch();
+  const [pageProducts, setPageProducts] = useState<Product[]>([]);
+  const [pagination, setPagination] = useState<Partial<Pagination>>();
+  const [search, setSearch] = useState("");
+  const { fetchProductsStatus, products } = useSelector(
+    (state: RootState) => state.products
   );
 
-  const { lastMessage } = useFilterWsMessages<OrderStatus>(
-    WS_MESSAGE_TYPE.ORDER_STATUS,
-  );
+  console.log("pageProducts; ", pageProducts);
 
   useEffect(() => {
-    dispatch(fetchOrder());
-  }, []);
+    dispatch(
+      fetchProducts({
+        categoryId: 2, //Пока не прикрутим категории на страницу подставляем id категории из таблицы Category в БД
+        limit: LIMIT,
+        pageNumber: FIRST_PAGE_NUMBER,
+        search,
+      })
+    );
+    setPagination({
+      limit: LIMIT,
+      pageNumber: FIRST_PAGE_NUMBER,
+    });
+  }, [dispatch, search]);
 
   useEffect(() => {
-    if (lastMessage && currentOrder) {
-      setCurrentOrderData({
-        ...currentOrder,
-        statusData: lastMessage.payload,
-      });
-    } else if (currentOrder) {
-      setCurrentOrderData({
-        ...currentOrder,
-      });
-    }
-  }, [currentOrder, lastMessage]);
-  useEffect(()=>{
-    dispatch(fetchImages())
-  },[])
-  
+    setPageProducts(products?.items || []);
+  }, [pageProducts.length, products]);
+
+  const onLoadMore = () => {
+    superDispatch({
+      action: fetchProducts({
+        categoryId: 2, //Пока не прикрутим категории на страницу подставляем id категории из таблицы Category в БД
+        limit: pagination?.limit,
+        pageNumber: pagination?.pageNumber + 1,
+        search,
+      }),
+      thenHandler: (response) => {
+        setPageProducts([...pageProducts, ...(response.items || [])]);
+        setPagination({
+          ...pagination,
+          pageNumber: pagination?.pageNumber + 1,
+        });
+      },
+    });
+  };
+
   return (
     <>
-      <Appbar.Header>
+      <Header>
         <TextInput
-        label="Поиск"
-        value={''}
-        activeUnderlineColor="grey"
-        style={{width:"100%"}}
-      />
-      </Appbar.Header>
+          label="Поиск"
+          value={""}
+          //TODO: цвета берем из темы ключом, чтобы при ключении темной темы цвет был норм
+          activeUnderlineColor="grey"
+          style={{ width: "100%" }}
+        />
+      </Header>
       <KeyboardAwareScrollView>
-        <ChoppScreenLayout loading={fetchOrderStatus === FETCH_STATUS.LOADING}>
+        <ChoppScreenLayout
+          loading={fetchProductsStatus === FETCH_STATUS.LOADING}
+        >
           <View style={styles.container}>
-            {currentOrderData ? (
+            {/* TODO: Этот экран (CallStatusScreen + CurrentOrderDetails) мы перенесем куда-нибудь в другое место.
+             Типа в статус заказа   */}
+            {/* {currentOrderData ? (
               <>
                 <CallStatusScreen
                   currentStatus={currentOrderData?.statusData?.status}
@@ -81,28 +95,27 @@ export default function TabHome() {
 
                 <CurrentOrderDetails order={currentOrderData} />
               </>
-            ) : (
-              <>
+            ) : ( */}
+            <>
               <FlatList
-                  data={images}
-                  keyExtractor={(item) => item.title}
-                  numColumns={2}
-                  renderItem={({ item }) => (
-                    <CardForProducts
-                      title={item.title}
-                      description={item.description}
-                      URL={ `${URLs.urlForImages+item.images}`}
-                      price={String(item.price)}
-                    />
-                  )}
+                data={pageProducts}
+                keyExtractor={(item) => item.title}
+                numColumns={2}
+                renderItem={({ item }) => (
+                  <ProductGridItem
+                    title={item.title}
+                    description={item.description}
+                    imagePath={CONFIG.filesUrl + item.images[0].path}
+                    price={String(item.price)}
                   />
-              </>
-            )}
+                )}
+              />
+            </>
+            {/* )} */}
           </View>
         </ChoppScreenLayout>
       </KeyboardAwareScrollView>
     </>
-    
   );
 }
 

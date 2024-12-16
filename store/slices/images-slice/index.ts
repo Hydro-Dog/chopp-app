@@ -1,1 +1,1 @@
-export * from './images-slice'
+export * from "./images-slice";
