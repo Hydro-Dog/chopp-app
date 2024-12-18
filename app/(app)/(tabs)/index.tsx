@@ -1,24 +1,31 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useState } from "react";
-import { View, StyleSheet, FlatList } from "react-native";
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  useColorScheme,
+  ScrollView,
+} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { TextInput, Appbar } from "react-native-paper";
+import { Appbar, Searchbar } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import { ProductGridItem } from "@/components/main";
+import { ProductGridItem, CategoryTabs } from "@/components/main";
 import {
   FETCH_STATUS,
   ChoppScreenLayout,
-  URLs,
   Pagination,
   useSuperDispatch,
 } from "@/shared";
 import { fetchProducts, Product } from "@/store/slices/product-slice";
 import { AppDispatch, RootState } from "@/store/store";
 import { CONFIG } from "@/my-config";
+import { COLORS } from "@/constants/Colors";
 
 const { Header } = Appbar;
 const LIMIT = 2; //Количество элеменов на странице, 2 взято в качестве примера
 const FIRST_PAGE_NUMBER = 1;
-
+const theme = useColorScheme() ?? "light";
 export default function TabHome() {
   const dispatch = useDispatch<AppDispatch>();
   const superDispatch = useSuperDispatch();
@@ -26,25 +33,27 @@ export default function TabHome() {
   const [pagination, setPagination] = useState<Partial<Pagination>>();
   const [search, setSearch] = useState("");
   const { fetchProductsStatus, products } = useSelector(
-    (state: RootState) => state.products
+    (state: RootState) => state.products,
   );
+  const [chosenCategory, setChosenCategory] = useState(1);
 
+  const [searchQuery, setSearchQuery] = useState("");
   console.log("pageProducts; ", pageProducts);
 
   useEffect(() => {
     dispatch(
       fetchProducts({
-        categoryId: 2, //Пока не прикрутим категории на страницу подставляем id категории из таблицы Category в БД
+        categoryId: chosenCategory,
         limit: LIMIT,
         pageNumber: FIRST_PAGE_NUMBER,
-        search,
-      })
+        search: searchQuery,
+      }),
     );
     setPagination({
       limit: LIMIT,
       pageNumber: FIRST_PAGE_NUMBER,
     });
-  }, [dispatch, search]);
+  }, [dispatch, searchQuery, chosenCategory]);
 
   useEffect(() => {
     setPageProducts(products?.items || []);
@@ -53,7 +62,7 @@ export default function TabHome() {
   const onLoadMore = () => {
     superDispatch({
       action: fetchProducts({
-        categoryId: 2, //Пока не прикрутим категории на страницу подставляем id категории из таблицы Category в БД
+        categoryId: 1, //Пока не прикрутим категории на страницу подставляем id категории из таблицы Category в БД
         limit: pagination?.limit,
         pageNumber: pagination?.pageNumber + 1,
         search,
@@ -70,15 +79,23 @@ export default function TabHome() {
 
   return (
     <>
-      <Header>
-        <TextInput
-          label="Поиск"
-          value={""}
-          //TODO: цвета берем из темы ключом, чтобы при ключении темной темы цвет был норм
-          activeUnderlineColor="grey"
-          style={{ width: "100%" }}
-        />
-      </Header>
+      <Appbar.Header style={{ height: 110 }}>
+        <View style={{ width: "100%", flex: 1, zIndex: 1 }}>
+          <Searchbar
+            placeholder="Search"
+            onChangeText={setSearchQuery}
+            value={searchQuery}
+            style={{
+              backgroundColor: COLORS.light.primaryContainer,
+              marginBottom: 5,
+            }}
+          />
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <CategoryTabs chosenCategory={chosenCategory} setChosenCategory={setChosenCategory}/>
+          </ScrollView>
+        </View>
+      </Appbar.Header>
+
       <KeyboardAwareScrollView>
         <ChoppScreenLayout
           loading={fetchProductsStatus === FETCH_STATUS.LOADING}
@@ -118,7 +135,6 @@ export default function TabHome() {
     </>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,

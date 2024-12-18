@@ -1,0 +1,1 @@
+export * from './tabs-of-category'

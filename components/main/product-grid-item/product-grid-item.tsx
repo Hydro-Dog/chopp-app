@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Dimensions } from "react-native";
 import { Card, Button, Text } from "react-native-paper";
+import { StyleSheet } from 'react-native';
 
 interface Props {
   imagePath: string;
@@ -17,19 +18,26 @@ export const ProductGridItem = ({
 }: Props) => {
   const { width } = Dimensions.get("window");
 
-  console.log('imagePath: ', imagePath)
+  console.log("imagePath: ", imagePath);
 
   return (
     <Card style={{ width: (width - 40) / 2, margin: "0.5rem" }}>
-      <Card.Cover source={{ uri: imagePath }} />
+      <Card.Cover style={{ margin: 10 }} source={{ uri: imagePath }} />
       <Card.Content>
         <Text variant="titleLarge">{title}</Text>
         <Text variant="bodyMedium">{description}</Text>
         <Text>{price}₽</Text>
       </Card.Content>
       <Card.Actions>
-        <Button>+</Button>
+        <Button labelStyle={styles.inButton}>
+          +
+        </Button>
       </Card.Actions>
     </Card>
   );
 };
+const styles = StyleSheet.create({
+  inButton: {
+    margin: 0,
+  },
+});
