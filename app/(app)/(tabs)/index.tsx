@@ -11,6 +11,8 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { Appbar, Searchbar } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { ProductGridItem, CategoryTabs } from "@/components/main";
+import { COLORS } from "@/constants/colors";
+import { CONFIG } from "@/my-config";
 import {
   FETCH_STATUS,
   ChoppScreenLayout,
@@ -19,13 +21,14 @@ import {
 } from "@/shared";
 import { fetchProducts, Product } from "@/store/slices/product-slice";
 import { AppDispatch, RootState } from "@/store/store";
-import { CONFIG } from "@/my-config";
-import { COLORS } from "@/constants/Colors";
 
 const { Header } = Appbar;
-const LIMIT = 2; //Количество элеменов на странице, 2 взято в качестве примера
+
+const LIMIT = 2; 
 const FIRST_PAGE_NUMBER = 1;
+
 const theme = useColorScheme() ?? "light";
+
 export default function TabHome() {
   const dispatch = useDispatch<AppDispatch>();
   const superDispatch = useSuperDispatch();
@@ -91,7 +94,10 @@ export default function TabHome() {
             }}
           />
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <CategoryTabs chosenCategory={chosenCategory} setChosenCategory={setChosenCategory}/>
+            <CategoryTabs
+              chosenCategory={chosenCategory}
+              setChosenCategory={setChosenCategory}
+            />
           </ScrollView>
         </View>
       </Appbar.Header>
@@ -122,7 +128,7 @@ export default function TabHome() {
                   <ProductGridItem
                     title={item.title}
                     description={item.description}
-                    imagePath={CONFIG.filesUrl + item.images[0].path}
+                    imagePath={CONFIG.filesUrl + item.images?.[0]?.path}
                     price={String(item.price)}
                   />
                 )}
