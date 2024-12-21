@@ -1,6 +1,6 @@
 import { AppDispatch, RootState } from "@/store/store";
 import * as React from "react";
-import { useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
 import { SegmentedButtons } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,12 +8,11 @@ import { fetchCategories } from "@/store/slices/product-category-slice";
 
 type Props = {
   chosenCategory: number;
-  setChosenCategory: React.Dispatch<React.SetStateAction<number>>;
+  setChosenCategory: Dispatch<SetStateAction<number>>;
 };
 
 export const CategoryTabs = ({ chosenCategory, setChosenCategory }: Props) => {
-
-  const { category } = useSelector((state: RootState) => state.categories);
+  const { categories } = useSelector((state: RootState) => state.categories);
 
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
@@ -23,12 +22,12 @@ export const CategoryTabs = ({ chosenCategory, setChosenCategory }: Props) => {
   return (
     <SafeAreaView style={styles.container}>
       <SegmentedButtons
-        value={chosenCategory}
-        onValueChange={setChosenCategory}
+        value={String(chosenCategory)}
+        onValueChange={(value) => setChosenCategory(Number(value))}
         buttons={
-          Array.isArray(category)
-            ? category?.map((item) => ({
-                value: item.id,
+          Array.isArray(categories)
+            ? categories?.map((item) => ({
+                value: String(item.id),
                 label: item.title,
               }))
             : []

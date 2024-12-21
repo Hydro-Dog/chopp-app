@@ -1,43 +1,54 @@
 import * as React from "react";
 import { Dimensions } from "react-native";
 import { Card, Button, Text } from "react-native-paper";
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
+import { COLORS } from "@/constants/сolors";
 
 interface Props {
   imagePath: string;
   title: string;
-  description: string;
   price: string;
 }
 
-export const ProductGridItem = ({
-  imagePath,
-  title,
-  description,
-  price,
-}: Props) => {
-  const { width } = Dimensions.get("window");
-
-  console.log("imagePath: ", imagePath);
-
+export const ProductGridItem = ({ imagePath, title, price }: Props) => {
   return (
-    <Card style={{ width: (width - 40) / 2, margin: "0.5rem" }}>
-      <Card.Cover style={{ margin: 10 }} source={{ uri: imagePath }} />
+    <Card style={styles.card}>
+      <Card.Cover source={{ uri: imagePath }} />
       <Card.Content>
-        <Text variant="titleLarge">{title}</Text>
-        <Text variant="bodyMedium">{description}</Text>
-        <Text>{price}₽</Text>
+        <Text style={styles.title} numberOfLines={2} variant="titleMedium">
+          <b>{title}</b>
+        </Text>
       </Card.Content>
       <Card.Actions>
-        <Button labelStyle={styles.inButton}>
-          +
+        <Button style={styles.button}>
+          <Text variant="titleMedium">{price}₽+</Text>
         </Button>
       </Card.Actions>
     </Card>
   );
 };
+const { width } = Dimensions.get("window");
 const styles = StyleSheet.create({
-  inButton: {
-    margin: 0,
+  button: {
+    width: "100%",
+    borderWidth: 0,
+    backgroundColor: COLORS.light.primaryContainer,
+  },
+  title: {
+    height: 50,
+  },
+  content: {
+    width: "100%",
+  },
+  card: {
+    width: (width - 50) / 2,
+    margin: 5,
+    elevation: 0,
+    shadowOffset: { width: 0, height: 0 },
+  },
+  activityIndicator: {
+    position: "absolute",
+    top: 40,
+    right: 40,
   },
 });

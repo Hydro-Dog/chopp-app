@@ -2,6 +2,6 @@ export type SearchResponse<T> = {
   items: T[];
   pageNumber: number;
   totalPages: number;
-  totalRecords: number;
+  totalItems: number;
   limit: number;
 };

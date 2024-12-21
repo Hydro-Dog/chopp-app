@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ProductGridItem, CategoryTabs } from "@/components/main";
 import { COLORS } from "@/constants/colors";
 import { CONFIG } from "@/my-config";
+
 import {
   FETCH_STATUS,
   ChoppScreenLayout,
@@ -21,10 +22,11 @@ import {
 } from "@/shared";
 import { fetchProducts, Product } from "@/store/slices/product-slice";
 import { AppDispatch, RootState } from "@/store/store";
+import { ru } from "@/translation/ru";
 
 const { Header } = Appbar;
 
-const LIMIT = 2; 
+const LIMIT = 8;
 const FIRST_PAGE_NUMBER = 1;
 
 const theme = useColorScheme() ?? "light";
@@ -34,14 +36,12 @@ export default function TabHome() {
   const superDispatch = useSuperDispatch();
   const [pageProducts, setPageProducts] = useState<Product[]>([]);
   const [pagination, setPagination] = useState<Partial<Pagination>>();
-  const [search, setSearch] = useState("");
   const { fetchProductsStatus, products } = useSelector(
     (state: RootState) => state.products,
   );
-  const [chosenCategory, setChosenCategory] = useState(1);
-
+  const [chosenCategory, setChosenCategory] = useState<number>(1);
   const [searchQuery, setSearchQuery] = useState("");
-  console.log("pageProducts; ", pageProducts);
+
 
   useEffect(() => {
     dispatch(
@@ -52,6 +52,8 @@ export default function TabHome() {
         search: searchQuery,
       }),
     );
+    console.log(products);
+
     setPagination({
       limit: LIMIT,
       pageNumber: FIRST_PAGE_NUMBER,
@@ -60,15 +62,16 @@ export default function TabHome() {
 
   useEffect(() => {
     setPageProducts(products?.items || []);
-  }, [pageProducts.length, products]);
+  }, [products]);
 
   const onLoadMore = () => {
+    if (fetchProductsStatus === FETCH_STATUS.LOADING) return;
     superDispatch({
       action: fetchProducts({
-        categoryId: 1, //Пока не прикрутим категории на страницу подставляем id категории из таблицы Category в БД
+        categoryId: chosenCategory,
         limit: pagination?.limit,
         pageNumber: pagination?.pageNumber + 1,
-        search,
+        search: searchQuery,
       }),
       thenHandler: (response) => {
         setPageProducts([...pageProducts, ...(response.items || [])]);
@@ -78,21 +81,26 @@ export default function TabHome() {
         });
       },
     });
+    console.log(products?.totalItems, pageProducts.length);
   };
-
   return (
     <>
-      <Appbar.Header style={{ height: 110 }}>
-        <View style={{ width: "100%", flex: 1, zIndex: 1 }}>
-          <Searchbar
-            placeholder="Search"
-            onChangeText={setSearchQuery}
-            value={searchQuery}
-            style={{
-              backgroundColor: COLORS.light.primaryContainer,
-              marginBottom: 5,
-            }}
-          />
+      <Appbar.Header style={{ height: 130 }}>
+        <View
+          style={{
+            flex: 1,
+            zIndex: 1,
+          }}
+        >
+          <View style={styles.centering}>
+            <Searchbar
+              placeholder={ru.search}
+              onChangeText={setSearchQuery}
+              value={searchQuery}
+              style={styles.search}
+              inputStyle={{ paddingBottom: 10 }} //Знаю что кастыль но почему-то ширина именно инпут поля изменяться не хочет вообще
+            />
+          </View>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <CategoryTabs
               chosenCategory={chosenCategory}
@@ -101,15 +109,11 @@ export default function TabHome() {
           </ScrollView>
         </View>
       </Appbar.Header>
-
-      <KeyboardAwareScrollView>
-        <ChoppScreenLayout
-          loading={fetchProductsStatus === FETCH_STATUS.LOADING}
-        >
-          <View style={styles.container}>
-            {/* TODO: Этот экран (CallStatusScreen + CurrentOrderDetails) мы перенесем куда-нибудь в другое место.
+      <ChoppScreenLayout loading={fetchProductsStatus === FETCH_STATUS.LOADING}>
+        <View style={styles.container}>
+          {/* TODO: Этот экран (CallStatusScreen + CurrentOrderDetails) мы перенесем куда-нибудь в другое место.
              Типа в статус заказа   */}
-            {/* {currentOrderData ? (
+          {/* {currentOrderData ? (
               <>
                 <CallStatusScreen
                   currentStatus={currentOrderData?.statusData?.status}
@@ -119,25 +123,30 @@ export default function TabHome() {
                 <CurrentOrderDetails order={currentOrderData} />
               </>
             ) : ( */}
-            <>
-              <FlatList
-                data={pageProducts}
-                keyExtractor={(item) => item.title}
-                numColumns={2}
-                renderItem={({ item }) => (
-                  <ProductGridItem
-                    title={item.title}
-                    description={item.description}
-                    imagePath={CONFIG.filesUrl + item.images?.[0]?.path}
-                    price={String(item.price)}
-                  />
-                )}
-              />
-            </>
-            {/* )} */}
-          </View>
-        </ChoppScreenLayout>
-      </KeyboardAwareScrollView>
+          <>
+            <FlatList
+              data={pageProducts}
+              keyExtractor={(item) => item.title}
+              numColumns={2}
+              onEndReached={() =>
+                pageProducts.length !== products?.totalItems && onLoadMore()
+              }
+              style={{ flex: 1 }}
+              renderItem={({ item }) => (
+                <ProductGridItem
+                  title={item.title}
+                  imagePath={CONFIG.filesUrl + item.images?.[0]?.path}
+                  price={String(item.price)}
+                />
+              )}
+            />
+          </>
+          {/* )} */}
+        </View>
+      </ChoppScreenLayout>
+      {/* <KeyboardAwareScrollView>
+        
+      </KeyboardAwareScrollView> */}
     </>
   );
 }
@@ -148,8 +157,22 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "space-between",
-    paddingBottom: 64,
+    //paddingBottom: 64,
     alignItems: "center",
+  },
+  search: {
+    backgroundColor: COLORS.light.onPrimary,
+    marginBottom: 5,
+    borderWidth: 2,
+    borderColor: COLORS.light.primaryContainer,
+    width: "95%",
+    height: 50,
+  },
+  centering: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingBottom: 10,
   },
   logo: {
     width: 128,

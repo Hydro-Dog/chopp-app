@@ -4,13 +4,13 @@ import { fetchCategories } from "./actions";
 import { ErrorResponse, FETCH_STATUS } from "@/shared";
 
 export type CategoryState = {
-  category?: Category;
+  categories?: Category;
   fetchCategoriesStatus: FETCH_STATUS;
   fetchCategoriesError: ErrorResponse | null;
 };
 
 const initialState: CategoryState = {
-  category: undefined,
+  categories: undefined,
   fetchCategoriesStatus: FETCH_STATUS.IDLE,
   fetchCategoriesError: null,
 };
@@ -26,7 +26,7 @@ export const productCategorySlice = createSlice({
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.fetchCategoriesStatus = FETCH_STATUS.SUCCESS;
-        state.category = action.payload;
+        state.categories = action.payload;
       })
       .addCase(fetchCategories.rejected, (state, action) => {
         state.fetchCategoriesStatus = FETCH_STATUS.ERROR;
