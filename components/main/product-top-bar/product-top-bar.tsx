@@ -1,4 +1,4 @@
-import { COLORS } from "@/constants/сolors";
+import { COLORS } from "@/constants/colors";
 import { ScrollView, View, StyleSheet } from "react-native";
 import { Appbar, Searchbar } from "react-native-paper";
 import { CategoryTabs } from "../category-tabs";

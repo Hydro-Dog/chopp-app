@@ -1,158 +1,126 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   View,
   StyleSheet,
-  FlatList,
-  useColorScheme,
+  ScrollView,
+  Text,
+  ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Appbar, Searchbar } from "react-native-paper";
-import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 import { ProductGridItem } from "@/components/main";
-import { COLORS } from "@/constants/сolors";
 import { CONFIG } from "@/my-config";
 
-import {
-  FETCH_STATUS,
-  ChoppScreenLayout,
-  Pagination,
-  useSuperDispatch,
-} from "@/shared";
-import { fetchProducts, Product } from "@/store/slices/product-slice";
-import { AppDispatch, RootState } from "@/store/store";
-import { ProductTopBar } from "@/components/main/product-top-bar";
-
-const { Header } = Appbar;
-//TODO: Временный лимит нужный для тестов. Потом нужно его увеличить.
-const LIMIT = 8;
-const FIRST_PAGE_NUMBER = 1;
-
-const theme = useColorScheme() ?? "light";
+const LIMIT = 4;
+const API_URL = "http://localhost:6001/api/products";
 
 export default function TabHome() {
-  const dispatch = useDispatch<AppDispatch>();
-  const superDispatch = useSuperDispatch();
-  const [pageProducts, setPageProducts] = useState<Product[]>([]);
-  const [pagination, setPagination] = useState<Partial<Pagination>>();
-  const { fetchProductsStatus, products } = useSelector(
-    (state: RootState) => state.products,
-  );
-  const [chosenCategory, setChosenCategory] = useState<number>(1);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
 
-  useEffect(() => {
-    dispatch(
-      fetchProducts({
-        categoryId: chosenCategory,
-        limit: LIMIT,
-        pageNumber: FIRST_PAGE_NUMBER,
-        search: searchQuery,
-      }),
-    );
+  const fetchItems = async (currentPage) => {
+    if (loading || !hasMore) return;
+    setLoading(true);
+    try {
+      const response = await axios.get(API_URL, {
+        params: {
+          limit: LIMIT,
+          page: currentPage,
+        },
+      });
 
-    setPagination({
-      limit: LIMIT,
-      pageNumber: FIRST_PAGE_NUMBER,
-    });
-  }, [dispatch, searchQuery, chosenCategory]);
+      const newItems = response.data;
+      setItems((prevItems) => [...prevItems, ...newItems.items]);
 
-  useEffect(() => {
-    setPageProducts(products?.items || []);
-  }, [products]);
-
-  const onLoadMore = () => {
-    if (fetchProductsStatus === FETCH_STATUS.LOADING) return;
-    superDispatch({
-      action: fetchProducts({
-        categoryId: chosenCategory,
-        limit: pagination?.limit,
-        pageNumber: pagination?.pageNumber + 1,
-        search: searchQuery,
-      }),
-      thenHandler: (response) => {
-        setPageProducts([...pageProducts, ...(response.items || [])]);
-        setPagination({
-          ...pagination,
-          pageNumber: pagination?.pageNumber + 1,
-        });
-      },
-    });
+      if (newItems.length < LIMIT) {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error("Error fetching items:", error);
+    } finally {
+      setLoading(false);
+    }
   };
-  return (
-    <>
-      <ProductTopBar
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        chosenCategory={chosenCategory}
-        setChosenCategory={setChosenCategory}
-      />
-      <ChoppScreenLayout loading={fetchProductsStatus === FETCH_STATUS.LOADING}>
-        <View style={styles.container}>
-          {/* TODO: Этот экран (CallStatusScreen + CurrentOrderDetails) мы перенесем куда-нибудь в другое место.
-             Типа в статус заказа   */}
-          {/* {currentOrderData ? (
-              <>
-                <CallStatusScreen
-                  currentStatus={currentOrderData?.statusData?.status}
-                  timeStamp={currentOrderData?.statusData?.timeStamp}
-                />
 
-                <CurrentOrderDetails order={currentOrderData} />
-              </>
-            ) : ( */}
-          <>
-            <FlatList
-              data={pageProducts}
-              keyExtractor={(item) => item.title}
-              numColumns={2}
-              onEndReached={() => {
-                if (pageProducts.length !== products?.totalItems)
-                  return onLoadMore();
-              }}
-              style={{ flex: 1 }}
-              renderItem={({ item }) => (
-                <ProductGridItem
-                  key={item.id}
-                  title={item.title}
-                  imagePath={CONFIG.filesUrl + item.images?.[0]?.path}
-                  price={String(item.price)}
-                />
-              )}
+  const loadMore = useCallback(() => {
+    if (!loading && hasMore) {
+      setPage((prevPage) => prevPage + 1);
+    }
+  }, [loading, hasMore]);
+
+  useEffect(() => {
+    fetchItems(page);
+  }, [page]);
+
+  const handleScroll = ({ nativeEvent }) => {
+    const { layoutMeasurement, contentOffset, contentSize } = nativeEvent;
+    if (
+      layoutMeasurement.height + contentOffset.y >= contentSize.height - 20 &&
+      hasMore &&
+      !loading
+    ) {
+      loadMore();
+    }
+  };
+
+  return (
+    <ScrollView
+      onScroll={handleScroll}
+      contentContainerStyle={styles.scrollViewContainer}
+    >
+      <View style={styles.listContainer}>
+        {items.map((item) => (
+          <TouchableOpacity key={item.id} style={styles.itemContainer}>
+            <ProductGridItem
+              title={item.title}
+              imagePath={CONFIG.filesUrl + item.images?.[0]?.path}
+              price={String(item.price)}
             />
-          </>
-          {/* )} */}
-        </View>
-      </ChoppScreenLayout>
-      {/* <KeyboardAwareScrollView>
-        
-      </KeyboardAwareScrollView> */}
-    </>
+          </TouchableOpacity>
+        ))}
+        {loading && <ActivityIndicator size="large" style={styles.loader} />}
+        {!hasMore && (
+          <Text style={styles.noMoreText}>No more items to load</Text>
+        )}
+      </View>
+    </ScrollView>
   );
 }
+
 const styles = StyleSheet.create({
-  container: {
-    paddingHorizontal: 20,
-    paddingVertical: 20,
-    flex: 1,
+  scrollViewContainer: {
+    padding: 20,
+  },
+  listContainer: {
     flexDirection: "column",
-    justifyContent: "space-between",
-    //paddingBottom: 64,
     alignItems: "center",
   },
-  logo: {
-    width: 128,
-    height: 128,
-  },
-  content: {
+  itemContainer: {
+    marginBottom: 20,
+    padding: 15,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 10,
+    backgroundColor: "#f9f9f9",
     width: "100%",
   },
-  loginButton: {
+  itemTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  itemBody: {
+    fontSize: 14,
+    marginTop: 5,
+    color: "#555",
+  },
+  loader: {
     marginTop: 20,
-    width: "100%",
   },
-  activityIndicator: {
-    position: "absolute",
-    top: 40,
-    right: 40,
+  noMoreText: {
+    marginTop: 20,
+    fontSize: 16,
+    color: "#888",
   },
 });
