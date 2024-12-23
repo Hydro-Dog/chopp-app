@@ -1,17 +1,15 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
   FlatList,
   useColorScheme,
-  ScrollView,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Appbar, Searchbar } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import { ProductGridItem, CategoryTabs } from "@/components/main";
-import { COLORS } from "@/constants/colors";
+import { ProductGridItem } from "@/components/main";
+import { COLORS } from "@/constants/сolors";
 import { CONFIG } from "@/my-config";
 
 import {
@@ -22,10 +20,10 @@ import {
 } from "@/shared";
 import { fetchProducts, Product } from "@/store/slices/product-slice";
 import { AppDispatch, RootState } from "@/store/store";
-import { ru } from "@/translation/ru";
+import { ProductTopBar } from "@/components/main/product-top-bar";
 
 const { Header } = Appbar;
-
+//TODO: Временный лимит нужный для тестов. Потом нужно его увеличить.
 const LIMIT = 8;
 const FIRST_PAGE_NUMBER = 1;
 
@@ -42,7 +40,6 @@ export default function TabHome() {
   const [chosenCategory, setChosenCategory] = useState<number>(1);
   const [searchQuery, setSearchQuery] = useState("");
 
-
   useEffect(() => {
     dispatch(
       fetchProducts({
@@ -52,7 +49,6 @@ export default function TabHome() {
         search: searchQuery,
       }),
     );
-    console.log(products);
 
     setPagination({
       limit: LIMIT,
@@ -81,34 +77,15 @@ export default function TabHome() {
         });
       },
     });
-    console.log(products?.totalItems, pageProducts.length);
   };
   return (
     <>
-      <Appbar.Header style={{ height: 130 }}>
-        <View
-          style={{
-            flex: 1,
-            zIndex: 1,
-          }}
-        >
-          <View style={styles.centering}>
-            <Searchbar
-              placeholder={ru.search}
-              onChangeText={setSearchQuery}
-              value={searchQuery}
-              style={styles.search}
-              inputStyle={{ paddingBottom: 10 }} //Знаю что кастыль но почему-то ширина именно инпут поля изменяться не хочет вообще
-            />
-          </View>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <CategoryTabs
-              chosenCategory={chosenCategory}
-              setChosenCategory={setChosenCategory}
-            />
-          </ScrollView>
-        </View>
-      </Appbar.Header>
+      <ProductTopBar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        chosenCategory={chosenCategory}
+        setChosenCategory={setChosenCategory}
+      />
       <ChoppScreenLayout loading={fetchProductsStatus === FETCH_STATUS.LOADING}>
         <View style={styles.container}>
           {/* TODO: Этот экран (CallStatusScreen + CurrentOrderDetails) мы перенесем куда-нибудь в другое место.
@@ -128,12 +105,14 @@ export default function TabHome() {
               data={pageProducts}
               keyExtractor={(item) => item.title}
               numColumns={2}
-              onEndReached={() =>
-                pageProducts.length !== products?.totalItems && onLoadMore()
-              }
+              onEndReached={() => {
+                if (pageProducts.length !== products?.totalItems)
+                  return onLoadMore();
+              }}
               style={{ flex: 1 }}
               renderItem={({ item }) => (
                 <ProductGridItem
+                  key={item.id}
                   title={item.title}
                   imagePath={CONFIG.filesUrl + item.images?.[0]?.path}
                   price={String(item.price)}
@@ -159,20 +138,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     //paddingBottom: 64,
     alignItems: "center",
-  },
-  search: {
-    backgroundColor: COLORS.light.onPrimary,
-    marginBottom: 5,
-    borderWidth: 2,
-    borderColor: COLORS.light.primaryContainer,
-    width: "95%",
-    height: 50,
-  },
-  centering: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingBottom: 10,
   },
   logo: {
     width: 128,
