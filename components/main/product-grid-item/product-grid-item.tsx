@@ -2,7 +2,7 @@ import * as React from "react";
 import { Dimensions } from "react-native";
 import { Card, Button, Text } from "react-native-paper";
 import { StyleSheet } from "react-native";
-import { COLORS } from "@/constants/сolors";
+import { COLORS } from "@/constants/colors";
 
 interface Props {
   imagePath: string;

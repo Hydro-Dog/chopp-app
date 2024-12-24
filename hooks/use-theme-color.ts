@@ -3,7 +3,7 @@
  * https://docs.expo.dev/guides/color-schemes/
  */
 
-import { COLORS } from "@/constants/сolors";
+import { COLORS } from "@/constants/colors";
 import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 import { LIGHT_THEME } from "@/theme";
 
