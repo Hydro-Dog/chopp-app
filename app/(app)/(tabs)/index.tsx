@@ -85,7 +85,7 @@ export default function TabHome() {
         chosenCategory={chosenCategory}
         setChosenCategory={setChosenCategory}
       />
-      <ChoppScreenLayout loading={fetchProductsStatus === FETCH_STATUS.LOADING}>
+      <ChoppScreenLayout>
         <View style={styles.container}>
           {/* TODO: Этот экран (CallStatusScreen + CurrentOrderDetails) мы перенесем куда-нибудь в другое место.
              Типа в статус заказа   */}
