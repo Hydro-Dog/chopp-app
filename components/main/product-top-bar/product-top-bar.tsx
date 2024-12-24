@@ -1,7 +1,6 @@
 import { COLORS } from "@/constants/colors";
 import { ScrollView, View, StyleSheet } from "react-native";
 import { Appbar, Searchbar } from "react-native-paper";
-import { CategoryTabs } from "../category-tabs";
 import { Dispatch, SetStateAction } from "react";
 import { useTranslation } from "react-i18next";
 import { useChoppTheme } from "@/shared";

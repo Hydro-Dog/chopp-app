@@ -1,16 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Category } from "./types";
 import { fetchCategories } from "./actions";
+import { Category } from "./types";
 import { ErrorResponse, FETCH_STATUS } from "@/shared";
 
 export type CategoryState = {
-  categories?: Category;
+  categories: Category[] | [];
   fetchCategoriesStatus: FETCH_STATUS;
   fetchCategoriesError: ErrorResponse | null;
 };
 
 const initialState: CategoryState = {
-  categories: undefined,
+  categories: [],
   fetchCategoriesStatus: FETCH_STATUS.IDLE,
   fetchCategoriesError: null,
 };

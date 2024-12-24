@@ -62,7 +62,7 @@ export const DARK_THEME = {
     onPrimaryContainer: "rgb(187, 222, 251)", // Светло-синий
     secondary: "rgb(207, 216, 220)", // Светло-серый
     onSecondary: "rgb(33, 33, 33)", // Почти черный
-    secondaryContainer: "rgb(96, 125, 139)", // Серый
+    secondaryContainer: "rgb(117 161 201)", // Серый
     onSecondaryContainer: "rgb(255, 255, 255)", // Белый
     tertiary: "rgb(255, 224, 178)", // Светло-оранжевый
     onTertiary: "rgb(102, 60, 0)", // Темно-оранжевый
@@ -87,7 +87,7 @@ export const DARK_THEME = {
     scrim: "rgb(0, 0, 0)", // Скрим для модальных окон
     inverseSurface: "rgb(255, 255, 255)", // Белый
     inverseOnSurface: "rgb(66, 66, 66)", // Инверсный серый
-    inversePrimary: "rgb(25, 118, 210)", // Инверсный синий
+    inversePrimary: "rgb(33, 150, 243)", // Инверсный синий
     elevation: {
       level0: "transparent",
       level1: "rgb(55, 55, 55)",

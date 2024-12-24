@@ -8,7 +8,7 @@ export const fetchCategories = createAsyncThunk(
   "products/fetchCategories",
   async (_, thunkAPI) => {
     try {
-      const response = await axiosPrivate.get<Category>("/categories");
+      const response = await axiosPrivate.get<Category[]>("/categories");
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

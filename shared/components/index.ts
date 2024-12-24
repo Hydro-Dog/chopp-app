@@ -23,3 +23,4 @@ export * from "./chopp-view-item";
 export * from "./chopp-view-items";
 export * from "./chopp-ws-wrapper";
 export * from "./HelloWave";
+export * from "./chopp-tabs";

@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { View, StyleSheet, FlatList, useColorScheme } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Appbar, Searchbar } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { ProductGridItem } from "@/components/main";
-import { COLORS } from "@/constants/colors";
 import { CONFIG } from "@/my-config";
 
 import {
@@ -12,33 +11,33 @@ import {
   ChoppScreenLayout,
   Pagination,
   useSuperDispatch,
+  ChoppTabs,
+  SearchResponse,
 } from "@/shared";
+import { fetchCategories } from "@/store/slices/product-category-slice";
 import { fetchProducts, Product } from "@/store/slices/product-slice";
 import { AppDispatch, RootState } from "@/store/store";
-import { ProductTopBar } from "@/components/main/product-top-bar";
 
-const { Header } = Appbar;
 //TODO: Временный лимит нужный для тестов. Потом нужно его увеличить.
 const LIMIT = 8;
 const FIRST_PAGE_NUMBER = 1;
 
-const theme = useColorScheme() ?? "light";
-
 export default function TabHome() {
+  const { t } = useTranslation();
   const dispatch = useDispatch<AppDispatch>();
-  const superDispatch = useSuperDispatch();
+  const superDispatch = useSuperDispatch<SearchResponse<Product>, any>();
   const [pageProducts, setPageProducts] = useState<Product[]>([]);
   const [pagination, setPagination] = useState<Partial<Pagination>>();
   const { fetchProductsStatus, products } = useSelector(
     (state: RootState) => state.products,
   );
-  const [chosenCategory, setChosenCategory] = useState<number>(1);
+  const [chosenCategory, setChosenCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     dispatch(
       fetchProducts({
-        categoryId: chosenCategory,
+        categoryId: Number(chosenCategory),
         limit: LIMIT,
         pageNumber: FIRST_PAGE_NUMBER,
         search: searchQuery,
@@ -63,7 +62,7 @@ export default function TabHome() {
       return;
     superDispatch({
       action: fetchProducts({
-        categoryId: chosenCategory,
+        categoryId: Number(chosenCategory),
         limit: pagination?.limit,
         pageNumber: pagination?.pageNumber + 1,
         search: searchQuery,
@@ -77,14 +76,40 @@ export default function TabHome() {
       },
     });
   };
+
+  //--------------------------------------Catagories
+  const { categories } = useSelector((state: RootState) => state.categories);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, []);
+
+  //TODO: Подумать как быть с категорией Без категории  Добавить в админку уведомление, что эти товары показаны не будут
+  const options = [...categories]
+    .filter((item) => item.title !== "Без категории")
+    ?.sort((a, b) => a.order - b.order)
+    .map(({ id, title }) => ({ id, value: title }));
+
+  useEffect(() => {
+    if (!chosenCategory && options.length) {
+      setChosenCategory(options[0].id);
+    }
+  }, [chosenCategory, options]);
+
   return (
     <>
-      <ProductTopBar
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        chosenCategory={chosenCategory}
-        setChosenCategory={setChosenCategory}
+      <Searchbar
+        placeholder={t("search")}
+        onChangeText={setSearchQuery}
+        value={searchQuery}
       />
+
+      <ChoppTabs
+        value={chosenCategory}
+        onChange={(value) => setChosenCategory(value.id)}
+        options={options}
+      />
+
       <ChoppScreenLayout
         loading={
           fetchProductsStatus === FETCH_STATUS.LOADING &&
@@ -92,41 +117,23 @@ export default function TabHome() {
         }
       >
         <View style={styles.container}>
-          {/* TODO: Этот экран (CallStatusScreen + CurrentOrderDetails) мы перенесем куда-нибудь в другое место.
-             Типа в статус заказа   */}
-          {/* {currentOrderData ? (
-              <>
-                <CallStatusScreen
-                  currentStatus={currentOrderData?.statusData?.status}
-                  timeStamp={currentOrderData?.statusData?.timeStamp}
-                />
-
-                <CurrentOrderDetails order={currentOrderData} />
-              </>
-            ) : ( */}
-          <>
-            <FlatList
-              data={pageProducts}
-              keyExtractor={(item) => item.title}
-              numColumns={2}
-              onEndReached={onLoadMore}
-              style={{ flex: 1 }}
-              renderItem={({ item }) => (
-                <ProductGridItem
-                  key={item.id}
-                  title={item.title}
-                  imagePath={CONFIG.filesUrl + item.images?.[0]?.path}
-                  price={String(item.price)}
-                />
-              )}
-            />
-          </>
-          {/* )} */}
+          <FlatList
+            data={pageProducts}
+            keyExtractor={(item) => item.title}
+            numColumns={2}
+            onEndReached={onLoadMore}
+            style={{ flex: 1 }}
+            renderItem={({ item }) => (
+              <ProductGridItem
+                key={item.id}
+                title={item.title}
+                imagePath={CONFIG.filesUrl + item.images?.[0]?.path}
+                price={String(item.price)}
+              />
+            )}
+          />
         </View>
       </ChoppScreenLayout>
-      {/* <KeyboardAwareScrollView>
-        
-      </KeyboardAwareScrollView> */}
     </>
   );
 }
