@@ -1,15 +1,10 @@
 import { useEffect, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  useColorScheme,
-} from "react-native";
+import { View, StyleSheet, FlatList, useColorScheme } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { Appbar, Searchbar } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { ProductGridItem } from "@/components/main";
-import { COLORS } from "@/constants/сolors";
+import { COLORS } from "@/constants/colors";
 import { CONFIG } from "@/my-config";
 
 import {
@@ -61,7 +56,11 @@ export default function TabHome() {
   }, [products]);
 
   const onLoadMore = () => {
-    if (fetchProductsStatus === FETCH_STATUS.LOADING) return;
+    if (
+      fetchProductsStatus === FETCH_STATUS.LOADING ||
+      pageProducts.length === products?.totalItems
+    )
+      return;
     superDispatch({
       action: fetchProducts({
         categoryId: chosenCategory,
@@ -105,10 +104,7 @@ export default function TabHome() {
               data={pageProducts}
               keyExtractor={(item) => item.title}
               numColumns={2}
-              onEndReached={() => {
-                if (pageProducts.length !== products?.totalItems)
-                  return onLoadMore();
-              }}
+              onEndReached={onLoadMore}
               style={{ flex: 1 }}
               renderItem={({ item }) => (
                 <ProductGridItem
