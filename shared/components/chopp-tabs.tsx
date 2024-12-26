@@ -19,7 +19,7 @@ export const ChoppTabs = <T extends { id: string | number; value: string }>({
   const { theme } = useChoppTheme();
 
   return (
-    <Header>
+    <Header style={styles.header}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <View style={styles.container}>
           {options.map((item) => (
@@ -55,7 +55,8 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    height: 130,
+    backgroundColor: "transparent",
+    paddingInline: 15,
   },
   viewInHeader: {
     flex: 1,

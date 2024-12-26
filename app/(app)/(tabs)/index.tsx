@@ -102,6 +102,7 @@ export default function TabHome() {
         placeholder={t("search")}
         onChangeText={setSearchQuery}
         value={searchQuery}
+        style={styles.search}
       />
 
       <ChoppTabs
@@ -138,6 +139,9 @@ export default function TabHome() {
   );
 }
 const styles = StyleSheet.create({
+  search:{
+    margin: 10,
+  },
   container: {
     paddingHorizontal: 20,
     paddingVertical: 20,
