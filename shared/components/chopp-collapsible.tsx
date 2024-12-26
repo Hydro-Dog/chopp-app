@@ -22,7 +22,6 @@ export function ChoppCollapsible({
         <Ionicons
           name={isOpen ? "chevron-down" : "chevron-forward-outline"}
           size={18}
-          color={theme === "light" ? COLORS.light.icon : COLORS.dark.icon}
         />
         <ChoppThemedText type="defaultSemiBold">{title}</ChoppThemedText>
       </TouchableOpacity>

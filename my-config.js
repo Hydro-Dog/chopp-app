@@ -2,6 +2,7 @@
 export const CONFIG = __DEV__
   ? {
       apiUrl: "http://localhost:6001/api/",
+      filesUrl: "http://localhost:6001/"
       // apiUrl: "http://192.168.1.110:4004/api/",
     }
   : {

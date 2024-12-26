@@ -1,96 +1,155 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { View, StyleSheet, Image } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { View, StyleSheet, FlatList } from "react-native";
+import { Searchbar } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import LogoDark from "@/assets/logo-dark.png";
-import LogoLight from "@/assets/logo-light.png";
-import { CallStatusScreen, NewOrderForm } from "@/components/main";
-import { CurrentOrderDetails } from "@/components/main/current-order-details";
+import { ProductGridItem } from "@/components/main";
+import { CONFIG } from "@/my-config";
+
 import {
-  ChoppThemedText,
   FETCH_STATUS,
-  OrderStatus,
-  useChoppTheme,
-  useFilterWsMessages,
-  WS_MESSAGE_TYPE,
   ChoppScreenLayout,
+  Pagination,
+  useSuperDispatch,
+  ChoppTabs,
+  SearchResponse,
 } from "@/shared";
-import { fetchOrder, Order } from "@/store/slices/order-slice";
+import { fetchCategories } from "@/store/slices/product-category-slice";
+import { fetchProducts, Product } from "@/store/slices/product-slice";
 import { AppDispatch, RootState } from "@/store/store";
 
+//TODO: Временный лимит нужный для тестов. Потом нужно его увеличить.
+//TODO PROD: поставить лимит в 100
+const LIMIT = 8;
+const FIRST_PAGE_NUMBER = 1;
+
 export default function TabHome() {
-  const { theme } = useChoppTheme();
   const { t } = useTranslation();
-  const [currentOrderData, setCurrentOrderData] = useState<Order>();
-
   const dispatch = useDispatch<AppDispatch>();
-  const { currentOrder, fetchOrderStatus } = useSelector(
-    (state: RootState) => state.order,
+  const superDispatch = useSuperDispatch<SearchResponse<Product>, any>();
+  const [pageProducts, setPageProducts] = useState<Product[]>([]);
+  const [pagination, setPagination] = useState<
+    Pick<Pagination, "pageNumber" | "limit">
+  >({ pageNumber: FIRST_PAGE_NUMBER, limit: LIMIT });
+  const { fetchProductsStatus, products } = useSelector(
+    (state: RootState) => state.products,
   );
-
-  const { lastMessage } = useFilterWsMessages<OrderStatus>(
-    WS_MESSAGE_TYPE.ORDER_STATUS,
-  );
+  const [chosenCategory, setChosenCategory] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
-    dispatch(fetchOrder());
+    dispatch(
+      fetchProducts({
+        categoryId: Number(chosenCategory),
+        limit: LIMIT,
+        pageNumber: FIRST_PAGE_NUMBER,
+        search: searchQuery,
+      }),
+    );
+
+    setPagination({
+      limit: LIMIT,
+      pageNumber: FIRST_PAGE_NUMBER,
+    });
+  }, [dispatch, searchQuery, chosenCategory]);
+
+  useEffect(() => {
+    setPageProducts(products?.items || []);
+  }, [products]);
+
+  const onLoadMore = () => {
+    if (
+      fetchProductsStatus === FETCH_STATUS.LOADING ||
+      pageProducts.length === products?.totalItems
+    )
+      return;
+    superDispatch({
+      action: fetchProducts({
+        categoryId: Number(chosenCategory),
+        limit: pagination?.limit,
+        pageNumber: pagination.pageNumber + 1,
+        search: searchQuery,
+      }),
+      thenHandler: (response) => {
+        setPageProducts([...pageProducts, ...(response.items || [])]);
+        setPagination({
+          ...pagination,
+          pageNumber: pagination.pageNumber + 1,
+        });
+      },
+    });
+  };
+
+  const { categories } = useSelector((state: RootState) => state.categories);
+
+  useEffect(() => {
+    dispatch(fetchCategories());
   }, []);
 
+  //TODO: Подумать как быть с категорией Без категории  Добавить в админку уведомление, что эти товары показаны не будут
+  const options = [...categories]
+    .filter((item) => item.title !== "Без категории")
+    ?.sort((a, b) => a.order - b.order)
+    .map(({ id, title }) => ({ id, value: title }));
+
   useEffect(() => {
-    if (lastMessage && currentOrder) {
-      setCurrentOrderData({
-        ...currentOrder,
-        statusData: lastMessage.payload,
-      });
-    } else if (currentOrder) {
-      setCurrentOrderData({
-        ...currentOrder,
-      });
+    if (!chosenCategory && options.length) {
+      setChosenCategory(options[0].id);
     }
-  }, [currentOrder, lastMessage]);
+  }, [chosenCategory, options]);
 
   return (
-    <KeyboardAwareScrollView>
-      <ChoppScreenLayout loading={fetchOrderStatus === FETCH_STATUS.LOADING}>
-        <View style={styles.container}>
-          {currentOrderData ? (
-            <>
-              <CallStatusScreen
-                currentStatus={currentOrderData?.statusData?.status}
-                timeStamp={currentOrderData?.statusData?.timeStamp}
-              />
+    <>
+      <Searchbar
+        placeholder={t("search")}
+        onChangeText={setSearchQuery}
+        value={searchQuery}
+        style={styles.search}
+      />
 
-              <CurrentOrderDetails order={currentOrderData} />
-            </>
-          ) : (
-            <>
-              <Image
-                style={styles.logo}
-                source={theme.dark ? LogoDark : LogoLight}
+      <ChoppTabs
+        value={chosenCategory}
+        onChange={(value) => setChosenCategory(value.id)}
+        options={options}
+      />
+
+      <ChoppScreenLayout
+        loading={
+          fetchProductsStatus === FETCH_STATUS.LOADING &&
+          pageProducts.length === 0
+        }
+      >
+        <View style={styles.container}>
+          <FlatList
+            data={pageProducts}
+            keyExtractor={(item) => item.title}
+            numColumns={2}
+            onEndReached={onLoadMore}
+            style={{ flex: 1 }}
+            renderItem={({ item }) => (
+              <ProductGridItem
+                key={item.id}
+                title={item.title}
+                imagePath={CONFIG.filesUrl + item.images?.[0]?.path}
+                price={String(item.price)}
               />
-              <View style={styles.content}>
-                <ChoppThemedText type="subtitleBold">
-                  {t("order")}
-                </ChoppThemedText>
-                <NewOrderForm />
-              </View>
-            </>
-          )}
+            )}
+          />
         </View>
       </ChoppScreenLayout>
-    </KeyboardAwareScrollView>
+    </>
   );
 }
-
 const styles = StyleSheet.create({
+  search: {
+    margin: 10,
+  },
   container: {
     paddingHorizontal: 20,
     paddingVertical: 20,
     flex: 1,
     flexDirection: "column",
     justifyContent: "space-between",
-    paddingBottom: 64,
     alignItems: "center",
   },
   logo: {

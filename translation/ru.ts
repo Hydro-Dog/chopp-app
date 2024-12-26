@@ -23,6 +23,7 @@ export const ru = {
     submit: "Подтвердить",
   },
   ok: "Ок",
+  search: "Поиск",
   save: "Сохранить",
   cancel: "Отмена",
   back: "Назад",

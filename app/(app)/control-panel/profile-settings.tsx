@@ -3,11 +3,11 @@ import { StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import { useBoolean } from "usehooks-ts";
+import { UserProfile } from "@/components/settings/profile/user-profile";
+import { UserProfileForm } from "@/components/settings/profile/user-profile-form";
 import { useChoppTheme, ChoppScreenLayout } from "@/shared";
 import { fetchCurrentUser } from "@/store/slices/user-slice";
 import { AppDispatch, RootState } from "@/store/store";
-import { UserProfileForm } from "@/components/settings/profile/user-profile-form";
-import { UserProfile } from "@/components/settings/profile/user-profile";
 
 export default function ProfileSettings() {
   const { theme } = useChoppTheme();
@@ -28,7 +28,6 @@ export default function ProfileSettings() {
 
   return (
     <ChoppScreenLayout
-      redirectToRoot
       showLogo
       showBackButton
       customLogo={

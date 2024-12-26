@@ -1,14 +1,17 @@
 import { useTranslation } from "react-i18next";
 import { ChoppChip } from "./chopp-chip";
-import { CALL_STATUS } from "../enums/call-status";
 import { useChoppTheme } from "../context/chopp-theme-context";
+import { CALL_STATUS } from "../enums/call-status";
 
 type Props = {
   status?: CALL_STATUS;
   style?: Record<string, string | number>;
 };
 
-export const ChoppOrderStatusChip = ({ style, status = "" as CALL_STATUS }: Props) => {
+export const ChoppOrderStatusChip = ({
+  style,
+  status = "" as CALL_STATUS,
+}: Props) => {
   const { theme } = useChoppTheme();
   const { t } = useTranslation();
 
