@@ -28,7 +28,9 @@ export default function TabHome() {
   const dispatch = useDispatch<AppDispatch>();
   const superDispatch = useSuperDispatch<SearchResponse<Product>, any>();
   const [pageProducts, setPageProducts] = useState<Product[]>([]);
-  const [pagination, setPagination] = useState<Partial<Pagination>>();
+  const [pagination, setPagination] = useState<
+    Pick<Pagination, "pageNumber" | "limit">
+  >({ pageNumber: FIRST_PAGE_NUMBER, limit: LIMIT });
   const { fetchProductsStatus, products } = useSelector(
     (state: RootState) => state.products,
   );
@@ -65,14 +67,14 @@ export default function TabHome() {
       action: fetchProducts({
         categoryId: Number(chosenCategory),
         limit: pagination?.limit,
-        pageNumber: pagination?.pageNumber || 0 + 1,
+        pageNumber: pagination.pageNumber + 1,
         search: searchQuery,
       }),
       thenHandler: (response) => {
         setPageProducts([...pageProducts, ...(response.items || [])]);
         setPagination({
           ...pagination,
-          pageNumber: pagination?.pageNumber || 0 + 1,
+          pageNumber: pagination.pageNumber + 1,
         });
       },
     });
