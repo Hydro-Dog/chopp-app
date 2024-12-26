@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { View, StyleSheet, FlatList, useColorScheme } from "react-native";
-import { Appbar, Searchbar } from "react-native-paper";
+import { View, StyleSheet, FlatList } from "react-native";
+import { Searchbar } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { ProductGridItem } from "@/components/main";
 import { CONFIG } from "@/my-config";
@@ -19,6 +19,7 @@ import { fetchProducts, Product } from "@/store/slices/product-slice";
 import { AppDispatch, RootState } from "@/store/store";
 
 //TODO: Временный лимит нужный для тестов. Потом нужно его увеличить.
+//TODO PROD: поставить лимит в 100
 const LIMIT = 8;
 const FIRST_PAGE_NUMBER = 1;
 
@@ -64,20 +65,19 @@ export default function TabHome() {
       action: fetchProducts({
         categoryId: Number(chosenCategory),
         limit: pagination?.limit,
-        pageNumber: pagination?.pageNumber + 1,
+        pageNumber: pagination?.pageNumber || 0 + 1,
         search: searchQuery,
       }),
       thenHandler: (response) => {
         setPageProducts([...pageProducts, ...(response.items || [])]);
         setPagination({
           ...pagination,
-          pageNumber: pagination?.pageNumber + 1,
+          pageNumber: pagination?.pageNumber || 0 + 1,
         });
       },
     });
   };
 
-  //--------------------------------------Catagories
   const { categories } = useSelector((state: RootState) => state.categories);
 
   useEffect(() => {
@@ -139,7 +139,7 @@ export default function TabHome() {
   );
 }
 const styles = StyleSheet.create({
-  search:{
+  search: {
     margin: 10,
   },
   container: {
@@ -148,7 +148,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "space-between",
-    //paddingBottom: 64,
     alignItems: "center",
   },
   logo: {

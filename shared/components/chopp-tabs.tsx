@@ -53,26 +53,8 @@ const styles = StyleSheet.create({
   activeText: {
     color: "white", // Цвет текста для активного элемента
   },
-
   header: {
     backgroundColor: "transparent",
     paddingInline: 15,
-  },
-  viewInHeader: {
-    flex: 1,
-  },
-  search: {
-    // backgroundColor: COLORS.light.onPrimary,
-    marginBottom: 5,
-    borderWidth: 2,
-    // borderColor: COLORS.light.primaryContainer,
-    width: "95%",
-    height: 50,
-  },
-  centering: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingBottom: 10,
   },
 });

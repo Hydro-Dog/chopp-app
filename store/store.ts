@@ -1,6 +1,10 @@
 import { configureStore, Middleware } from "@reduxjs/toolkit";
 import { chatSlice, ChatState } from "./slices/chat-slice/index";
 import { orderSlice, OrderState } from "./slices/order-slice/index";
+import {
+  CategoryState,
+  productCategorySlice,
+} from "./slices/product-category-slice";
 import { productSlice, ProductsState } from "./slices/product-slice";
 import { userSlice, UserState } from "./slices/user-slice/index";
 import {
@@ -13,7 +17,6 @@ import {
   wsSlice,
   WsState,
 } from "./slices/ws-slice";
-import { CategoryState, productCategorySlice } from "./slices/product-category-slice";
 
 type WsAction = {
   type: string;
