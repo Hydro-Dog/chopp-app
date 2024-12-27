@@ -1,9 +1,9 @@
 import * as React from "react";
-import { useState } from "react";
 import { Dimensions } from "react-native";
 import { StyleSheet } from "react-native";
 import { Card, IconButton, Text } from "react-native-paper";
 import { useChoppTheme } from "@/shared";
+import { router } from "expo-router";
 
 const { width } = Dimensions.get("window");
 
@@ -14,13 +14,12 @@ interface Props {
 }
 export const ProductGridItem = ({ imagePath, title, price }: Props) => {
   const { theme } = useChoppTheme();
-  const [pressed, setPressed] = useState(false);
 
   return (
-    <Card style={styles.card}>
+    <Card style={styles.card} onPress={() => router.push("/product-card")}>
       <Card.Cover source={{ uri: imagePath }} />
       <Card.Content style={styles.content}>
-        <Text style={styles.title} numberOfLines={1} >
+        <Text style={styles.title} numberOfLines={1}>
           {title}
         </Text>
       </Card.Content>
