@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { View, StyleSheet, FlatList } from "react-native";
-import { Searchbar } from "react-native-paper";
+import { Badge, IconButton, Searchbar, useTheme } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { ProductGridItem } from "@/components/main";
 import { CONFIG } from "@/my-config";
@@ -13,10 +13,12 @@ import {
   useSuperDispatch,
   ChoppTabs,
   SearchResponse,
+  useChoppTheme,
 } from "@/shared";
 import { fetchCategories } from "@/store/slices/product-category-slice";
 import { fetchProducts, Product } from "@/store/slices/product-slice";
 import { AppDispatch, RootState } from "@/store/store";
+import { router } from "expo-router";
 
 //TODO: Временный лимит нужный для тестов. Потом нужно его увеличить.
 //TODO PROD: поставить лимит в 100
@@ -34,8 +36,12 @@ export default function TabHome() {
   const { fetchProductsStatus, products } = useSelector(
     (state: RootState) => state.products,
   );
+  const { basketItems } = useSelector((state: RootState) => state.basketItems);
+
   const [chosenCategory, setChosenCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const { theme } = useChoppTheme();
+  const [countGoods, setCountGoods] = useState(0);
 
   useEffect(() => {
     dispatch(
@@ -86,6 +92,14 @@ export default function TabHome() {
     dispatch(fetchCategories());
   }, []);
 
+  useEffect(() => {
+    let count = 0;
+    basketItems.forEach((item) => {
+      return (count += item.value);
+    });
+    setCountGoods(count);
+  }, [basketItems]);
+
   //TODO: Подумать как быть с категорией Без категории  Добавить в админку уведомление, что эти товары показаны не будут
   const options = [...categories]
     .filter((item) => item.title !== "Без категории")
@@ -100,12 +114,22 @@ export default function TabHome() {
 
   return (
     <>
-      <Searchbar
-        placeholder={t("search")}
-        onChangeText={setSearchQuery}
-        value={searchQuery}
-        style={styles.search}
-      />
+      <View style={styles.upConteiner}>
+        <Searchbar
+          placeholder={t("search")}
+          onChangeText={setSearchQuery}
+          value={searchQuery}
+          style={styles.search}
+        />
+        {countGoods ? <Badge style={styles.badge}>{countGoods}</Badge> : null}
+        <IconButton
+          icon="basket"
+          iconColor={theme.colors.primary}
+          style={styles.basket}
+          size={40}
+          onPress={() => router.push("/basket")}
+        />
+      </View>
 
       <ChoppTabs
         value={chosenCategory}
@@ -128,6 +152,7 @@ export default function TabHome() {
             style={{ flex: 1 }}
             renderItem={({ item }) => (
               <ProductGridItem
+                id={item.id}
                 key={item.id}
                 title={item.title}
                 imagePath={CONFIG.filesUrl + item.images?.[0]?.path}
@@ -141,12 +166,27 @@ export default function TabHome() {
   );
 }
 const styles = StyleSheet.create({
+  upConteiner:{
+    flexDirection:"row",
+    
+  },
+  badge: {
+    position: "absolute",
+    top: 12,
+    right: 16,
+    zIndex: 90,
+  },
+  basket: {
+    flex:1,
+  },
   search: {
-    margin: 10,
+    marginLeft: 10,
+    marginTop: 10,
+    
+    flex:4,
   },
   container: {
     paddingHorizontal: 20,
-    paddingVertical: 20,
     flex: 1,
     flexDirection: "column",
     justifyContent: "space-between",

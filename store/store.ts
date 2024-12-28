@@ -17,7 +17,7 @@ import {
   wsSlice,
   WsState,
 } from "./slices/ws-slice";
-
+import { basketItems, BasketState } from "./slices/basket-slice";
 type WsAction = {
   type: string;
   payload?: any;
@@ -89,6 +89,7 @@ export const store = configureStore({
     order: orderSlice.reducer,
     products: productSlice.reducer,
     categories: productCategorySlice.reducer,
+    basketItems: basketItems.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware().concat(wsMiddleware);
@@ -102,6 +103,7 @@ export type RootState = {
   order: OrderState;
   products: ProductsState;
   categories: CategoryState;
+  basketItems: BasketState;
 };
 
 export type AppDispatch = typeof store.dispatch;

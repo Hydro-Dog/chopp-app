@@ -4,8 +4,8 @@ import { Text, StyleSheet } from "react-native";
 export default function ProductCard() {
   return (
     <>
+      <ChoppBackButton redirectToRoot={true} style={styles.backButton} />
       <ChoppScreenLayout containerStyles={styles.container}>
-        <ChoppBackButton redirectToRoot={true} style={styles.backButton} />
         <Text>qweqwe</Text>
       </ChoppScreenLayout>
     </>
