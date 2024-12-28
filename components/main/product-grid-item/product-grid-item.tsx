@@ -1,9 +1,12 @@
 import * as React from "react";
-import { useState } from "react";
 import { Dimensions } from "react-native";
 import { StyleSheet } from "react-native";
 import { Card, IconButton, Text } from "react-native-paper";
 import { useChoppTheme } from "@/shared";
+import { router } from "expo-router";
+import { useDispatch, useSelector } from "react-redux";
+import { delBasketItems, setBasketItems } from "@/store/slices/basket-slice";
+import { RootState } from "@/store/store";
 
 const { width } = Dimensions.get("window");
 
@@ -11,33 +14,40 @@ interface Props {
   imagePath: string;
   title: string;
   price: string;
+  id: number;
 }
-export const ProductGridItem = ({ imagePath, title, price }: Props) => {
+export const ProductGridItem = ({ imagePath, title, price, id }: Props) => {
   const { theme } = useChoppTheme();
-  const [pressed, setPressed] = useState(false);
+  const dispatch = useDispatch();
+  const { basketItems } = useSelector((state: RootState) => state.basketItems);
 
   return (
-    <Card style={styles.card}>
+    <Card style={styles.card} onPress={() => router.push("/product-card")}>
       <Card.Cover source={{ uri: imagePath }} />
       <Card.Content style={styles.content}>
-        <Text style={styles.title} numberOfLines={1} >
+        <Text style={styles.title} numberOfLines={1}>
           {title}
         </Text>
       </Card.Content>
       <Card.Content style={styles.bottomPart}>
         <IconButton
           icon="minus"
-          disabled
+          disabled={
+            (basketItems.find((item) => item.key === id)?.value ?? 0) < 1
+          }
           iconColor={theme.colors.primary}
           size={22}
-          onPress={() => console.log("Pressed")}
+          onPress={() => dispatch(delBasketItems(id))}
         />
-        <Text variant="titleMedium">{price}₽</Text>
+        <Text variant="titleMedium">
+          {(basketItems.find((item) => item.key === id)?.value ?? 0) ||
+            `${price}₽`}
+        </Text>
         <IconButton
           icon="plus"
           iconColor={theme.colors.primary}
           size={22}
-          onPress={() => console.log("Pressed")}
+          onPress={() => dispatch(setBasketItems(id))}
         />
       </Card.Content>
     </Card>
