@@ -22,7 +22,7 @@ export default function LoginPage() {
           <LoginForm />
 
           <Button
-            mode="outlined"
+            mode="text"
             style={styles.registerButton}
             onPress={() => router.push("/registration")}
           >

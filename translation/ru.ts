@@ -17,6 +17,8 @@ export const ru = {
   signIn: "Вход",
   actions: {
     register: "Зарегистрироваться",
+    byEmail: "С помощью эл. почты",
+    byPhoneNumber: "По номеру телефона",
     signIn: "Войти",
     toSignIn: "Уже есть аккаунт",
     createAccount: 'Создать аккаунт',
