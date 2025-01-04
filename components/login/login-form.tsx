@@ -117,7 +117,6 @@ export const LoginForm = () => {
                 value={value}
                 onBlur={onBlur}
                 onChangeText={(text) => onChange(formatPhoneNumber(text))}
-                maxLength={12}
                 error={!!errors.phoneNumber}
               />
             )}
