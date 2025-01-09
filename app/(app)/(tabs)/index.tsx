@@ -19,6 +19,7 @@ import { fetchCategories } from "@/store/slices/product-category-slice";
 import { fetchProducts, Product } from "@/store/slices/product-slice";
 import { AppDispatch, RootState } from "@/store/store";
 import { router } from "expo-router";
+import { fetchGetShoppingCart } from "@/store/slices/basket-slice";
 
 //TODO: Временный лимит нужный для тестов. Потом нужно его увеличить.
 //TODO PROD: поставить лимит в 100
@@ -36,7 +37,9 @@ export default function TabHome() {
   const { fetchProductsStatus, products } = useSelector(
     (state: RootState) => state.products,
   );
-  const { basketItems } = useSelector((state: RootState) => state.basketItems);
+  const { basket } = useSelector((state: RootState) => state.basketItems);
+  
+  const { currentUser } = useSelector((state: RootState) => state.user); 
 
   const [chosenCategory, setChosenCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
@@ -93,12 +96,17 @@ export default function TabHome() {
   }, []);
 
   useEffect(() => {
-    let count = 0;
-    basketItems.forEach((item) => {
-      return (count += item.value);
-    });
-    setCountGoods(count);
-  }, [basketItems]);
+    console.log(currentUser);
+    dispatch(fetchGetShoppingCart({ productId: Number(currentUser?.id) }));
+  }, [currentUser]);
+
+  // useEffect(() => {
+  //   let count = 0;
+  //   basketItems.forEach((item) => {
+  //     return (count += item.value);
+  //   });
+  //   setCountGoods(count);
+  // }, [basketItems]);
 
   //TODO: Подумать как быть с категорией Без категории  Добавить в админку уведомление, что эти товары показаны не будут
   const options = [...categories]
@@ -127,7 +135,7 @@ export default function TabHome() {
           iconColor={theme.colors.primary}
           style={styles.basket}
           size={40}
-          onPress={() => router.push("/basket")}
+          onPress={() => router.push("shoppingCard")}
         />
       </View>
 
@@ -166,9 +174,8 @@ export default function TabHome() {
   );
 }
 const styles = StyleSheet.create({
-  upConteiner:{
-    flexDirection:"row",
-    
+  upConteiner: {
+    flexDirection: "row",
   },
   badge: {
     position: "absolute",
@@ -177,13 +184,13 @@ const styles = StyleSheet.create({
     zIndex: 90,
   },
   basket: {
-    flex:1,
+    flex: 1,
   },
   search: {
     marginLeft: 10,
     marginTop: 10,
-    
-    flex:4,
+
+    flex: 4,
   },
   container: {
     paddingHorizontal: 20,

@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { Slot, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import { useAuthGuard } from "@/hooks/use-auth-guard";
 import { useChoppTheme } from "@/shared";
 

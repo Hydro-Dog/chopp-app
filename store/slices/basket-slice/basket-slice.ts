@@ -1,51 +1,59 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { BasketItem } from "./types";
+import { createSlice } from "@reduxjs/toolkit";
+import { Basket} from "./types";
+import { FETCH_STATUS, ErrorResponse } from "@/shared";
+import {
+  fetchDelShoppingCart,
+  fetchGetShoppingCart,
+  fetchPutShoppingCart,
+} from "./actions";
 
 export type BasketState = {
-  basketItems: BasketItem[];
+  basket: Basket|undefined;
+  fetchShoppingCartStatus: FETCH_STATUS;
+  fetchShoppingCartError: ErrorResponse | null;
 };
 
 const initialState: BasketState = {
-  basketItems: [],
+  basket:undefined,
+  fetchShoppingCartStatus: FETCH_STATUS.IDLE,
+  fetchShoppingCartError: null,
 };
 
 export const basketItems = createSlice({
   name: "basketItems",
   initialState,
-  reducers: {
-    setBasketItems: (state, action: PayloadAction<number>) => {
-      const key = action.payload;
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchPutShoppingCart.pending, (state) => {
+        state.fetchShoppingCartStatus = FETCH_STATUS.LOADING;
+      })
+      .addCase(fetchPutShoppingCart.fulfilled, (state) => {
+        state.fetchShoppingCartStatus = FETCH_STATUS.SUCCESS;
+      })
+      .addCase(fetchPutShoppingCart.rejected, (state, action) => {
+        state.fetchShoppingCartStatus = FETCH_STATUS.ERROR;
+      })
 
-      const findItem = state.basketItems.find((item) => item.key === key);
+      .addCase(fetchGetShoppingCart.pending, (state) => {
+        state.fetchShoppingCartStatus = FETCH_STATUS.LOADING;
+      })
+      .addCase(fetchGetShoppingCart.fulfilled, (state, action) => {
+        state.fetchShoppingCartStatus = FETCH_STATUS.SUCCESS;
+        state.basket = action.payload;
+      })
+      .addCase(fetchGetShoppingCart.rejected, (state) => {
+        state.fetchShoppingCartStatus = FETCH_STATUS.ERROR;
+      })
 
-      if (findItem) {
-        findItem.value += 1;   
-      } else {
-        state.basketItems.push({ key, value: 1 });
-      }
-    },
-    delBasketItems: (state, action: PayloadAction<number>) => {
-      const key = action.payload;
-
-      const findItem = state.basketItems.find((item) => item.key === key);
-
-      if (findItem) {
-        if (findItem.value === 1) {
-          state.basketItems = state.basketItems.filter(
-            (item) => item.key !== key,
-          );
-        } else {
-          findItem.value -= 1;
-        }
-      }
-    },
-
-    clearBasketItems: (state) => {
-      state.basketItems = [];
-    },
+      .addCase(fetchDelShoppingCart.pending, (state) => {
+        state.fetchShoppingCartStatus = FETCH_STATUS.LOADING;
+      })
+      .addCase(fetchDelShoppingCart.fulfilled, (state) => {
+        state.fetchShoppingCartStatus = FETCH_STATUS.SUCCESS;
+      })
+      .addCase(fetchDelShoppingCart.rejected, (state) => {
+        state.fetchShoppingCartStatus = FETCH_STATUS.ERROR;
+      })
   },
 });
-
-export const { setBasketItems, delBasketItems, clearBasketItems } =
-  basketItems.actions;
-export default basketItems.reducer;

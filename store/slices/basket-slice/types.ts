@@ -1,4 +1,10 @@
 export type BasketItem = {
-  key: number;
-  value: number;
+  productId: number;
+  productName: string;
+  price: number;
+  quantity: number;
 };
+export type Basket = {
+  items: BasketItem[];
+  totalPrice: number;
+}

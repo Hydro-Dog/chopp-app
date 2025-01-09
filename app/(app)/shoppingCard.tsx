@@ -5,12 +5,12 @@ import { View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { useTranslation } from "react-i18next";
-import { clearBasketItems } from "@/store/slices/basket-slice";
 
 export default function Basket() {
   const dispatch = useDispatch();
   const { basketItems } = useSelector((state: RootState) => state.basketItems);
   const { t } = useTranslation();
+
   return (
     <>
       <ChoppBackButton style={styles.backButton} redirectToRoot={true} />
@@ -22,19 +22,19 @@ export default function Basket() {
           <Button
             style={styles.clearButton}
             mode="contained"
-            onPress={() => dispatch(clearBasketItems())}
+            //onPress={() => dispatch(clearBasketItems())}
           >
             {t("clearBasket")}
           </Button>
 
-          <FlatList
+          {/* <FlatList
             data={basketItems}
             keyExtractor={(item) => item.key.toString()}
             numColumns={1}
             style={{ flex: 1 }}
             renderItem={({ item }) => <Text>{item.key}</Text>}
-          />
-          {basketItems.length ? (
+          /> */}
+          {/* {basketItems.length ? (
             <Button
               style={styles.buyButton}
               mode="contained"
@@ -44,7 +44,7 @@ export default function Basket() {
             </Button>
           ) : (
             <Text style={styles.emptyBasket}>{t("emptyBasket")}</Text>
-          )}
+          )} */}
         </View>
       </ChoppScreenLayout>
     </>
