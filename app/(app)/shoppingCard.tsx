@@ -3,14 +3,21 @@ import { FlatList, StyleSheet } from "react-native";
 import { Button, Text } from "react-native-paper";
 import { View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { AppDispatch, RootState } from "@/store/store";
 import { useTranslation } from "react-i18next";
+import { useEffect } from "react";
+import {
+  fetchDelShoppingCart,
+  fetchPostShoppingCart,
+} from "@/store/slices/basket-slice";
 
 export default function Basket() {
-  const dispatch = useDispatch();
-  const { basketItems } = useSelector((state: RootState) => state.basketItems);
+  const dispatch = useDispatch<AppDispatch>();
+  const { basket } = useSelector((state: RootState) => state.basketItems);
   const { t } = useTranslation();
-
+  useEffect(() => {
+    dispatch(fetchPostShoppingCart({ basket }));
+  }, [basket]);
   return (
     <>
       <ChoppBackButton style={styles.backButton} redirectToRoot={true} />
@@ -22,19 +29,19 @@ export default function Basket() {
           <Button
             style={styles.clearButton}
             mode="contained"
-            //onPress={() => dispatch(clearBasketItems())}
+            onPress={() => dispatch(fetchDelShoppingCart())}
           >
             {t("clearBasket")}
           </Button>
 
-          {/* <FlatList
-            data={basketItems}
-            keyExtractor={(item) => item.key.toString()}
+          <FlatList
+            data={basket.items}
+            keyExtractor={(item) => item.productId.toString()}
             numColumns={1}
             style={{ flex: 1 }}
-            renderItem={({ item }) => <Text>{item.key}</Text>}
-          /> */}
-          {/* {basketItems.length ? (
+            renderItem={({ item }) => <Text>{item.productId}</Text>}
+          />
+          {basket.items.length ? (
             <Button
               style={styles.buyButton}
               mode="contained"
@@ -44,7 +51,7 @@ export default function Basket() {
             </Button>
           ) : (
             <Text style={styles.emptyBasket}>{t("emptyBasket")}</Text>
-          )} */}
+          )}
         </View>
       </ChoppScreenLayout>
     </>

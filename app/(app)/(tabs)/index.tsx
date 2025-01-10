@@ -19,7 +19,10 @@ import { fetchCategories } from "@/store/slices/product-category-slice";
 import { fetchProducts, Product } from "@/store/slices/product-slice";
 import { AppDispatch, RootState } from "@/store/store";
 import { router } from "expo-router";
-import { fetchGetShoppingCart } from "@/store/slices/basket-slice";
+import {
+  fetchGetShoppingCart,
+  fetchPostShoppingCart,
+} from "@/store/slices/basket-slice";
 
 //TODO: Временный лимит нужный для тестов. Потом нужно его увеличить.
 //TODO PROD: поставить лимит в 100
@@ -38,14 +41,11 @@ export default function TabHome() {
     (state: RootState) => state.products,
   );
   const { basket } = useSelector((state: RootState) => state.basketItems);
-  
-  const { currentUser } = useSelector((state: RootState) => state.user); 
 
   const [chosenCategory, setChosenCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const { theme } = useChoppTheme();
-  const [countGoods, setCountGoods] = useState(0);
-
+  const [totalQuantity, setTotalQuantity] = useState(0);
   useEffect(() => {
     dispatch(
       fetchProducts({
@@ -93,20 +93,17 @@ export default function TabHome() {
 
   useEffect(() => {
     dispatch(fetchCategories());
+    dispatch(fetchGetShoppingCart());
   }, []);
 
   useEffect(() => {
-    console.log(currentUser);
-    dispatch(fetchGetShoppingCart({ productId: Number(currentUser?.id) }));
-  }, [currentUser]);
-
-  // useEffect(() => {
-  //   let count = 0;
-  //   basketItems.forEach((item) => {
-  //     return (count += item.value);
-  //   });
-  //   setCountGoods(count);
-  // }, [basketItems]);
+    dispatch(fetchPostShoppingCart({ basket }));
+    let summ = 0;
+    basket.items.forEach((item) => {
+      summ += item.quantity;
+    });
+    setTotalQuantity(summ);
+  }, [basket]);
 
   //TODO: Подумать как быть с категорией Без категории  Добавить в админку уведомление, что эти товары показаны не будут
   const options = [...categories]
@@ -129,13 +126,17 @@ export default function TabHome() {
           value={searchQuery}
           style={styles.search}
         />
-        {countGoods ? <Badge style={styles.badge}>{countGoods}</Badge> : null}
+
+        {totalQuantity ? (
+          <Badge style={styles.badge}>{totalQuantity}</Badge>
+        ) : null}
+
         <IconButton
           icon="basket"
           iconColor={theme.colors.primary}
           style={styles.basket}
           size={40}
-          onPress={() => router.push("shoppingCard")}
+          onPress={() => router.push("/shoppingCard")}
         />
       </View>
 

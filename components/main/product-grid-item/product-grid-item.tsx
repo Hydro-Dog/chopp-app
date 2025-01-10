@@ -5,10 +5,10 @@ import { Badge, Card, IconButton, Text } from "react-native-paper";
 import { ChoppThemedText, useChoppTheme } from "@/shared";
 import { router } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/store/store";
+import { AppDispatch, RootState } from "@/store/store";
 import { COLORS } from "@/constants/Colors";
-import { fetchGetShoppingCart } from "@/store/slices/basket-slice/actions";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { delBasketItems, setBasketItems } from "@/store/slices/basket-slice";
 
 const { width } = Dimensions.get("window");
 
@@ -20,12 +20,17 @@ interface Props {
 }
 export const ProductGridItem = ({ imagePath, title, price, id }: Props) => {
   const { theme } = useChoppTheme();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+  const [inBasket, setInBasket] = useState(false);
   const { basket } = useSelector((state: RootState) => state.basketItems);
-
-  const setDisable = () => {
-    //return (basketItems?.value ?? 0) < 1;
-  };
+  useEffect(()=>{
+    if (basket?.items.find((item) => item.productId === id)) {
+      setInBasket(false);
+    }
+    else{
+      setInBasket(true)
+    }
+  }, [basket])
 
   return (
     <Card style={styles.card} onPress={() => router.push("/product-card")}>
@@ -36,25 +41,25 @@ export const ProductGridItem = ({ imagePath, title, price, id }: Props) => {
         </ChoppThemedText>
       </Card.Content>
       <Card.Content style={styles.bottomPart}>
-        {/* {basketItems?.value ?? 0 ? (
+        {!inBasket ? (
           <Badge size={20} style={styles.badge}>
-            {basketItems?.value ?? 0}
+            {basket?.items.find((item) => item.productId === id)?.quantity}
           </Badge>
-        ) : null} */}
+        ) : null}
 
         <IconButton
           icon="minus"
-          //disabled={setDisable()}
+          disabled={inBasket}
           iconColor={theme.colors.primary}
           size={22}
-          //onPress={}
+          onPress={() => dispatch(delBasketItems(id))}
         />
         <Text variant="titleMedium">{`${price}₽`}</Text>
         <IconButton
           icon="plus"
           iconColor={theme.colors.primary}
           size={22}
-          //onPress={}
+          onPress={() => dispatch(setBasketItems(id))}
         />
       </Card.Content>
     </Card>
