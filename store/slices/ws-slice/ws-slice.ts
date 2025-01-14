@@ -4,13 +4,11 @@ import { WsMessage } from "@/shared/types/ws-message";
 
 export type WsState = {
   wsConnected: boolean;
-  messages: WsMessage<unknown>[];
   error: any;
 };
 
 const initialState: WsState = {
   wsConnected: false,
-  messages: [],
   error: null,
 };
 
@@ -20,13 +18,6 @@ export const wsSlice = createSlice({
   reducers: {
     setWsConnected: (state, action: PayloadAction<boolean>) => {
       state.wsConnected = action.payload;
-    },
-    pushWsMessage: (state, action: PayloadAction<any>) => {
-      try {
-        state.messages.push(JSON.parse(action.payload));
-      } catch (error) {
-        console.error(error);
-      }
     },
     setWsError: (state, action: PayloadAction<any>) => {
       state.error = action.payload;
@@ -39,7 +30,6 @@ export const wsSlice = createSlice({
 
 export const {
   setWsConnected,
-  pushWsMessage,
   setWsError,
   wsConnect,
   wsDisconnect,

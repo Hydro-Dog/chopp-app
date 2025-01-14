@@ -14,7 +14,7 @@ export const WsWrapper = ({ children }: PropsWithChildren<object>) => {
       if (accessToken) {
         dispatch(
           wsConnect({
-            url: `${CONFIG.apiUrl}/ws?token=${accessToken}`,
+            url: `${CONFIG.wsUrl}`,
           }),
         );
       }

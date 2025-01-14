@@ -9,16 +9,11 @@ type Args = {
 };
 
 export const useNewIncomingMessageChatHandler = ({ flatListRef }: Args) => {
-  const { setMessages } = useChatsContext();
   const { lastMessage: newMessage } = useFilterWsMessages<ChatMessage>(
     WS_MESSAGE_TYPE.MESSAGE,
   );
 
   useEffect(() => {
-    setMessages((prev) => [...prev, newMessage?.payload]);
-
-    //TODO: скролить только если до конца проскролен список
-
     setTimeout(() => {
       flatListRef.current.scrollToEnd({ animated: true });
     }, 100);

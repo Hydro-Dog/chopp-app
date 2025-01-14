@@ -2,20 +2,18 @@ import { useSelector } from "react-redux";
 import { RootState } from "@/store/store";
 import { WsMessage } from "../types/ws-message";
 import { WS_MESSAGE_TYPE } from "../types/ws-message-type";
+import { useEffect } from "react";
 
 export const useFilterWsMessages = <T>(type: WS_MESSAGE_TYPE) => {
-  // Используем селектор с указанием, что messages это массив WsMessage<T>
-  const messages = useSelector<RootState, WsMessage<T>[]>(
-    (state: RootState) => state.ws.messages,
-  );
+  const { chatMessages } = useSelector((state: RootState) => state.chat);
 
-  // Фильтруем сообщения по типу
-  const typedMessages = messages.filter(
-    (item: WsMessage<T>) => item.type === type,
-  );
+  // // Фильтруем сообщения по типу
+  // const typedMessages = chatMessages.filter(
+  //   (item: WsMessage<T>) => item.type === type,
+  // );
 
   // Получаем последнее сообщение из отфильтрованных
-  const lastMessage = typedMessages[typedMessages.length - 1] || null;
+  const lastMessage = chatMessages[chatMessages.length - 1] || null;
 
-  return { messages: typedMessages, lastMessage };
+  return { messages: chatMessages, lastMessage };
 };
