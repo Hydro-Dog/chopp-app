@@ -1,54 +1,69 @@
-import { ChoppBackButton, ChoppScreenLayout } from "@/shared";
-import { FlatList, StyleSheet } from "react-native";
-import { Button, Text } from "react-native-paper";
-import { View } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store/store";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useEffect } from "react";
+import { FlatList, StyleSheet } from "react-native";
+import { View } from "react-native";
+import { Button, IconButton, Text } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
+import { BasketProductCard } from "@/components/basket";
+import {
+  ChoppBackButton,
+  ChoppScreenLayout,
+  ChoppThemedText,
+  useChoppTheme,
+} from "@/shared";
 import {
   fetchDelShoppingCart,
-  fetchPostShoppingCart,
+  fetchGetShoppingCart,
 } from "@/store/slices/basket-slice";
+
+import { AppDispatch, RootState } from "@/store/store";
 
 export default function Basket() {
   const dispatch = useDispatch<AppDispatch>();
+  const { theme } = useChoppTheme();
   const { basket } = useSelector((state: RootState) => state.basketItems);
   const { t } = useTranslation();
   useEffect(() => {
-    dispatch(fetchPostShoppingCart({ basket }));
-  }, [basket]);
+    dispatch(fetchGetShoppingCart());
+  }, []);
+
   return (
     <>
       <ChoppBackButton style={styles.backButton} redirectToRoot={true} />
-      <Text style={styles.header} variant="headlineLarge">
-        {t("basket")}
-      </Text>
+      <View style={styles.upperPanel}>
+        <Text style={styles.header} variant="headlineLarge">
+          {t("basket")}
+        </Text>
+        <IconButton
+          icon="delete"
+          iconColor={theme.colors.primary}
+          size={35}
+          onPress={() => dispatch(fetchDelShoppingCart())}
+        />
+      </View>
       <ChoppScreenLayout>
         <View style={{ flex: 1 }}>
-          <Button
-            style={styles.clearButton}
-            mode="contained"
-            onPress={() => dispatch(fetchDelShoppingCart())}
-          >
-            {t("clearBasket")}
-          </Button>
-
-          <FlatList
-            data={basket.items}
-            keyExtractor={(item) => item.productId.toString()}
-            numColumns={1}
-            style={{ flex: 1 }}
-            renderItem={({ item }) => <Text>{item.productId}</Text>}
-          />
-          {basket.items.length ? (
-            <Button
-              style={styles.buyButton}
-              mode="contained"
-              onPress={() => console.log("Pressed")}
-            >
-              {t("toOrder")}
-            </Button>
+          <View style={styles.container}>
+            <FlatList
+              data={basket.items}
+              keyExtractor={(item) => item.product.id.toString()}
+              numColumns={1}
+              renderItem={({ item }) => <BasketProductCard {...item} />}
+            />
+          </View>
+          {basket.quantity ? (
+            <View style={styles.bottomPanel}>
+              <ChoppThemedText style={{ fontSize: 20 }}>
+                {basket.totalPrice}{t("currency")}
+              </ChoppThemedText>
+              <Button
+                style={styles.buyButton}
+                mode="contained"
+                onPress={() => console.log("Pressed")}
+              >
+                {t("toOrder")}
+              </Button>
+            </View>
           ) : (
             <Text style={styles.emptyBasket}>{t("emptyBasket")}</Text>
           )}
@@ -58,6 +73,25 @@ export default function Basket() {
   );
 }
 const styles = StyleSheet.create({
+  upperPanel:{
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  bottomPanel: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingInline: 15,
+    paddingBlock: 10,
+  },
+  container: {
+    paddingHorizontal: 20,
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   emptyBasket: {
     textAlign: "center",
     padding: 15,

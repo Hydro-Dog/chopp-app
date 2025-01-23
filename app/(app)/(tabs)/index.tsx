@@ -20,9 +20,8 @@ import { fetchProducts, Product } from "@/store/slices/product-slice";
 import { AppDispatch, RootState } from "@/store/store";
 import { router } from "expo-router";
 import {
-  fetchGetShoppingCart,
-  fetchPostShoppingCart,
-} from "@/store/slices/basket-slice";
+   fetchGetShoppingCart,
+ } from "@/store/slices/basket-slice";
 
 //TODO: Временный лимит нужный для тестов. Потом нужно его увеличить.
 //TODO PROD: поставить лимит в 100
@@ -45,7 +44,6 @@ export default function TabHome() {
   const [chosenCategory, setChosenCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const { theme } = useChoppTheme();
-  const [totalQuantity, setTotalQuantity] = useState(0);
   useEffect(() => {
     dispatch(
       fetchProducts({
@@ -96,15 +94,6 @@ export default function TabHome() {
     dispatch(fetchGetShoppingCart());
   }, []);
 
-  useEffect(() => {
-    dispatch(fetchPostShoppingCart({ basket }));
-    let summ = 0;
-    basket.items.forEach((item) => {
-      summ += item.quantity;
-    });
-    setTotalQuantity(summ);
-  }, [basket]);
-
   //TODO: Подумать как быть с категорией Без категории  Добавить в админку уведомление, что эти товары показаны не будут
   const options = [...categories]
     .filter((item) => item.title !== "Без категории")
@@ -119,7 +108,7 @@ export default function TabHome() {
 
   return (
     <>
-      <View style={styles.upConteiner}>
+      <View style={styles.upContainer}>
         <Searchbar
           placeholder={t("search")}
           onChangeText={setSearchQuery}
@@ -127,8 +116,8 @@ export default function TabHome() {
           style={styles.search}
         />
 
-        {totalQuantity ? (
-          <Badge style={styles.badge}>{totalQuantity}</Badge>
+        {basket.quantity ? (
+          <Badge style={styles.badge}>{basket.quantity}</Badge>
         ) : null}
 
         <IconButton
@@ -175,7 +164,7 @@ export default function TabHome() {
   );
 }
 const styles = StyleSheet.create({
-  upConteiner: {
+  upContainer: {
     flexDirection: "row",
   },
   badge: {

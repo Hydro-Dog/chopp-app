@@ -14,7 +14,7 @@ export type BasketState = {
 };
 
 const initialState: BasketState = {
-  basket: { items: [] },
+  basket: { items: [], quantity: 0, totalPrice: 0 },
   fetchShoppingCartStatus: FETCH_STATUS.IDLE,
   fetchShoppingCartError: null,
 };
@@ -22,46 +22,18 @@ const initialState: BasketState = {
 export const basketItems = createSlice({
   name: "basketItems",
   initialState,
-  reducers: {
-    setBasketItems: (state, action) => {
-      const key = action.payload;
-      const findItem = state.basket.items.find(
-        (item) => item.productId === key,
-      );
-
-      if (findItem) {
-        findItem.quantity += 1;
-      } else {
-        state.basket.items.push({ productId: key, quantity: 1 });
-      }
-    },
-    delBasketItems: (state, action) => {
-      const key = action.payload;
-
-      const findItem = state.basket.items.find(
-        (item) => item.productId === key,
-      );
-
-      if (findItem) {
-        if (findItem.quantity === 1) {
-          state.basket.items = state.basket.items.filter(
-            (item) => item.productId !== key,
-          );
-        } else {
-          findItem.quantity -= 1;
-        }
-      }
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchPostShoppingCart.pending, (state) => {
         state.fetchShoppingCartStatus = FETCH_STATUS.LOADING;
       })
-      .addCase(fetchPostShoppingCart.fulfilled, (state) => {
+      .addCase(fetchPostShoppingCart.fulfilled, (state, action) => {
         state.fetchShoppingCartStatus = FETCH_STATUS.SUCCESS;
+        console.log(action.payload);
+        state.basket = action.payload || { items: [] };
       })
-      .addCase(fetchPostShoppingCart.rejected, (state, action) => {
+      .addCase(fetchPostShoppingCart.rejected, (state) => {
         state.fetchShoppingCartStatus = FETCH_STATUS.ERROR;
       })
 
@@ -70,8 +42,7 @@ export const basketItems = createSlice({
       })
       .addCase(fetchGetShoppingCart.fulfilled, (state, action) => {
         state.fetchShoppingCartStatus = FETCH_STATUS.SUCCESS;
-        console.log(action.payload);
-        //state.basket = action.payload || { items: [] };
+        state.basket = action.payload || { items: [] };
       })
       .addCase(fetchGetShoppingCart.rejected, (state) => {
         state.fetchShoppingCartStatus = FETCH_STATUS.ERROR;
@@ -82,12 +53,10 @@ export const basketItems = createSlice({
       })
       .addCase(fetchDelShoppingCart.fulfilled, (state) => {
         state.fetchShoppingCartStatus = FETCH_STATUS.SUCCESS;
+        state.basket = { items: [], quantity: 0, totalPrice: 0 };
       })
       .addCase(fetchDelShoppingCart.rejected, (state) => {
         state.fetchShoppingCartStatus = FETCH_STATUS.ERROR;
       });
   },
 });
-export const { setBasketItems, delBasketItems } =
-  basketItems.actions;
-export default basketItems.reducer;

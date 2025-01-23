@@ -6,9 +6,10 @@ import { ChoppThemedText, useChoppTheme } from "@/shared";
 import { router } from "expo-router";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
-import { COLORS } from "@/constants/Colors";
+import { COLORS } from "@/constants/colors";
 import { useEffect, useState } from "react";
-import { delBasketItems, setBasketItems } from "@/store/slices/basket-slice";
+import { fetchPostShoppingCart } from "@/store/slices/basket-slice";
+import { useTranslation } from "react-i18next";
 
 const { width } = Dimensions.get("window");
 
@@ -19,18 +20,18 @@ interface Props {
   id: number;
 }
 export const ProductGridItem = ({ imagePath, title, price, id }: Props) => {
+    const { t } = useTranslation();
   const { theme } = useChoppTheme();
   const dispatch = useDispatch<AppDispatch>();
   const [inBasket, setInBasket] = useState(false);
   const { basket } = useSelector((state: RootState) => state.basketItems);
-  useEffect(()=>{
-    if (basket?.items.find((item) => item.productId === id)) {
+  useEffect(() => {
+    if (basket?.items.find((item) => item.product.id === id)) {
       setInBasket(false);
+    } else {
+      setInBasket(true);
     }
-    else{
-      setInBasket(true)
-    }
-  }, [basket])
+  }, [basket]);
 
   return (
     <Card style={styles.card} onPress={() => router.push("/product-card")}>
@@ -43,7 +44,7 @@ export const ProductGridItem = ({ imagePath, title, price, id }: Props) => {
       <Card.Content style={styles.bottomPart}>
         {!inBasket ? (
           <Badge size={20} style={styles.badge}>
-            {basket?.items.find((item) => item.productId === id)?.quantity}
+            {basket.items.find((item) => item.product.id === id)?.quantity}
           </Badge>
         ) : null}
 
@@ -52,14 +53,18 @@ export const ProductGridItem = ({ imagePath, title, price, id }: Props) => {
           disabled={inBasket}
           iconColor={theme.colors.primary}
           size={22}
-          onPress={() => dispatch(delBasketItems(id))}
+          onPress={() =>
+            dispatch(fetchPostShoppingCart({ basket, item: id, append: false }))
+          }
         />
-        <Text variant="titleMedium">{`${price}₽`}</Text>
+        <Text variant="titleMedium">{price}{t("currency")}</Text>
         <IconButton
           icon="plus"
           iconColor={theme.colors.primary}
           size={22}
-          onPress={() => dispatch(setBasketItems(id))}
+          onPress={() =>
+            dispatch(fetchPostShoppingCart({ basket, item: id, append: true }))
+          }
         />
       </Card.Content>
     </Card>
