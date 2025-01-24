@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { View, StyleSheet, FlatList } from "react-native";
-import { Badge, IconButton, Searchbar, useTheme } from "react-native-paper";
+import { Badge, IconButton, Searchbar } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { ProductGridItem } from "@/components/main";
 import { CONFIG } from "@/my-config";
@@ -20,8 +20,8 @@ import { fetchProducts, Product } from "@/store/slices/product-slice";
 import { AppDispatch, RootState } from "@/store/store";
 import { router } from "expo-router";
 import {
-   fetchGetShoppingCart,
- } from "@/store/slices/basket-slice";
+  fetchGetShoppingCart,
+} from "@/store/slices/basket-slice";
 
 //TODO: Временный лимит нужный для тестов. Потом нужно его увеличить.
 //TODO PROD: поставить лимит в 100
@@ -40,7 +40,6 @@ export default function TabHome() {
     (state: RootState) => state.products,
   );
   const { basket } = useSelector((state: RootState) => state.basketItems);
-
   const [chosenCategory, setChosenCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const { theme } = useChoppTheme();

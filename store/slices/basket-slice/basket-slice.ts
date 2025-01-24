@@ -30,7 +30,6 @@ export const basketItems = createSlice({
       })
       .addCase(fetchPostShoppingCart.fulfilled, (state, action) => {
         state.fetchShoppingCartStatus = FETCH_STATUS.SUCCESS;
-        console.log(action.payload);
         state.basket = action.payload || { items: [] };
       })
       .addCase(fetchPostShoppingCart.rejected, (state) => {

@@ -8,8 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store/store";
 import { COLORS } from "@/constants/colors";
 import { useEffect, useState } from "react";
-import { fetchPostShoppingCart } from "@/store/slices/basket-slice";
 import { useTranslation } from "react-i18next";
+import { Decrement, Increment } from "@/utils";
 
 const { width } = Dimensions.get("window");
 
@@ -20,11 +20,12 @@ interface Props {
   id: number;
 }
 export const ProductGridItem = ({ imagePath, title, price, id }: Props) => {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
   const { theme } = useChoppTheme();
   const dispatch = useDispatch<AppDispatch>();
   const [inBasket, setInBasket] = useState(false);
   const { basket } = useSelector((state: RootState) => state.basketItems);
+
   useEffect(() => {
     if (basket?.items.find((item) => item.product.id === id)) {
       setInBasket(false);
@@ -53,18 +54,17 @@ export const ProductGridItem = ({ imagePath, title, price, id }: Props) => {
           disabled={inBasket}
           iconColor={theme.colors.primary}
           size={22}
-          onPress={() =>
-            dispatch(fetchPostShoppingCart({ basket, item: id, append: false }))
-          }
+          onPress={() => Decrement(id, basket, dispatch)}
         />
-        <Text variant="titleMedium">{price}{t("currency")}</Text>
+        <Text variant="titleMedium">
+          {price}
+          {t("currency")}
+        </Text>
         <IconButton
           icon="plus"
           iconColor={theme.colors.primary}
           size={22}
-          onPress={() =>
-            dispatch(fetchPostShoppingCart({ basket, item: id, append: true }))
-          }
+          onPress={() => Increment(id, basket, dispatch)}
         />
       </Card.Content>
     </Card>

@@ -25,6 +25,7 @@ export const ru = {
   ok: "Ок",
   basket:"Корзина",
   count:"шт.",
+  chooseAll:"Выбрать все",
   currency:"₽",
   inAll:"Общая стоимость",
   emptyBasket:"Корзина пуста",
