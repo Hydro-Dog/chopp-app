@@ -20,6 +20,8 @@ import { addToStorage } from "@/shared/utils/async-storage-methods";
 import { formatPhoneNumber } from "@/shared/utils/format-phone-number";
 import { login, UserLoginDTO } from "@/store/slices/user-slice/index";
 import { RootState, AppDispatch } from "@/store/store";
+import { useState } from "react";
+import { LoginType } from "./types";
 
 export const LoginForm = () => {
   const { setAuth, setIsAsyncStorageLoaded } = useAuthContext();
@@ -32,17 +34,28 @@ export const LoginForm = () => {
   const dispatch = useDispatch<AppDispatch>();
   const { pushNewNotification } = useChoppSnackbar();
 
+  const [loginType, setLoginType] = useState<LoginType>(LoginType.EMAIL);
+  const isEmailLoginType = loginType === LoginType.EMAIL;
+
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<LoginFormType>({
-    resolver: zodResolver(loginSchema(t)),
+    resolver: zodResolver(loginSchema(t, loginType)),
     defaultValues: {
       phoneNumber: "",
       password: "",
     },
   });
+
+  const handleChangeLoginType = () => {
+    if (isEmailLoginType) {
+      setLoginType(LoginType.PHONE_NUMBER);
+    } else {
+      setLoginType(LoginType.EMAIL);
+    }
+  };
 
   const onSubmit: SubmitHandler<LoginFormType> = async (data) => {
     try {
@@ -73,22 +86,43 @@ export const LoginForm = () => {
 
   return (
     <View>
-      <ChoppFormField errorMessage={errors.phoneNumber?.message}>
-        <Controller
-          control={control}
-          name="phoneNumber"
-          render={({ field: { onChange, onBlur, value } }) => (
-            <TextInput
-              mode="outlined"
-              label={t("phoneNumber")}
-              value={value}
-              onBlur={onBlur}
-              onChangeText={(text) => onChange(formatPhoneNumber(text))}
-              error={!!errors.phoneNumber}
-            />
-          )}
-        />
-      </ChoppFormField>
+      {isEmailLoginType && (
+        <ChoppFormField errorMessage={errors.email?.message}>
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                mode="outlined"
+                label="Email"
+                value={value}
+                onBlur={onBlur}
+                onChangeText={onChange}
+                error={!!errors.email}
+              />
+            )}
+          />
+        </ChoppFormField>
+      )}
+
+      {!isEmailLoginType && (
+        <ChoppFormField errorMessage={errors.phoneNumber?.message}>
+          <Controller
+            control={control}
+            name="phoneNumber"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                mode="outlined"
+                label={t("phoneNumber")}
+                value={value}
+                onBlur={onBlur}
+                onChangeText={(text) => onChange(formatPhoneNumber(text))}
+                error={!!errors.phoneNumber}
+              />
+            )}
+          />
+        </ChoppFormField>
+      )}
 
       <ChoppFormField
         errorMessage={errors.password?.message}
@@ -129,6 +163,14 @@ export const LoginForm = () => {
       >
         {t("actions.signIn")}
       </Button>
+
+      <Button
+        mode="outlined"
+        style={styles.loginTypeButton}
+        onPress={handleChangeLoginType}
+      >
+        {isEmailLoginType ? t("actions.byPhoneNumber") : t("actions.byEmail")}
+      </Button>
     </View>
   );
 };
@@ -136,5 +178,8 @@ export const LoginForm = () => {
 const styles = StyleSheet.create({
   loginButton: {
     marginTop: 24,
+  },
+  loginTypeButton: {
+    marginTop: 20,
   },
 });

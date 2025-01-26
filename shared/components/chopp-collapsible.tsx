@@ -3,7 +3,6 @@ import { StyleSheet, TouchableOpacity, useColorScheme } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { ChoppThemedText } from "./chopp-themed-text";
 import { ChoppThemedView } from "./chopp-themed-view";
-import { COLORS } from "@/constants/colors";
 
 export function ChoppCollapsible({
   children,

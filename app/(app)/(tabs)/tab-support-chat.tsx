@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -27,7 +27,7 @@ export default function TabSupportChat() {
   const { theme } = useChoppTheme();
   const flatListRef = useRef<FlatList<ChatMessage> | null>(null);
   const [text, setText] = useState("");
-  const { messages, setMessages } = useChatsContext();
+  const { chatMessages, setMessages } = useChatsContext();
 
   const dispatch = useDispatch<AppDispatch>();
   const { currentUser } = useSelector((state: RootState) => state.user);
@@ -38,9 +38,16 @@ export default function TabSupportChat() {
   // const { lastMessage: typingStatus } = useFilterWsMessages(
   //   WS_MESSAGE_TYPE.TYPING,
   // );
-  const { lastMessage: newMessage } = useFilterWsMessages<ChatMessage>(
-    WS_MESSAGE_TYPE.MESSAGE,
-  );
+  // const { lastMessage: newMessage } = useFilterWsMessages<ChatMessage>(
+  //   WS_MESSAGE_TYPE.MESSAGE,
+  // );
+
+  // useEffect(() => {
+  //   setTimeout(() => {
+  //     flatListRef.current?.scrollToEnd({ animated: true });
+  //     // TODO: какой-нибудь requestidleCallback для react-native прикрутить бы или на последнем рефе завязаться
+  //   }, 1000);
+  // }, [flatListRef]);
 
   useNewIncomingMessageChatHandler({ flatListRef });
 
@@ -61,9 +68,7 @@ export default function TabSupportChat() {
       dispatch(wsSend(newMessage));
       setText(""); // Очистка TextArea после отправки сообщения
       //Обновить открытые сообщения
-      setMessages((prev) => {
-        return [...prev, newMessage.payload];
-      });
+      setMessages([...chatMessages, newMessage.payload]);
 
       setTimeout(() => {
         flatListRef.current?.scrollToEnd({ animated: true });

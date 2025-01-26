@@ -14,8 +14,7 @@ type Props = {
 };
 
 export const Chat = forwardRef<FlatList<ChatMessage>, Props>((_, ref) => {
-  const { messages, setMessages } = useChatsContext();
-  const { chatMessages } = useSelector((state: RootState) => state.chat);
+  const { chatMessages } = useChatsContext();
   // const [messages, setMessages] = useState<ChatMessage[]>([]);
   const { currentUser } = useSelector((state: RootState) => state.user);
 
@@ -48,12 +47,12 @@ export const Chat = forwardRef<FlatList<ChatMessage>, Props>((_, ref) => {
       duration: 500,
       useNativeDriver: true,
     }).start();
-  }, [messages]);
+  }, [chatMessages]);
 
   return (
     <FlatList
       ref={ref}
-      data={messages}
+      data={chatMessages}
       //   onEndReached={handleReachEnd}
       // onEndReachedThreshold={0.5}  // Вызывается когда пользователь достигает 50% конца списка
 

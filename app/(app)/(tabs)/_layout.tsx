@@ -23,26 +23,26 @@ export default function TabLayout() {
     WS_MESSAGE_TYPE.MESSAGE,
   );
   const dispatch = useDispatch<AppDispatch>();
-  const { chatStats, setChatStats } = useChatsContext();
+  // const { chatStats, setChatStats } = useChatsContext();
 
   useFetchMessages();
-  useFetchChatStats();
-  useReadAllChatMessages();
+  // useFetchChatStats();
+  // useReadAllChatMessages();
 
   useEffect(() => {
     dispatch(fetchCurrentUser());
   }, [dispatch]);
 
   //TODO: вынести в хук
-  useEffect(() => {
-    setChatStats((prev) => {
-      return {
-        ...prev,
-        unRead: prev.unRead + 1,
-        total: prev.total + 1,
-      };
-    });
-  }, [newMessage]);
+  // useEffect(() => {
+  //   setChatStats((prev) => {
+  //     return {
+  //       ...prev,
+  //       unRead: prev.unRead + 1,
+  //       total: prev.total + 1,
+  //     };
+  //   });
+  // }, [newMessage]);
 
   return (
     <Tabs
@@ -76,7 +76,7 @@ export default function TabLayout() {
             <TabBarIcon
               name={focused ? "chatbox-ellipses" : "chatbox-ellipses-outline"}
               color={color}
-              badge={chatStats?.unRead ? chatStats?.unRead : ""}
+              // badge={chatStats?.unRead ? chatStats?.unRead : ""}
             />
           ),
         }}
