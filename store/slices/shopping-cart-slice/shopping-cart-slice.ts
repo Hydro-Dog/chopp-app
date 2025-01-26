@@ -1,9 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-  delShoppingCart,
-  fetchShoppingCart,
-  postShoppingCart,
-} from "./actions";
+import { clearShoppingCart, fetchShoppingCart, postShoppingCart } from "./actions";
 import { ShoppingCart } from "./types";
 import { FETCH_STATUS, ErrorResponse } from "@/shared";
 
@@ -15,7 +11,8 @@ export type ShoppingCartState = {
 
 const initialState: ShoppingCartState = {
   shoppingCart: { items: [], quantity: 0, totalPrice: 0 },
-  fetchShoppingCartStatus: FETCH_STATUS.IDLE,
+  //TODO: залагал компилятор, выдавал ошибку из-за FETCH_STATUS
+  fetchShoppingCartStatus: "idle",
   fetchShoppingCartError: null,
 };
 
@@ -35,7 +32,6 @@ export const shoppingCart = createSlice({
       .addCase(postShoppingCart.rejected, (state) => {
         state.fetchShoppingCartStatus = FETCH_STATUS.ERROR;
       })
-
       .addCase(fetchShoppingCart.pending, (state) => {
         state.fetchShoppingCartStatus = FETCH_STATUS.LOADING;
       })
@@ -46,15 +42,14 @@ export const shoppingCart = createSlice({
       .addCase(fetchShoppingCart.rejected, (state) => {
         state.fetchShoppingCartStatus = FETCH_STATUS.ERROR;
       })
-
-      .addCase(delShoppingCart.pending, (state) => {
+      .addCase(clearShoppingCart.pending, (state) => {
         state.fetchShoppingCartStatus = FETCH_STATUS.LOADING;
       })
-      .addCase(delShoppingCart.fulfilled, (state) => {
+      .addCase(clearShoppingCart.fulfilled, (state) => {
         state.fetchShoppingCartStatus = FETCH_STATUS.SUCCESS;
         state.shoppingCart = { items: [], quantity: 0, totalPrice: 0 };
       })
-      .addCase(delShoppingCart.rejected, (state) => {
+      .addCase(clearShoppingCart.rejected, (state) => {
         state.fetchShoppingCartStatus = FETCH_STATUS.ERROR;
       });
   },

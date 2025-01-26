@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
 import { useTranslation } from "react-i18next";
 import { Dimensions, StyleSheet, View } from "react-native";
-import { Card, Checkbox, IconButton } from "react-native-paper";
-
+import { Card, IconButton } from "react-native-paper";
 import { CONFIG } from "@/my-config";
 import { ChoppThemedText, useChoppTheme } from "@/shared";
+import ChoppCheckbox from "@/shared/components/chopp-checkbox";
 import { useDecrementShoppingCartItem } from "@/shared/hooks/use-decrement-shopping-cart-item";
 import { useIncrementShoppingCartItem } from "@/shared/hooks/use-increment-shopping-cart-item";
 import { ShoppingCartItem } from "@/store/slices/shopping-cart-slice";
@@ -14,30 +14,17 @@ type Props = {
   item: ShoppingCartItem;
   itemIdsForDelete: number[];
   setItemIdsForDelete: Dispatch<SetStateAction<number[]>>;
-  isChoose: boolean;
+  isDeleteMode: boolean;
 };
 
-export const ShoppingCartCard = ({
-  item,
-  itemIdsForDelete,
-  setItemIdsForDelete,
-  isChoose,
-}: Props) => {
+export const ShoppingCartCard = ({ item, itemIdsForDelete, setItemIdsForDelete, isDeleteMode }: Props) => {
   const { theme } = useChoppTheme();
   const { t } = useTranslation();
   const decrement = useDecrementShoppingCartItem();
   const increment = useIncrementShoppingCartItem();
 
-  const chooseDeleteThis = () => {
-    const elem = itemIdsForDelete.find((id) => id === item.product.id);
-    if (elem) {
-      setItemIdsForDelete((prev) => {
-        const newItemIdsForDelete = prev.filter((id) => id !== item.product.id);
-        return newItemIdsForDelete;
-      });
-    } else {
-      setItemIdsForDelete((prev) => [...prev, item.product.id]);
-    }
+  const selectItem = (checked: boolean) => {
+    setItemIdsForDelete((prev) => (checked ? [...prev, item.product.id] : prev.filter((id) => id !== item.product.id)));
   };
 
   return (
@@ -53,25 +40,14 @@ export const ShoppingCartCard = ({
           <ChoppThemedText style={styles.title} numberOfLines={1}>
             {item.product.title}
           </ChoppThemedText>
-          <ChoppThemedText numberOfLines={1}>
-            {item.product.description}
-          </ChoppThemedText>
+          <ChoppThemedText numberOfLines={1}>{item.product.description}</ChoppThemedText>
           <ChoppThemedText>
             {item.product.price} {t("currency")}/{t("count")}
           </ChoppThemedText>
         </View>
         <View style={styles.rightBlock}>
           <View style={styles.checkbox}>
-            <Checkbox
-              disabled={!isChoose}
-              status={
-                itemIdsForDelete.find((id) => id === item.product.id) !==
-                undefined
-                  ? "checked"
-                  : "unchecked"
-              }
-              onPress={() => chooseDeleteThis()}
-            />
+            {isDeleteMode && <ChoppCheckbox value={itemIdsForDelete.includes(item.product.id)} onChange={selectItem} />}
           </View>
           <View style={styles.buttons}>
             <IconButton
@@ -80,11 +56,7 @@ export const ShoppingCartCard = ({
               size={22}
               onPress={() => decrement({ itemId: item.product.id })}
             />
-            <ChoppThemedText
-              style={{ color: theme.colors.primary, fontSize: 18 }}
-            >
-              {item.quantity}
-            </ChoppThemedText>
+            <ChoppThemedText style={{ color: theme.colors.primary, fontSize: 18 }}>{item.quantity}</ChoppThemedText>
             <IconButton
               icon="plus"
               iconColor={theme.colors.primary}
@@ -93,8 +65,7 @@ export const ShoppingCartCard = ({
             />
           </View>
           <ChoppThemedText style={styles.totalPrice}>
-            {item.totalPrice}
-            {t("currency")}
+            {item.totalPrice} {t("currency")}
           </ChoppThemedText>
         </View>
       </View>
@@ -138,7 +109,6 @@ const styles = StyleSheet.create({
   text: {
     paddingInline: 10,
     flex: 2,
-    //	alignItems: "center",
   },
   img: {
     borderRadius: 10,

@@ -1,17 +1,20 @@
 import { Product } from "../product-slice";
 
-export type postShoppingCartItemDTO = {
+export type PostShoppingCartItemDTO = {
   productId: number;
   quantity: number;
 };
-export type postShoppingCartDTO = {
-  items: postShoppingCartItemDTO[];
+
+export type PostShoppingCartDTO = {
+  items: PostShoppingCartItemDTO[];
 };
+
 export type ShoppingCart = {
   items: ShoppingCartItem[];
   quantity: number;
   totalPrice: number;
 };
+
 export type ShoppingCartItem = {
   product: Product;
   quantity: number;

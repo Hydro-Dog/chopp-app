@@ -12,25 +12,14 @@ type Props = {
   shoppingCart: ShoppingCart;
 };
 
-export const UpperPanel = ({
-  setSearchQuery,
-  searchQuery,
-  shoppingCart,
-}: Props) => {
+export const TopBar = ({ setSearchQuery, searchQuery, shoppingCart }: Props) => {
   const { theme } = useChoppTheme();
   const { t } = useTranslation();
   return (
     <View style={styles.upContainer}>
-      <Searchbar
-        placeholder={t("search")}
-        onChangeText={setSearchQuery}
-        value={searchQuery}
-        style={styles.search}
-      />
+      <Searchbar placeholder={t("search")} onChangeText={setSearchQuery} value={searchQuery} style={styles.search} />
 
-      {shoppingCart.quantity ? (
-        <Badge style={styles.badge}>{shoppingCart.quantity}</Badge>
-      ) : null}
+      {shoppingCart.quantity ? <Badge style={styles.badge}>{shoppingCart.quantity}</Badge> : null}
 
       <IconButton
         icon="basket"

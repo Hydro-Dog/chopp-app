@@ -4,28 +4,27 @@ import { Dimensions } from "react-native";
 import { StyleSheet } from "react-native";
 import { Card } from "react-native-paper";
 import { useSelector } from "react-redux";
-import { ButtonsForProductGridItem } from "../buttons-for-product-grid-item";
+import { CounterButtons } from "./components";
 import { ChoppThemedText } from "@/shared";
 import { RootState } from "@/store/store";
 
 const { width } = Dimensions.get("window");
-
 interface Props {
   imagePath: string;
   title: string;
   price: string;
   itemId: number;
 }
+
 export const ProductGridItem = ({ imagePath, title, price, itemId }: Props) => {
-  const [isInShoppingCart, setInShoppingCart] = useState(false);
-  const { shoppingCart } = useSelector(
-    (state: RootState) => state.shoppingCart,
-  );
+  const { shoppingCart } = useSelector((state: RootState) => state.shoppingCart);
+  const [isShoppingCartItem, setIsShoppingCartItem] = useState(false);
+
   useEffect(() => {
     if (shoppingCart?.items.find((item) => item.product.id === itemId)) {
-      setInShoppingCart(false);
+      setIsShoppingCartItem(true);
     } else {
-      setInShoppingCart(true);
+      setIsShoppingCartItem(false);
     }
   }, [shoppingCart]);
 
@@ -37,11 +36,11 @@ export const ProductGridItem = ({ imagePath, title, price, itemId }: Props) => {
           {title}
         </ChoppThemedText>
       </Card.Content>
-      <Card.Content style={styles.bottomPart}>
-        <ButtonsForProductGridItem
+      <Card.Content style={styles.footer}>
+        <CounterButtons
           itemId={itemId}
           shoppingCart={shoppingCart}
-          isInShoppingCart={isInShoppingCart}
+          isShoppingCartItem={isShoppingCartItem}
           price={price}
         />
       </Card.Content>
@@ -50,10 +49,7 @@ export const ProductGridItem = ({ imagePath, title, price, itemId }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  countInBasket: {
-    textAlign: "center",
-  },
-  bottomPart: {
+  footer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",

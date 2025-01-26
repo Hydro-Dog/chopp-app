@@ -1,20 +1,10 @@
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { View, StyleSheet, FlatList } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { ProductGridItem } from "@/components/main";
-import { UpperPanel } from "@/components/main/upper-panel";
+import { TopBar } from "@/components/main/top-bar";
 import { CONFIG } from "@/my-config";
-
-import {
-  FETCH_STATUS,
-  ChoppScreenLayout,
-  Pagination,
-  useSuperDispatch,
-  ChoppTabs,
-  SearchResponse,
-  useChoppTheme,
-} from "@/shared";
+import { FETCH_STATUS, ChoppScreenLayout, Pagination, useSuperDispatch, ChoppTabs, SearchResponse } from "@/shared";
 import { fetchCategories } from "@/store/slices/product-category-slice";
 import { fetchProducts, Product } from "@/store/slices/product-slice";
 import { fetchShoppingCart } from "@/store/slices/shopping-cart-slice";
@@ -26,22 +16,18 @@ const LIMIT = 8;
 const FIRST_PAGE_NUMBER = 1;
 
 export default function TabHome() {
-  const { t } = useTranslation();
   const dispatch = useDispatch<AppDispatch>();
   const superDispatch = useSuperDispatch<SearchResponse<Product>, any>();
   const [pageProducts, setPageProducts] = useState<Product[]>([]);
-  const [pagination, setPagination] = useState<
-    Pick<Pagination, "pageNumber" | "limit">
-  >({ pageNumber: FIRST_PAGE_NUMBER, limit: LIMIT });
-  const { fetchProductsStatus, products } = useSelector(
-    (state: RootState) => state.products,
-  );
-  const { shoppingCart } = useSelector(
-    (state: RootState) => state.shoppingCart,
-  );
+  const [pagination, setPagination] = useState<Pick<Pagination, "pageNumber" | "limit">>({
+    pageNumber: FIRST_PAGE_NUMBER,
+    limit: LIMIT,
+  });
+  const { fetchProductsStatus, products } = useSelector((state: RootState) => state.products);
+  const { shoppingCart } = useSelector((state: RootState) => state.shoppingCart);
   const [chosenCategory, setChosenCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const { theme } = useChoppTheme();
+
   useEffect(() => {
     dispatch(
       fetchProducts({
@@ -63,11 +49,10 @@ export default function TabHome() {
   }, [products]);
 
   const onLoadMore = () => {
-    if (
-      fetchProductsStatus === FETCH_STATUS.LOADING ||
-      pageProducts.length === products?.totalItems
-    )
+    if (fetchProductsStatus === FETCH_STATUS.LOADING || pageProducts.length === products?.totalItems) {
       return;
+    }
+
     superDispatch({
       action: fetchProducts({
         categoryId: Number(chosenCategory),
@@ -84,7 +69,6 @@ export default function TabHome() {
       },
     });
   };
-
   const { categories } = useSelector((state: RootState) => state.categories);
 
   useEffect(() => {
@@ -106,23 +90,10 @@ export default function TabHome() {
 
   return (
     <>
-      <UpperPanel
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        shoppingCart={shoppingCart}
-      />
-      <ChoppTabs
-        value={chosenCategory}
-        onChange={(value) => setChosenCategory(value.id)}
-        options={options}
-      />
+      <TopBar searchQuery={searchQuery} setSearchQuery={setSearchQuery} shoppingCart={shoppingCart} />
+      <ChoppTabs value={chosenCategory} onChange={(value) => setChosenCategory(value.id)} options={options} />
 
-      <ChoppScreenLayout
-        loading={
-          fetchProductsStatus === FETCH_STATUS.LOADING &&
-          pageProducts.length === 0
-        }
-      >
+      <ChoppScreenLayout loading={fetchProductsStatus === FETCH_STATUS.LOADING && pageProducts.length === 0}>
         <View style={styles.container}>
           <FlatList
             data={pageProducts}
@@ -145,6 +116,7 @@ export default function TabHome() {
     </>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
