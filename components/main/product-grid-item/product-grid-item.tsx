@@ -1,15 +1,12 @@
 import * as React from "react";
+import { useEffect, useState } from "react";
 import { Dimensions } from "react-native";
 import { StyleSheet } from "react-native";
-import { Badge, Card, IconButton, Text } from "react-native-paper";
-import { ChoppThemedText, useChoppTheme } from "@/shared";
-import { router } from "expo-router";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/store/store";
-import { COLORS } from "@/constants/colors";
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Decrement, Increment } from "@/utils";
+import { Card } from "react-native-paper";
+import { useSelector } from "react-redux";
+import { ButtonsForProductGridItem } from "../buttons-for-product-grid-item";
+import { ChoppThemedText } from "@/shared";
+import { RootState } from "@/store/store";
 
 const { width } = Dimensions.get("window");
 
@@ -17,25 +14,23 @@ interface Props {
   imagePath: string;
   title: string;
   price: string;
-  id: number;
+  itemId: number;
 }
-export const ProductGridItem = ({ imagePath, title, price, id }: Props) => {
-  const { t } = useTranslation();
-  const { theme } = useChoppTheme();
-  const dispatch = useDispatch<AppDispatch>();
-  const [inBasket, setInBasket] = useState(false);
-  const { basket } = useSelector((state: RootState) => state.basketItems);
-
+export const ProductGridItem = ({ imagePath, title, price, itemId }: Props) => {
+  const [isInShoppingCart, setInShoppingCart] = useState(false);
+  const { shoppingCart } = useSelector(
+    (state: RootState) => state.shoppingCart,
+  );
   useEffect(() => {
-    if (basket?.items.find((item) => item.product.id === id)) {
-      setInBasket(false);
+    if (shoppingCart?.items.find((item) => item.product.id === itemId)) {
+      setInShoppingCart(false);
     } else {
-      setInBasket(true);
+      setInShoppingCart(true);
     }
-  }, [basket]);
+  }, [shoppingCart]);
 
   return (
-    <Card style={styles.card} onPress={() => router.push("/product-card")}>
+    <Card style={styles.card}>
       <Card.Cover source={{ uri: imagePath }} />
       <Card.Content style={styles.content}>
         <ChoppThemedText style={styles.title} numberOfLines={1}>
@@ -43,28 +38,11 @@ export const ProductGridItem = ({ imagePath, title, price, id }: Props) => {
         </ChoppThemedText>
       </Card.Content>
       <Card.Content style={styles.bottomPart}>
-        {!inBasket ? (
-          <Badge size={20} style={styles.badge}>
-            {basket.items.find((item) => item.product.id === id)?.quantity}
-          </Badge>
-        ) : null}
-
-        <IconButton
-          icon="minus"
-          disabled={inBasket}
-          iconColor={theme.colors.primary}
-          size={22}
-          onPress={() => Decrement(id, basket, dispatch)}
-        />
-        <Text variant="titleMedium">
-          {price}
-          {t("currency")}
-        </Text>
-        <IconButton
-          icon="plus"
-          iconColor={theme.colors.primary}
-          size={22}
-          onPress={() => Increment(id, basket, dispatch)}
+        <ButtonsForProductGridItem
+          itemId={itemId}
+          shoppingCart={shoppingCart}
+          isInShoppingCart={isInShoppingCart}
+          price={price}
         />
       </Card.Content>
     </Card>
@@ -72,13 +50,6 @@ export const ProductGridItem = ({ imagePath, title, price, id }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  badge: {
-    position: "absolute",
-    top: 4,
-    right: 12,
-    zIndex: 90,
-    backgroundColor: COLORS.dark.primary,
-  },
   countInBasket: {
     textAlign: "center",
   },

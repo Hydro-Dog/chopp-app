@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { View, StyleSheet, FlatList } from "react-native";
-import { Badge, IconButton, Searchbar } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { ProductGridItem } from "@/components/main";
+import { UpperPanel } from "@/components/main/upper-panel";
 import { CONFIG } from "@/my-config";
 
 import {
@@ -17,11 +17,8 @@ import {
 } from "@/shared";
 import { fetchCategories } from "@/store/slices/product-category-slice";
 import { fetchProducts, Product } from "@/store/slices/product-slice";
+import { fetchShoppingCart } from "@/store/slices/shopping-cart-slice";
 import { AppDispatch, RootState } from "@/store/store";
-import { router } from "expo-router";
-import {
-  fetchGetShoppingCart,
-} from "@/store/slices/basket-slice";
 
 //TODO: Временный лимит нужный для тестов. Потом нужно его увеличить.
 //TODO PROD: поставить лимит в 100
@@ -39,7 +36,9 @@ export default function TabHome() {
   const { fetchProductsStatus, products } = useSelector(
     (state: RootState) => state.products,
   );
-  const { basket } = useSelector((state: RootState) => state.basketItems);
+  const { shoppingCart } = useSelector(
+    (state: RootState) => state.shoppingCart,
+  );
   const [chosenCategory, setChosenCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const { theme } = useChoppTheme();
@@ -90,7 +89,7 @@ export default function TabHome() {
 
   useEffect(() => {
     dispatch(fetchCategories());
-    dispatch(fetchGetShoppingCart());
+    dispatch(fetchShoppingCart());
   }, []);
 
   //TODO: Подумать как быть с категорией Без категории  Добавить в админку уведомление, что эти товары показаны не будут
@@ -107,27 +106,11 @@ export default function TabHome() {
 
   return (
     <>
-      <View style={styles.upContainer}>
-        <Searchbar
-          placeholder={t("search")}
-          onChangeText={setSearchQuery}
-          value={searchQuery}
-          style={styles.search}
-        />
-
-        {basket.quantity ? (
-          <Badge style={styles.badge}>{basket.quantity}</Badge>
-        ) : null}
-
-        <IconButton
-          icon="basket"
-          iconColor={theme.colors.primary}
-          style={styles.basket}
-          size={40}
-          onPress={() => router.push("/shoppingCard")}
-        />
-      </View>
-
+      <UpperPanel
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        shoppingCart={shoppingCart}
+      />
       <ChoppTabs
         value={chosenCategory}
         onChange={(value) => setChosenCategory(value.id)}
@@ -149,7 +132,7 @@ export default function TabHome() {
             style={{ flex: 1 }}
             renderItem={({ item }) => (
               <ProductGridItem
-                id={item.id}
+                itemId={item.id}
                 key={item.id}
                 title={item.title}
                 imagePath={CONFIG.filesUrl + item.images?.[0]?.path}
@@ -163,24 +146,6 @@ export default function TabHome() {
   );
 }
 const styles = StyleSheet.create({
-  upContainer: {
-    flexDirection: "row",
-  },
-  badge: {
-    position: "absolute",
-    top: 12,
-    right: 16,
-    zIndex: 90,
-  },
-  basket: {
-    flex: 1,
-  },
-  search: {
-    marginLeft: 10,
-    marginTop: 10,
-
-    flex: 4,
-  },
   container: {
     paddingHorizontal: 20,
     flex: 1,

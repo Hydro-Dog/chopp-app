@@ -1,40 +1,42 @@
-import { CONFIG } from "@/my-config";
-import { ChoppThemedText, useChoppTheme } from "@/shared";
-import {BasketItem} from "@/store/slices/basket-slice";
-import { AppDispatch, RootState } from "@/store/store";
-import { Decrement, Increment } from "@/utils";
 import { Dispatch, SetStateAction } from "react";
 import { useTranslation } from "react-i18next";
 import { Dimensions, StyleSheet, View } from "react-native";
-import { Card, Checkbox, IconButton, Text } from "react-native-paper";
-import { useDispatch, useSelector } from "react-redux";
+import { Card, Checkbox, IconButton } from "react-native-paper";
+
+import { CONFIG } from "@/my-config";
+import { ChoppThemedText, useChoppTheme } from "@/shared";
+import { useDecrementShoppingCartItem } from "@/shared/hooks/use-decrement-shopping-cart-item";
+import { useIncrementShoppingCartItem } from "@/shared/hooks/use-increment-shopping-cart-item";
+import { ShoppingCartItem } from "@/store/slices/shopping-cart-slice";
 const { width } = Dimensions.get("window");
 
 type Props = {
-  item: BasketItem;
-  deleteItems: number[];
-  setDeleteItems: Dispatch<SetStateAction<number[]>>;
+  item: ShoppingCartItem;
+  itemIdsForDelete: number[];
+  setItemIdsForDelete: Dispatch<SetStateAction<number[]>>;
+  isChoose: boolean;
 };
 
-export const BasketProductCard = ({
-  deleteItems,
-  setDeleteItems,
+export const ShoppingCartCard = ({
   item,
+  itemIdsForDelete,
+  setItemIdsForDelete,
+  isChoose,
 }: Props) => {
   const { theme } = useChoppTheme();
   const { t } = useTranslation();
-  const { basket } = useSelector((state: RootState) => state.basketItems);
-  const dispatch = useDispatch<AppDispatch>();
+  const decrement = useDecrementShoppingCartItem();
+  const increment = useIncrementShoppingCartItem();
 
-  const setDeleteThis = () => {
-    const findItem = deleteItems.find((id) => id === item.product.id);
-    if (findItem) {
-      setDeleteItems((prev) => {
-        const newDeleteItems = prev.filter((id) => id !== item.product.id);
-        return newDeleteItems;
+  const chooseDeleteThis = () => {
+    const elem = itemIdsForDelete.find((id) => id === item.product.id);
+    if (elem) {
+      setItemIdsForDelete((prev) => {
+        const newItemIdsForDelete = prev.filter((id) => id !== item.product.id);
+        return newItemIdsForDelete;
       });
     } else {
-      setDeleteItems((prev) => [...prev, item.product.id]);
+      setItemIdsForDelete((prev) => [...prev, item.product.id]);
     }
   };
 
@@ -61,12 +63,14 @@ export const BasketProductCard = ({
         <View style={styles.rightBlock}>
           <View style={styles.checkbox}>
             <Checkbox
+              disabled={!isChoose}
               status={
-                deleteItems.find((id) => id === item.product.id) != undefined
+                itemIdsForDelete.find((id) => id === item.product.id) !==
+                undefined
                   ? "checked"
                   : "unchecked"
               }
-              onPress={() => setDeleteThis()}
+              onPress={() => chooseDeleteThis()}
             />
           </View>
           <View style={styles.buttons}>
@@ -74,16 +78,18 @@ export const BasketProductCard = ({
               icon="minus"
               iconColor={theme.colors.primary}
               size={22}
-              onPress={() => Decrement(item.product.id, basket, dispatch)}
+              onPress={() => decrement({ itemId: item.product.id })}
             />
-            <Text style={{ color: theme.colors.primary }} variant="titleMedium">
+            <ChoppThemedText
+              style={{ color: theme.colors.primary, fontSize: 18 }}
+            >
               {item.quantity}
-            </Text>
+            </ChoppThemedText>
             <IconButton
               icon="plus"
               iconColor={theme.colors.primary}
               size={22}
-              onPress={() => Increment(item.product.id, basket, dispatch)}
+              onPress={() => increment({ itemId: item.product.id })}
             />
           </View>
           <ChoppThemedText style={styles.totalPrice}>

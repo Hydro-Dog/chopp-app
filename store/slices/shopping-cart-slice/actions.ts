@@ -1,15 +1,15 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { BasketPOST, Basket } from "./types";
+import { postShoppingCartDTO, ShoppingCart } from "./types";
 import { axiosPrivate } from "@/services";
 import { ErrorResponse } from "@/shared";
 
-export const fetchPostShoppingCart = createAsyncThunk<
-  Basket,
-  { basket: BasketPOST }
->("products/fetchPutProducts", async ({ basket }, thunkAPI) => {
+export const postShoppingCart = createAsyncThunk<
+  ShoppingCart,
+  { newShoppingCart: postShoppingCartDTO }
+>("products/fetchPutProducts", async ({ newShoppingCart }, thunkAPI) => {
   try {
-    const response = await axiosPrivate.post(`/shopping-cart`, basket);
+    const response = await axiosPrivate.post(`/shopping-cart`, newShoppingCart);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response) {
@@ -22,11 +22,11 @@ export const fetchPostShoppingCart = createAsyncThunk<
   }
 });
 
-export const fetchGetShoppingCart = createAsyncThunk<Basket>(
+export const fetchShoppingCart = createAsyncThunk<ShoppingCart>(
   "products/fetchGetProducts",
   async (_, thunkAPI) => {
     try {
-      const response = await axiosPrivate.get<Basket>(`/shopping-cart`);
+      const response = await axiosPrivate.get<ShoppingCart>(`/shopping-cart`);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -40,7 +40,7 @@ export const fetchGetShoppingCart = createAsyncThunk<Basket>(
   },
 );
 
-export const fetchDelShoppingCart = createAsyncThunk(
+export const delShoppingCart = createAsyncThunk(
   "products/fetchDelProducts",
   async (_, thunkAPI) => {
     try {

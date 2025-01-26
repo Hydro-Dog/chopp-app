@@ -6,6 +6,7 @@ import {
   productCategorySlice,
 } from "./slices/product-category-slice";
 import { productSlice, ProductsState } from "./slices/product-slice";
+import { shoppingCart, ShoppingCartState } from "./slices/shopping-cart-slice";
 import { userSlice, UserState } from "./slices/user-slice/index";
 import {
   pushWsMessage,
@@ -17,7 +18,6 @@ import {
   wsSlice,
   WsState,
 } from "./slices/ws-slice";
-import { basketItems, BasketState } from "./slices/basket-slice";
 type WsAction = {
   type: string;
   payload?: any;
@@ -89,7 +89,7 @@ export const store = configureStore({
     order: orderSlice.reducer,
     products: productSlice.reducer,
     categories: productCategorySlice.reducer,
-    basketItems: basketItems.reducer,
+    shoppingCart: shoppingCart.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware().concat(wsMiddleware);
@@ -103,7 +103,7 @@ export type RootState = {
   order: OrderState;
   products: ProductsState;
   categories: CategoryState;
-  basketItems: BasketState;
+  shoppingCart: ShoppingCartState;
 };
 
 export type AppDispatch = typeof store.dispatch;

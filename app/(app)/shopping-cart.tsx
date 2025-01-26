@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FlatList, StyleSheet } from "react-native";
 import { View } from "react-native";
-import { Button, Checkbox, IconButton, Text } from "react-native-paper";
+import { Button, Checkbox, IconButton } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
-import { BasketProductCard } from "@/components/basket";
+import { ShoppingCartCard } from "@/components/shopping-cart";
 import {
   ChoppBackButton,
   ChoppScreenLayout,
@@ -12,93 +12,107 @@ import {
   useChoppTheme,
 } from "@/shared";
 import {
-  BasketPOST,
-  fetchGetShoppingCart,
-  fetchPostShoppingCart,
-} from "@/store/slices/basket-slice";
+  postShoppingCartDTO,
+  fetchShoppingCart,
+  postShoppingCart,
+} from "@/store/slices/shopping-cart-slice";
 
 import { AppDispatch, RootState } from "@/store/store";
 
-export default function Basket() {
+export default function ShoppingCart() {
   const dispatch = useDispatch<AppDispatch>();
   const { theme } = useChoppTheme();
-  const { basket } = useSelector((state: RootState) => state.basketItems);
+  const { shoppingCart } = useSelector(
+    (state: RootState) => state.shoppingCart,
+  );
   const { t } = useTranslation();
-  const [deleteItems, setDeleteItems] = useState<number[]>([]);
+  const [itemIdsForDelete, setItemIdsForDelete] = useState<number[]>([]);
+  const [isChoose, setChoose] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchGetShoppingCart());
+    dispatch(fetchShoppingCart());
   }, []);
 
   const chooseAll = () => {
-    if (deleteItems.length != basket.items.length) {
+    if (itemIdsForDelete.length !== shoppingCart.items.length) {
       const tempDelete: number[] = [];
-      basket.items.map((item) => tempDelete.push(item.product.id));
-      setDeleteItems(tempDelete);
+      shoppingCart.items.map((item) => tempDelete.push(item.product.id));
+      setItemIdsForDelete(tempDelete);
     } else {
-      setDeleteItems([]);
+      setItemIdsForDelete([]);
     }
   };
-  const del = () => {
-    if (deleteItems.length !== 0) {
-      const deleteItemsSet = new Set(deleteItems);
-      const newBasket: BasketPOST = {
-        items: basket.items
+  const deleteChosenItem = () => {
+    if (itemIdsForDelete.length !== 0) {
+      const deleteItemsSet = new Set(itemIdsForDelete);
+      const newShoppingCart: postShoppingCartDTO = {
+        items: shoppingCart.items
           .filter((item) => !deleteItemsSet.has(item.product.id))
           .map((item) => ({
             productId: item.product.id,
             quantity: item.quantity,
           })),
       };
-      dispatch(fetchPostShoppingCart({ basket: newBasket }));
+      dispatch(postShoppingCart({ newShoppingCart }));
+      setItemIdsForDelete([]);
     }
   };
   return (
     <>
       <ChoppBackButton style={styles.backButton} redirectToRoot={true} />
       <View style={styles.upperPanel}>
-        <Text style={styles.header} variant="headlineLarge">
-          {t("basket")}
-        </Text>
+        <View style={styles.titleAndButton}>
+          <ChoppThemedText style={styles.header}>
+            {t("shoppingCart")}
+          </ChoppThemedText>
+          <Button mode="contained" onPress={() => setChoose((prev) => !prev)}>
+            {isChoose ? t("cancel") : t("choose")}
+          </Button>
+        </View>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <ChoppThemedText>{t("chooseAll")}</ChoppThemedText>
-          <Checkbox
-            status={
-              deleteItems.length == basket.items.length
-                ? "checked"
-                : "unchecked"
-            }
-            onPress={() => chooseAll()}
-          />
-          <IconButton
-            icon="delete"
-            iconColor={theme.colors.primary}
-            size={35}
-            onPress={() => del()}
-          />
+          {isChoose && (
+            <View style={styles.ifChoose}>
+              <ChoppThemedText>{t("chooseAll")}</ChoppThemedText>
+              <Checkbox
+                status={
+                  itemIdsForDelete.length == shoppingCart.items.length
+                    ? "checked"
+                    : "unchecked"
+                }
+                onPress={() => chooseAll()}
+              />
+              <IconButton
+                icon="delete"
+                iconColor={theme.colors.primary}
+                size={35}
+                onPress={() => deleteChosenItem()}
+              />
+            </View>
+          )}
         </View>
       </View>
       <ChoppScreenLayout>
         <View style={{ flex: 1 }}>
           <View style={styles.container}>
             <FlatList
-              data={basket.items}
+              data={shoppingCart.items}
               keyExtractor={(item) => item.product.id.toString()}
               numColumns={1}
               renderItem={({ item }) => (
-                <BasketProductCard
-                  setDeleteItems={setDeleteItems}
-                  deleteItems={deleteItems}
+                <ShoppingCartCard
+                  setItemIdsForDelete={setItemIdsForDelete}
+                  itemIdsForDelete={itemIdsForDelete}
                   item={item}
+                  isChoose={isChoose}
                 />
               )}
             />
           </View>
-          {basket.quantity ? (
+          {shoppingCart.quantity ? (
             <View style={{ flexDirection: "column" }}>
               <View style={styles.priceAndButton}>
                 <ChoppThemedText style={{ fontSize: 20 }}>
-                  {basket.totalPrice}
+                  {shoppingCart.totalPrice}
                   {t("currency")}
                 </ChoppThemedText>
                 <Button
@@ -115,7 +129,9 @@ export default function Basket() {
               </ChoppThemedText>
             </View>
           ) : (
-            <Text style={styles.emptyBasket}>{t("emptyBasket")}</Text>
+            <ChoppThemedText style={styles.emptyBasket}>
+              {t("emptyBasket")}
+            </ChoppThemedText>
           )}
         </View>
       </ChoppScreenLayout>
@@ -123,10 +139,20 @@ export default function Basket() {
   );
 }
 const styles = StyleSheet.create({
-  upperPanel: {
+  ifChoose: {
+    paddingInline: 15,
     flexDirection: "row",
-    justifyContent: "space-between",
     alignItems: "center",
+  },
+  titleAndButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingInline: 15,
+  },
+  upperPanel: {
+    flexDirection: "column",
+    justifyContent: "space-between",
   },
   priceAndButton: {
     flexDirection: "row",
@@ -159,6 +185,6 @@ const styles = StyleSheet.create({
     padding: 15,
   },
   header: {
-    padding: 15,
+    fontSize: 32,
   },
 });
