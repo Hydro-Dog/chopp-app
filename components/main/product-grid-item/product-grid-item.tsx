@@ -1,43 +1,47 @@
 import * as React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dimensions } from "react-native";
 import { StyleSheet } from "react-native";
-import { Card, IconButton, Text } from "react-native-paper";
-import { useChoppTheme } from "@/shared";
+import { Card } from "react-native-paper";
+import { useSelector } from "react-redux";
+import { CounterButtons } from "./components";
+import { ChoppThemedText } from "@/shared";
+import { RootState } from "@/store/store";
 
 const { width } = Dimensions.get("window");
-
 interface Props {
   imagePath: string;
   title: string;
   price: string;
+  itemId: number;
 }
-export const ProductGridItem = ({ imagePath, title, price }: Props) => {
-  const { theme } = useChoppTheme();
-  const [pressed, setPressed] = useState(false);
+
+export const ProductGridItem = ({ imagePath, title, price, itemId }: Props) => {
+  const { shoppingCart } = useSelector((state: RootState) => state.shoppingCart);
+  const [isShoppingCartItem, setIsShoppingCartItem] = useState(false);
+
+  useEffect(() => {
+    if (shoppingCart?.items.find((item) => item.product.id === itemId)) {
+      setIsShoppingCartItem(true);
+    } else {
+      setIsShoppingCartItem(false);
+    }
+  }, [shoppingCart]);
 
   return (
     <Card style={styles.card}>
       <Card.Cover source={{ uri: imagePath }} />
       <Card.Content style={styles.content}>
-        <Text style={styles.title} numberOfLines={1} >
+        <ChoppThemedText style={styles.title} numberOfLines={1}>
           {title}
-        </Text>
+        </ChoppThemedText>
       </Card.Content>
-      <Card.Content style={styles.bottomPart}>
-        <IconButton
-          icon="minus"
-          disabled
-          iconColor={theme.colors.primary}
-          size={22}
-          onPress={() => console.log("Pressed")}
-        />
-        <Text variant="titleMedium">{price}₽</Text>
-        <IconButton
-          icon="plus"
-          iconColor={theme.colors.primary}
-          size={22}
-          onPress={() => console.log("Pressed")}
+      <Card.Content style={styles.footer}>
+        <CounterButtons
+          itemId={itemId}
+          shoppingCart={shoppingCart}
+          isShoppingCartItem={isShoppingCartItem}
+          price={price}
         />
       </Card.Content>
     </Card>
@@ -45,7 +49,7 @@ export const ProductGridItem = ({ imagePath, title, price }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  bottomPart: {
+  footer: {
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
