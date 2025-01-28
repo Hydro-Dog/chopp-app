@@ -3,11 +3,7 @@ import axios from "axios";
 import { CONFIG } from "@/my-config";
 
 import { AuthType } from "@/shared/context/auth-context";
-import {
-  getFromStorage,
-  clearStorage,
-  addToStorage,
-} from "@/shared/utils/async-storage-methods";
+import { getFromStorage, clearStorage, addToStorage } from "@/shared/utils/async-storage-methods";
 
 type FailedQueRequest = {
   resolve: (val: unknown) => void;
@@ -21,9 +17,7 @@ export const axiosPrivate = axios.create({
   //   headers: { "Content-Type": "application/json" },
 });
 
-const refresh = async (
-  setAuth: Dispatch<SetStateAction<AuthType | undefined>>,
-) => {
+const refresh = async (setAuth: Dispatch<SetStateAction<AuthType | undefined>>) => {
   const refreshToken = await getFromStorage("refreshToken");
   try {
     const response = await axiosDefault.post("auth/refresh", {
@@ -101,11 +95,7 @@ export const useSetInterceptors = () => {
     async (error) => {
       const originalRequest = error.config;
 
-      if (
-        error.response &&
-        [401, 403].includes(error.response.status) &&
-        !originalRequest._retry
-      ) {
+      if (error.response && [401, 403].includes(error.response.status) && !originalRequest._retry) {
         if (isRefreshing) {
           return new Promise(function (resolve, reject) {
             failedQueue.push({ resolve, reject });
@@ -125,8 +115,7 @@ export const useSetInterceptors = () => {
         try {
           const newToken = await refresh(setAuth); // Получаем новый токен
           await addToStorage("accessToken", newToken); // Обновляем токен в хранилище
-          axiosPrivate.defaults.headers.common["Authorization"] =
-            "Bearer " + newToken; // Обновляем токен в axios
+          axiosPrivate.defaults.headers.common["Authorization"] = "Bearer " + newToken; // Обновляем токен в axios
           originalRequest.headers["Authorization"] = "Bearer " + newToken; // Обновляем заголовки в повторном запросе
           processQueue(null, newToken); // Продолжаем выполнение ожидающих запросов
           return axiosPrivate(originalRequest); // Отправляем повторный запрос с новым токеном
