@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { createOrder, fetchMyOrders, fetchOrder } from "./actions";
+import { createOrder, fetchLastOrder, fetchMyOrders, fetchOrder } from "./actions";
 import { Order } from ".";
 import { FETCH_STATUS } from "@/shared/types/fetch-status";
 import { ErrorResponse } from "@/shared/types/response-error";
@@ -13,6 +13,8 @@ export type OrderState = {
   myOrders?: Order[] | null;
   fetchMyOrdersStatus: FETCH_STATUS;
   fetchMyOrdersError: ErrorResponse | null;
+  fetchLastOrderStatus: FETCH_STATUS;
+  fetchLastOrderError: ErrorResponse | null;
 };
 
 const initialState: OrderState = {
@@ -24,6 +26,8 @@ const initialState: OrderState = {
   myOrders: null,
   fetchMyOrdersStatus: FETCH_STATUS.IDLE,
   fetchMyOrdersError: null,
+  fetchLastOrderStatus: FETCH_STATUS.IDLE,
+  fetchLastOrderError: null,
 };
 
 export const orderSlice = createSlice({
@@ -48,16 +52,26 @@ export const orderSlice = createSlice({
       .addCase(fetchMyOrders.pending, (state) => {
         state.fetchMyOrdersStatus = FETCH_STATUS.LOADING;
       })
-      .addCase(
-        fetchMyOrders.fulfilled,
-        (state, action: PayloadAction<Order[]>) => {
-          state.fetchMyOrdersStatus = FETCH_STATUS.SUCCESS;
-          state.myOrders = action.payload;
-        }
-      )
+      .addCase(fetchMyOrders.fulfilled, (state, action: PayloadAction<Order[]>) => {
+        state.fetchMyOrdersStatus = FETCH_STATUS.SUCCESS;
+        state.myOrders = action.payload;
+      })
       .addCase(fetchMyOrders.rejected, (state, action) => {
         state.fetchMyOrdersStatus = FETCH_STATUS.ERROR;
         state.fetchMyOrdersError = action.payload ?? {
+          message: "Failed to fetch user information",
+        };
+      })
+      .addCase(fetchLastOrder.pending, (state) => {
+        state.createOrderStatus = FETCH_STATUS.LOADING;
+      })
+      .addCase(fetchLastOrder.fulfilled, (state, action) => {
+        state.createOrderStatus = FETCH_STATUS.LOADING;
+        state.currentOrder = action.payload;
+      })
+      .addCase(fetchLastOrder.rejected, (state, action) => {
+        state.createOrderStatus = FETCH_STATUS.LOADING;
+        state.fetchLastError = action.payload ?? {
           message: "Failed to fetch user information",
         };
       })

@@ -1,9 +1,14 @@
-import { OrderStatus } from "@/shared/types/order-status";
+//import { OrderStatus } from "@/shared/types/order-status";
 
 export type Order = {
+  createdAt: string;
   id: string;
-  address: string;
-  orderComment: string;
-  createdAt?: number;
-  statusData?: OrderStatus;
+  orderStatus: string;
+  paymentStatus: string;
+  paymentUrl: string;
+  quantity: number;
+  totalPrice: number;
+  transactionId: string;
+  updatedAt: string;
+  userId: number;
 };
