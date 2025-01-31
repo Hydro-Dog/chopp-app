@@ -2,8 +2,8 @@ import { useTranslation } from "react-i18next";
 import { Linking, View } from "react-native";
 import { StyleSheet } from "react-native";
 import { FlatList } from "react-native";
-import { Button, Card } from "react-native-paper";
-import { CONFIG } from "@/my-config";
+import { Button } from "react-native-paper";
+import { OrderGoodsCard } from "./order-goods-card";
 import { ChoppScreenLayout, ChoppThemedText } from "@/shared";
 import { Order } from "@/store/slices/order-slice";
 
@@ -40,22 +40,7 @@ export const OrderCard = ({ order }: Props) => {
             data={order.items}
             keyExtractor={(item) => item.id.toString()}
             numColumns={1}
-            renderItem={({ item }) => (
-              <Card>
-                <View style={styles.goods}>
-                  <Card.Cover style={styles.img} source={{ uri: `${CONFIG.filesUrl + item.product.images[0].path}` }} />
-                  <Card.Content>
-                    <ChoppThemedText>{item.product.title}</ChoppThemedText>
-                    <ChoppThemedText>
-                      {item.quantity} {t("count")}
-                    </ChoppThemedText>
-                    <ChoppThemedText>
-                      {item.price} {t("currency")}/{t("count")}
-                    </ChoppThemedText>
-                  </Card.Content>
-                </View>
-              </Card>
-            )}
+            renderItem={({ item }) => <OrderGoodsCard item={item} />}
           />
         </View>
       </ChoppScreenLayout>
@@ -83,16 +68,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     marginBottom: 10,
-  },
-  goods: {
-    flexDirection: "row",
-    alignItems: "center",
-    margin: 5,
-  },
-  img: {
-    borderRadius: 10,
-    width: 150,
-    height: 150,
   },
   container: {
     paddingInline: 20,
