@@ -1,9 +1,9 @@
+import { Linking } from "react-native";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { Order } from "./types";
+import { FewOrders, Order } from "./types";
 import { axiosPrivate } from "@/services";
 import { ErrorResponse } from "@/shared/types/response-error";
-import { Linking } from "react-native";
 
 export const fetchOrder = createAsyncThunk<Order, string, { rejectValue: ErrorResponse }>(
   "/fetchOrder",
@@ -23,11 +23,11 @@ export const fetchOrder = createAsyncThunk<Order, string, { rejectValue: ErrorRe
   },
 );
 
-export const fetchMyOrders = createAsyncThunk<Order[], void, { rejectValue: ErrorResponse }>(
+export const fetchMyOrders = createAsyncThunk<FewOrders, void, { rejectValue: ErrorResponse }>(
   "/fetchOrders",
   async (_, thunkAPI) => {
     try {
-      const response = await axiosPrivate.get<Order[]>("/orders");
+      const response = await axiosPrivate.get<FewOrders>("/orders");
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {

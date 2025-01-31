@@ -1,53 +1,50 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { View, StyleSheet, Linking } from "react-native";
-import { Button } from "react-native-paper";
+import { View, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import { OrderCard } from "@/components/order";
 import { ChoppThemedText } from "@/shared";
-import { fetchLastOrder } from "@/store/slices/order-slice";
+import { fetchMyOrders, Order } from "@/store/slices/order-slice";
 import { AppDispatch, RootState } from "@/store/store";
 
 export default function TabOrder() {
-  const { t } = useTranslation();
-  const { currentOrder } = useSelector((state: RootState) => state.order);
+  const { myOrders } = useSelector((state: RootState) => state.order);
   const dispatch = useDispatch<AppDispatch>();
-
+  const [unfinishedOrders, setUnfinishedOrders] = useState<Order[]>([]);
+  const { t } = useTranslation();
   useEffect(() => {
-    dispatch(fetchLastOrder());
+    //Пока не показываются товары в запросе на последний по времени заказ (fetchLastOrder)
+    dispatch(fetchMyOrders());
+    console.log(myOrders);
   }, []);
-  const makePayment = () => {
-    if (currentOrder?.paymentUrl)
-      Linking.openURL(currentOrder.paymentUrl).catch((err) => console.error("Ошибка открытия ссылки:", err));
-  };
+  useEffect(() => {
+    if (myOrders) {
+      setUnfinishedOrders(myOrders.filter((item) => item.orderStatus !== "delivered"));
+    }
+  }, [myOrders]);
   return (
     <>
-      <View style={styles.container}>
-        <ChoppThemedText style={styles.title}>
-          {t("order")} № {currentOrder?.id}
-        </ChoppThemedText>
-        <ChoppThemedText>
-          {t("statusOfPayment")}: {t(`${currentOrder?.orderStatus}`)}
-        </ChoppThemedText>
-        <ChoppThemedText>
-          {t("inAll")}: {currentOrder?.totalPrice} {t("currency")}
-        </ChoppThemedText>
-        {currentOrder?.paymentStatus === "pending" && (
-          <Button mode="contained" onPress={() => makePayment()}>
-            {t("makePayment")}
-          </Button>
-        )}
-      </View>
+      {unfinishedOrders.length ? (
+        <OrderCard order={unfinishedOrders[0]} />
+      ) : (
+        <View style={styles.empty}>
+          <ChoppThemedText style={styles.emptyText}>{t("noOrdersInProcessing")}</ChoppThemedText>
+        </View>
+      )}
     </>
   );
 }
 const styles = StyleSheet.create({
-  title: {
-    fontSize: 20,
-  },
   container: {
-    flexDirection: "column",
-    alignItems: "center",
+    width: "100%",
+    padding: 10,
+  },
+  empty: {
+    flex: 1,
     justifyContent: "center",
-    paddingVertical: 10,
+  },
+  emptyText: {
+    textAlign: "center",
+    fontWeight: "100",
   },
 });
