@@ -13,11 +13,7 @@ export function TabBarIcon({
 }) {
   return (
     <View style={{ position: "relative" }}>
-      {badge && (
-        <Badge style={{ position: "absolute", zIndex: 10, left: 16, top: -8 }}>
-          {badge}
-        </Badge>
-      )}
+      {badge && <Badge style={{ position: "absolute", zIndex: 10, left: 16, top: -8 }}>{badge}</Badge>}
       <Ionicons size={28} style={[{ marginBottom: -3 }, style]} {...props} />
     </View>
   );

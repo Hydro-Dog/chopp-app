@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchProducts } from "./actions";
 import { Product } from "./types";
-import { FETCH_STATUS, ErrorResponse, SearchResponse } from "@/shared";
+import { SearchResponse, FETCH_STATUS, ErrorResponse } from "@/shared/types";
 
 export type ProductsState = {
   products?: SearchResponse<Product>;

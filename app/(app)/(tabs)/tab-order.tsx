@@ -1,50 +1,26 @@
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { View, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { OrderCard } from "@/components/order";
-import { ChoppThemedText } from "@/shared";
-import { fetchMyOrders, Order } from "@/store/slices/order-slice";
+import { EmptyCard, OrderScreen } from "@/components/order";
+import { Order, ORDER_STATUS } from "@/shared";
+import { fetchOrders } from "@/store/slices/order-slice";
 import { AppDispatch, RootState } from "@/store/store";
 
 export default function TabOrder() {
-  const { myOrders } = useSelector((state: RootState) => state.order);
+  const { orders } = useSelector((state: RootState) => state.orders);
+  const [activeOrder, setActiveOrder] = useState<Order>();
   const dispatch = useDispatch<AppDispatch>();
-  const [unfinishedOrders, setUnfinishedOrders] = useState<Order[]>([]);
-  const { t } = useTranslation();
+
   useEffect(() => {
     //Пока не показываются товары в запросе на последний по времени заказ (fetchLastOrder)
-    dispatch(fetchMyOrders());
-    console.log(myOrders);
+    dispatch(fetchOrders());
+    console.log(orders);
   }, []);
+
   useEffect(() => {
-    if (myOrders) {
-      setUnfinishedOrders(myOrders.filter((item) => item.orderStatus !== "delivered"));
+    if (orders) {
+      setActiveOrder(orders.find((item) => item.orderStatus !== ORDER_STATUS.DELIVERED));
     }
-  }, [myOrders]);
-  return (
-    <>
-      {unfinishedOrders.length ? (
-        <OrderCard order={unfinishedOrders[0]} />
-      ) : (
-        <View style={styles.empty}>
-          <ChoppThemedText style={styles.emptyText}>{t("noOrdersInProcessing")}</ChoppThemedText>
-        </View>
-      )}
-    </>
-  );
+  }, [orders]);
+
+  return activeOrder ? <OrderScreen order={activeOrder} /> : <EmptyCard message="noOrdersInProcessing" />;
 }
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    padding: 10,
-  },
-  empty: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  emptyText: {
-    textAlign: "center",
-    fontWeight: "100",
-  },
-});

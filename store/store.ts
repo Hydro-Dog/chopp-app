@@ -13,7 +13,7 @@ export const store = configureStore({
     user: userSlice.reducer,
     ws: wsSlice.reducer,
     chat: chatSlice.reducer,
-    order: orderSlice.reducer,
+    orders: orderSlice.reducer,
     products: productSlice.reducer,
     categories: productCategorySlice.reducer,
     shoppingCart: shoppingCart.reducer,
@@ -27,7 +27,7 @@ export type RootState = {
   user: UserState;
   ws: WsState;
   chat: ChatState;
-  order: OrderState;
+  orders: OrderState;
   products: ProductsState;
   categories: CategoryState;
   shoppingCart: ShoppingCartState;

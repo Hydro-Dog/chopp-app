@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 export const ru = {
   jopa1: "Жопа",
   welcome: "Добро пожаловать в React Native",

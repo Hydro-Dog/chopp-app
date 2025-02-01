@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { createOrder, fetchLastOrder, fetchMyOrders, fetchOrder } from "./actions";
-import { FewOrders, Order } from ".";
+import { createOrder, fetchLastOrder, fetchOrders, fetchOrder } from "./actions";
+import { Order, SearchResponse } from "@/shared/types";
 import { FETCH_STATUS } from "@/shared/types/fetch-status";
 import { ErrorResponse } from "@/shared/types/response-error";
 
@@ -10,7 +10,7 @@ export type OrderState = {
   createOrderError: ErrorResponse | null;
   fetchOrderStatus: FETCH_STATUS;
   fetchOrderError: ErrorResponse | null;
-  myOrders?: Order[] | null;
+  orders?: Order[] | null;
   fetchMyOrdersStatus: FETCH_STATUS;
   fetchMyOrdersError: ErrorResponse | null;
   fetchLastOrderStatus: FETCH_STATUS;
@@ -23,7 +23,7 @@ const initialState: OrderState = {
   createOrderError: null,
   fetchOrderStatus: FETCH_STATUS.IDLE,
   fetchOrderError: null,
-  myOrders: null,
+  orders: null,
   fetchMyOrdersStatus: FETCH_STATUS.IDLE,
   fetchMyOrdersError: null,
   fetchLastOrderStatus: FETCH_STATUS.IDLE,
@@ -49,14 +49,14 @@ export const orderSlice = createSlice({
           message: "Failed to fetch user information",
         };
       })
-      .addCase(fetchMyOrders.pending, (state) => {
+      .addCase(fetchOrders.pending, (state) => {
         state.fetchMyOrdersStatus = FETCH_STATUS.LOADING;
       })
-      .addCase(fetchMyOrders.fulfilled, (state, action: PayloadAction<FewOrders>) => {
+      .addCase(fetchOrders.fulfilled, (state, action: PayloadAction<SearchResponse<Order>>) => {
         state.fetchMyOrdersStatus = FETCH_STATUS.SUCCESS;
-        state.myOrders = action.payload.items;
+        state.orders = action.payload.items;
       })
-      .addCase(fetchMyOrders.rejected, (state, action) => {
+      .addCase(fetchOrders.rejected, (state, action) => {
         state.fetchMyOrdersStatus = FETCH_STATUS.ERROR;
         state.fetchMyOrdersError = action.payload ?? {
           message: "Failed to fetch user information",

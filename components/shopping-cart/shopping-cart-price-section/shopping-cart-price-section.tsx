@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Linking } from "react-native";
 import { Banner, Button } from "react-native-paper";
-import { useDispatch, useSelector } from "react-redux";
-import { ChoppThemedText } from "@/shared";
+import { useBoolean } from "usehooks-ts";
+import { ChoppThemedText, Order, useSuperDispatch } from "@/shared";
 import { createOrder } from "@/store/slices/order-slice";
 import { ShoppingCart } from "@/store/slices/shopping-cart-slice";
-import { AppDispatch, RootState } from "@/store/store";
 
 type Props = {
   shoppingCart: ShoppingCart;
@@ -14,35 +13,47 @@ type Props = {
 
 export const ShoppingCartPriceSection = ({ shoppingCart }: Props) => {
   const { t } = useTranslation();
-  const dispatch = useDispatch<AppDispatch>();
-  const { createOrderError } = useSelector((state: RootState) => state.order);
-  const [visible, setVisible] = useState(false);
+  const { value: isBannerVisible, setTrue: showBanner, setFalse: hideBanner } = useBoolean();
+  const [bannerMessage, setBannerMessage] = useState("");
+  const { superDispatch } = useSuperDispatch<Order, unknown>();
 
-  useEffect(() => {
-    if (createOrderError) {
-      setVisible(true);
-    }
-  }, [createOrderError]);
-  
+  const onCommitOrder = () => {
+    superDispatch({
+      action: createOrder(),
+      thenHandler: (order) => {
+        Linking.openURL(order.paymentUrl).catch((err) => console.error("Ошибка открытия ссылки:", err));
+      },
+      catchHandler: (err) => {
+        setBannerMessage(err.message);
+        showBanner();
+      },
+    });
+  };
+
+  const onHideBannerPress = () => {
+    hideBanner();
+    setBannerMessage("");
+  };
+
   return (
     <View style={{ flexDirection: "column" }}>
       <Banner
-        visible={visible}
+        visible={isBannerVisible}
         actions={[
           {
-            label: "Ok",
-            onPress: () => setVisible(false),
+            label: t("ok"),
+            onPress: onHideBannerPress,
           },
         ]}
       >
-        <ChoppThemedText>{createOrderError?.message}</ChoppThemedText>
+        <ChoppThemedText>{bannerMessage}</ChoppThemedText>
       </Banner>
       <View style={styles.priceAndButton}>
         <ChoppThemedText style={{ fontSize: 20 }}>
           {shoppingCart.totalPrice}
           {t("currency")}
         </ChoppThemedText>
-        <Button style={styles.buyButton} mode="contained" onPress={() => dispatch(createOrder())}>
+        <Button style={styles.buyButton} mode="contained" onPress={onCommitOrder}>
           {t("toOrder")}
         </Button>
       </View>

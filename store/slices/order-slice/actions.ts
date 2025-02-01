@@ -1,8 +1,8 @@
 import { Linking } from "react-native";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { FewOrders, Order } from "./types";
 import { axiosPrivate } from "@/services";
+import { Order, SearchResponse } from "@/shared";
 import { ErrorResponse } from "@/shared/types/response-error";
 
 export const fetchOrder = createAsyncThunk<Order, string, { rejectValue: ErrorResponse }>(
@@ -23,11 +23,11 @@ export const fetchOrder = createAsyncThunk<Order, string, { rejectValue: ErrorRe
   },
 );
 
-export const fetchMyOrders = createAsyncThunk<FewOrders, void, { rejectValue: ErrorResponse }>(
+export const fetchOrders = createAsyncThunk<SearchResponse<Order>, void, { rejectValue: ErrorResponse }>(
   "/fetchOrders",
   async (_, thunkAPI) => {
     try {
-      const response = await axiosPrivate.get<FewOrders>("/orders");
+      const response = await axiosPrivate.get<SearchResponse<Order>>("/orders");
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
@@ -59,9 +59,7 @@ export const createOrder = createAsyncThunk<Order>("/createOrder", async (_, thu
   try {
     const returnUrl = { returnUrl: window.location.href };
     const response = await axiosPrivate.post<Order>(`/orders`, returnUrl);
-    if (response.status === 200 || response.status === 201) {
-      Linking.openURL(response.data.paymentUrl).catch((err) => console.error("Ошибка открытия ссылки:", err));
-    }
+
     return response.data;
   } catch (error) {
     console.log("axios error: ", error);

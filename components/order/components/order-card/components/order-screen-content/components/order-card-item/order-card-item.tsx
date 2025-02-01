@@ -2,19 +2,19 @@ import { useTranslation } from "react-i18next";
 import { View, StyleSheet } from "react-native";
 import { Card } from "react-native-paper";
 import { CONFIG } from "@/my-config";
-import { ChoppThemedText } from "@/shared";
-import { OrderItem } from "@/store/slices/order-slice";
+import { ChoppThemedText, OrderItem } from "@/shared";
 
 type Props = {
   item: OrderItem;
 };
 
-export const OrderGoodsCard = ({ item }: Props) => {
+export const OrderCardItem = ({ item }: Props) => {
   const { t } = useTranslation();
+
   return (
     <Card style={styles.container}>
       <View style={styles.goods}>
-        <Card.Cover style={styles.img} source={{ uri: `${CONFIG.filesUrl + item.product.images[0].path}` }} />
+        <Card.Cover style={styles.img} source={{ uri: `${CONFIG.filesUrl || '' + item.product.images[0].path}` }} />
         <Card.Content>
           <ChoppThemedText>{item.product.title}</ChoppThemedText>
           <ChoppThemedText>
