@@ -6,7 +6,7 @@ import { AppDispatch } from "@/store/store";
 
 type Args<R, A> = {
   action: AsyncThunkAction<R, A, { rejectValue: ErrorResponse }>;
-  thenHandler: (value: R) => void;
+  thenHandler?: (value: R) => void;
   catchHandler?: (error: ErrorResponse) => void;
 };
 
@@ -23,9 +23,11 @@ export const useSuperDispatch = <R, A>() => {
     // });
   };
 
-  return ({ action, thenHandler, catchHandler }: Args<R, A>) =>
-    dispatch(action)
-      .unwrap()
-      .then(thenHandler)
-      .catch(catchHandler || defaultErrorHandler);
+  return {
+    superDispatch: ({ action, thenHandler, catchHandler }: Args<R, A>) =>
+      dispatch(action)
+        .unwrap()
+        .then(thenHandler)
+        .catch(catchHandler || defaultErrorHandler),
+  };
 };

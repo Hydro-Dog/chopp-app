@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { createOrder, fetchMyOrders, fetchOrder } from "./actions";
-import { Order } from ".";
+import { createOrder, fetchLastOrder, fetchOrders, fetchOrder } from "./actions";
+import { Order, SearchResponse } from "@/shared/types";
 import { FETCH_STATUS } from "@/shared/types/fetch-status";
 import { ErrorResponse } from "@/shared/types/response-error";
 
@@ -10,9 +10,11 @@ export type OrderState = {
   createOrderError: ErrorResponse | null;
   fetchOrderStatus: FETCH_STATUS;
   fetchOrderError: ErrorResponse | null;
-  myOrders?: Order[] | null;
+  orders?: Order[] | null;
   fetchMyOrdersStatus: FETCH_STATUS;
   fetchMyOrdersError: ErrorResponse | null;
+  fetchLastOrderStatus: FETCH_STATUS;
+  fetchLastOrderError: ErrorResponse | null;
 };
 
 const initialState: OrderState = {
@@ -21,9 +23,11 @@ const initialState: OrderState = {
   createOrderError: null,
   fetchOrderStatus: FETCH_STATUS.IDLE,
   fetchOrderError: null,
-  myOrders: null,
+  orders: null,
   fetchMyOrdersStatus: FETCH_STATUS.IDLE,
   fetchMyOrdersError: null,
+  fetchLastOrderStatus: FETCH_STATUS.IDLE,
+  fetchLastOrderError: null,
 };
 
 export const orderSlice = createSlice({
@@ -45,19 +49,29 @@ export const orderSlice = createSlice({
           message: "Failed to fetch user information",
         };
       })
-      .addCase(fetchMyOrders.pending, (state) => {
+      .addCase(fetchOrders.pending, (state) => {
         state.fetchMyOrdersStatus = FETCH_STATUS.LOADING;
       })
-      .addCase(
-        fetchMyOrders.fulfilled,
-        (state, action: PayloadAction<Order[]>) => {
-          state.fetchMyOrdersStatus = FETCH_STATUS.SUCCESS;
-          state.myOrders = action.payload;
-        }
-      )
-      .addCase(fetchMyOrders.rejected, (state, action) => {
+      .addCase(fetchOrders.fulfilled, (state, action: PayloadAction<SearchResponse<Order>>) => {
+        state.fetchMyOrdersStatus = FETCH_STATUS.SUCCESS;
+        state.orders = action.payload.items;
+      })
+      .addCase(fetchOrders.rejected, (state, action) => {
         state.fetchMyOrdersStatus = FETCH_STATUS.ERROR;
         state.fetchMyOrdersError = action.payload ?? {
+          message: "Failed to fetch user information",
+        };
+      })
+      .addCase(fetchLastOrder.pending, (state) => {
+        state.createOrderStatus = FETCH_STATUS.LOADING;
+      })
+      .addCase(fetchLastOrder.fulfilled, (state, action) => {
+        state.createOrderStatus = FETCH_STATUS.LOADING;
+        state.currentOrder = action.payload;
+      })
+      .addCase(fetchLastOrder.rejected, (state, action) => {
+        state.createOrderStatus = FETCH_STATUS.LOADING;
+        state.fetchLastOrderError = (action.payload as ErrorResponse) ?? {
           message: "Failed to fetch user information",
         };
       })
@@ -70,7 +84,7 @@ export const orderSlice = createSlice({
       })
       .addCase(createOrder.rejected, (state, action) => {
         state.createOrderStatus = FETCH_STATUS.ERROR;
-        state.createOrderError = action.payload ?? {
+        state.createOrderError = (action.payload as ErrorResponse) ?? {
           message: "Failed to fetch user information",
         };
       });

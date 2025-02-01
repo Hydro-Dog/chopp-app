@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchCategories } from "./actions";
 import { Category } from "./types";
-import { ErrorResponse, FETCH_STATUS } from "@/shared";
+import { FETCH_STATUS, ErrorResponse } from "@/shared/types";
 
 export type CategoryState = {
   categories: Category[] | [];

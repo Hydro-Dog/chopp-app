@@ -1,10 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {
-  createUser,
-  fetchCurrentUser,
-  login,
-  updateCurrentUser,
-} from "./actions";
+import { createUser, fetchCurrentUser, login, updateCurrentUser } from "./actions";
 import { User, UserAuthorization } from ".";
 import { FETCH_STATUS } from "@/shared/types/fetch-status";
 import { ErrorResponse } from "@/shared/types/response-error";
@@ -53,14 +48,11 @@ export const userSlice = createSlice({
       .addCase(fetchCurrentUser.pending, (state) => {
         state.fetchCurrentUserStatus = FETCH_STATUS.LOADING;
       })
-      .addCase(
-        fetchCurrentUser.fulfilled,
-        (state, action: PayloadAction<User>) => {
-          state.fetchCurrentUserStatus = FETCH_STATUS.SUCCESS;
+      .addCase(fetchCurrentUser.fulfilled, (state, action: PayloadAction<User>) => {
+        state.fetchCurrentUserStatus = FETCH_STATUS.SUCCESS;
 
-          state.currentUser = action.payload;
-        }
-      )
+        state.currentUser = action.payload;
+      })
       .addCase(fetchCurrentUser.rejected, (state, action) => {
         state.fetchCurrentUserStatus = FETCH_STATUS.ERROR;
         state.currentUserError = action.payload ?? {
@@ -70,15 +62,12 @@ export const userSlice = createSlice({
       .addCase(updateCurrentUser.pending, (state) => {
         state.updateCurrentUserStatus = FETCH_STATUS.LOADING;
       })
-      .addCase(
-        updateCurrentUser.fulfilled,
-        (state, action: PayloadAction<User>) => {
-          state.updateCurrentUserStatus = FETCH_STATUS.SUCCESS;
-          console.log("action.payload: ", action.payload);
-          state.currentUser = action.payload;
-          state.updateCurrentUserStatus = FETCH_STATUS.IDLE;
-        }
-      )
+      .addCase(updateCurrentUser.fulfilled, (state, action: PayloadAction<User>) => {
+        state.updateCurrentUserStatus = FETCH_STATUS.SUCCESS;
+        console.log("action.payload: ", action.payload);
+        state.currentUser = action.payload;
+        state.updateCurrentUserStatus = FETCH_STATUS.IDLE;
+      })
       .addCase(updateCurrentUser.rejected, (state, action) => {
         state.updateCurrentUserStatus = FETCH_STATUS.ERROR;
         state.updateCurrentUserError = action.payload ?? {
@@ -99,13 +88,10 @@ export const userSlice = createSlice({
       .addCase(login.pending, (state) => {
         state.loginStatus = FETCH_STATUS.LOADING;
       })
-      .addCase(
-        login.fulfilled,
-        (state, action: PayloadAction<UserAuthorization>) => {
-          state.loginStatus = FETCH_STATUS.SUCCESS;
-          // localStorage.setItem("token", action.payload.Authorization);
-        }
-      )
+      .addCase(login.fulfilled, (state, action: PayloadAction<UserAuthorization>) => {
+        state.loginStatus = FETCH_STATUS.SUCCESS;
+        // localStorage.setItem("token", action.payload.Authorization);
+      })
       .addCase(login.rejected, (state, action) => {
         state.loginStatus = FETCH_STATUS.ERROR;
         state.loginError = action.payload ?? {

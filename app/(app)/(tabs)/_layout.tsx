@@ -2,16 +2,8 @@ import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { Tabs } from "expo-router";
-import useFetchChatStats from "@/hooks/use-fetch-chat-stats";
 import useFetchMessages from "@/hooks/use-fetch-messages";
-import useReadAllChatMessages from "@/hooks/use-read-all-chat-messages";
-import {
-  useChatsContext,
-  useFilterWsMessages,
-  useChoppTheme,
-  ChatMessage,
-  WS_MESSAGE_TYPE,
-} from "@/shared";
+import { useChoppTheme } from "@/shared";
 import { TabBarIcon } from "@/shared/components/chopp-tab-bar-icon";
 import { fetchCurrentUser } from "@/store/slices/user-slice";
 import { AppDispatch } from "@/store/store";
@@ -19,30 +11,13 @@ import { AppDispatch } from "@/store/store";
 export default function TabLayout() {
   const { theme } = useChoppTheme();
   const { t } = useTranslation();
-  const { lastMessage: newMessage } = useFilterWsMessages<ChatMessage>(
-    WS_MESSAGE_TYPE.MESSAGE,
-  );
   const dispatch = useDispatch<AppDispatch>();
-  // const { chatStats, setChatStats } = useChatsContext();
 
   useFetchMessages();
-  // useFetchChatStats();
-  // useReadAllChatMessages();
 
   useEffect(() => {
     dispatch(fetchCurrentUser());
   }, [dispatch]);
-
-  //TODO: вынести в хук
-  // useEffect(() => {
-  //   setChatStats((prev) => {
-  //     return {
-  //       ...prev,
-  //       unRead: prev.unRead + 1,
-  //       total: prev.total + 1,
-  //     };
-  //   });
-  // }, [newMessage]);
 
   return (
     <Tabs
@@ -60,11 +35,15 @@ export default function TabLayout() {
         name="index"
         options={{
           title: t("mainPage"),
+          tabBarIcon: ({ color, focused }) => <TabBarIcon name={focused ? "grid" : "grid-outline"} color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="tab-order"
+        options={{
+          title: t("order"),
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "home" : "home-outline"}
-              color={color}
-            />
+            <TabBarIcon name={focused ? "bag-handle" : "bag-handle-outline"} color={color} />
           ),
         }}
       />
@@ -73,11 +52,7 @@ export default function TabLayout() {
         options={{
           title: t("supportPage"),
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "chatbox-ellipses" : "chatbox-ellipses-outline"}
-              color={color}
-              // badge={chatStats?.unRead ? chatStats?.unRead : ""}
-            />
+            <TabBarIcon name={focused ? "chatbox-ellipses" : "chatbox-ellipses-outline"} color={color} />
           ),
         }}
       />
@@ -86,10 +61,7 @@ export default function TabLayout() {
         options={{
           title: t("controlPanel"),
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "settings" : "settings-outline"}
-              color={color}
-            />
+            <TabBarIcon name={focused ? "settings" : "settings-outline"} color={color} />
           ),
         }}
       />
@@ -110,10 +82,7 @@ export default function TabLayout() {
         options={{
           title: t("logoutPage"),
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "log-out" : "log-out-outline"}
-              color={color}
-            />
+            <TabBarIcon name={focused ? "log-out" : "log-out-outline"} color={color} />
           ),
         }}
       />

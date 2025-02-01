@@ -12,19 +12,19 @@ import {
   ChoppViewItems,
 } from "@/shared";
 import { ChoppOrderStatusChip } from "@/shared/components/chopp-order-status-chip";
-import { fetchMyOrders } from "@/store/slices/order-slice";
+import { fetchOrders } from "@/store/slices/order-slice";
 import { AppDispatch, RootState } from "@/store/store";
 
 export default function OrderHistory() {
   const { t } = useTranslation();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { myOrders, fetchMyOrdersStatus } = useSelector(
+  const { orders, fetchMyOrdersStatus } = useSelector(
     (state: RootState) => state.order,
   );
 
   useEffect(() => {
-    dispatch(fetchMyOrders());
+    dispatch(fetchOrders());
   }, []);
 
   // TODO: дабавить превью текста заказа
@@ -35,9 +35,9 @@ export default function OrderHistory() {
           showBackButton
           loading={fetchMyOrdersStatus === FETCH_STATUS.LOADING}
         >
-          {myOrders && (
+          {orders && (
             <ChoppAnimatedList
-              data={myOrders}
+              data={orders}
               renderItem={(item) => (
                 <ChoppCollapsibleCard
                   title={
