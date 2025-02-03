@@ -8,7 +8,7 @@ type Props = {
   item: OrderItem;
 };
 
-export const OrderHistoryCard = ({ item }: Props) => {
+export const OrderHistoryProductCard = ({ item }: Props) => {
   const { t } = useTranslation();
   return (
     <Card style={styles.card}>

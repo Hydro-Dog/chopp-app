@@ -4,7 +4,7 @@ import { StyleSheet, SafeAreaView, StatusBar, View, FlatList } from "react-nativ
 import { Icon } from "react-native-paper";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import { OrderHistoryCard } from "@/components/settings/order-history";
+import { OrderHistoryProductCard } from "@/components/settings/order-history";
 import {
   ChoppScreenLayout,
   FETCH_STATUS,
@@ -28,7 +28,6 @@ export default function OrderHistory() {
     dispatch(fetchOrders());
   }, []);
 
-  // TODO: дабавить превью текста заказа
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
@@ -66,7 +65,7 @@ export default function OrderHistory() {
                             data={item.items}
                             horizontal
                             keyExtractor={(item) => item.product.id.toString()}
-                            renderItem={({ item }) => <OrderHistoryCard item={item} />}
+                            renderItem={({ item }) => <OrderHistoryProductCard item={item} />}
                             showsHorizontalScrollIndicator={false}
                           />
                         </View>

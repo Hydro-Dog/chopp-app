@@ -1,1 +1,1 @@
-export * from "./order-history-card";
+export * from "./order-history-product-card";
