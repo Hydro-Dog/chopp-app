@@ -1,7 +1,7 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { View, StyleSheet } from "react-native";
 import { ChoppThemedText } from "@/shared";
-import { useTranslation } from "react-i18next";
 
 type Props = {
   message: string;

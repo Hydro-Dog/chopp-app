@@ -13,7 +13,7 @@ export const OrderScreenContent = ({ order }: Props) => {
       <View style={styles.row}>
         <FlatList
           data={order.items}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.product.id.toString()}
           numColumns={1}
           renderItem={({ item }) => <OrderCardItem item={item} />}
         />

@@ -14,7 +14,7 @@ export const OrderCardItem = ({ item }: Props) => {
   return (
     <Card style={styles.container}>
       <View style={styles.goods}>
-        <Card.Cover style={styles.img} source={{ uri: `${CONFIG.filesUrl || '' + item.product.images[0].path}` }} />
+        <Card.Cover style={styles.img} source={{ uri: `${(CONFIG.filesUrl ?? "") + item.product.images[0].path}` }} />
         <Card.Content>
           <ChoppThemedText>{item.product.title}</ChoppThemedText>
           <ChoppThemedText>
