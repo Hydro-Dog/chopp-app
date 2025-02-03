@@ -14,7 +14,7 @@ export const ChoppViewItems = ({ items, loading }: Props) => {
           loading={loading}
           key={key}
           title={key}
-          label={String(val)}
+          label={(val)}
         />
       ))}
     </View>
