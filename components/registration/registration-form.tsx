@@ -8,13 +8,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { useBoolean } from "usehooks-ts";
 import { RegistrationFormType, registrationSchema } from "./types";
-import { ChoppCheckbox } from "@/shared/components/chopp-checkbox";
+import ChoppCheckbox from "@/shared/components/chopp-checkbox";
 import { ChoppDialog } from "@/shared/components/chopp-dialog";
 import { ChoppFormField } from "@/shared/components/chopp-form-field";
-import {
-  useChoppSnackbar,
-  SNACKBAR_VARIANTS,
-} from "@/shared/components/chopp-snackbar-stack";
+import { useChoppSnackbar, SNACKBAR_VARIANTS } from "@/shared/components/chopp-snackbar-stack";
 import { ChoppThemedText } from "@/shared/components/chopp-themed-text";
 import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 import { FETCH_STATUS } from "@/shared/types/fetch-status";
@@ -27,8 +24,7 @@ export const RegistrationForm = () => {
   const { theme } = useChoppTheme();
   const { t } = useTranslation();
   const router = useRouter();
-  const { value: passwordVisible, toggle: togglePasswordVisibility } =
-    useBoolean();
+  const { value: passwordVisible, toggle: togglePasswordVisibility } = useBoolean();
   const { createUserStatus } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
 
@@ -65,11 +61,7 @@ export const RegistrationForm = () => {
     }
   };
 
-  const {
-    value: isModalVisible,
-    setTrue: showModal,
-    setFalse: hideModal,
-  } = useBoolean();
+  const { value: isModalVisible, setTrue: showModal, setFalse: hideModal } = useBoolean();
 
   const [modalData, setModalData] = useState<{ title: string; text: string }>();
 
@@ -151,10 +143,7 @@ export const RegistrationForm = () => {
           )}
         />
       </ChoppFormField>
-      <ChoppFormField
-        styles={{ marginBottom: 16 }}
-        errorMessage={errors.isPersonalDataProcessingAccepted?.message}
-      >
+      <ChoppFormField styles={{ marginBottom: 16 }} errorMessage={errors.isPersonalDataProcessingAccepted?.message}>
         <Controller
           control={control}
           name="isPersonalDataProcessingAccepted"
@@ -164,28 +153,18 @@ export const RegistrationForm = () => {
               onChange={onChange}
               label={
                 <>
-                  <ChoppThemedText>
-                    {t(
-                      "registrationForm.acceptPersonalDataProcessingMessage_1",
-                    )}{" "}
-                  </ChoppThemedText>
+                  <ChoppThemedText>{t("registrationForm.acceptPersonalDataProcessingMessage_1")} </ChoppThemedText>
                   <ChoppThemedText
                     variant="primary"
                     onPress={() => {
                       showModal();
                       setModalData({
-                        title: t(
-                          "registrationForm.acceptPersonalDataProcessingTitle",
-                        ),
-                        text: t(
-                          "registrationForm.acceptPersonalDataProcessingText",
-                        ),
+                        title: t("registrationForm.acceptPersonalDataProcessingTitle"),
+                        text: t("registrationForm.acceptPersonalDataProcessingText"),
                       });
                     }}
                   >
-                    {t(
-                      "registrationForm.acceptPersonalDataProcessingMessage_2",
-                    )}
+                    {t("registrationForm.acceptPersonalDataProcessingMessage_2")}
                   </ChoppThemedText>
                 </>
               }
@@ -203,9 +182,7 @@ export const RegistrationForm = () => {
               onChange={onChange}
               label={
                 <>
-                  <ChoppThemedText>
-                    {t("registrationForm.acceptOfferDoc_1")}{" "}
-                  </ChoppThemedText>
+                  <ChoppThemedText>{t("registrationForm.acceptOfferDoc_1")} </ChoppThemedText>
                   <ChoppThemedText
                     variant="primary"
                     onPress={() => {
@@ -234,12 +211,7 @@ export const RegistrationForm = () => {
       >
         {t("actions.createAccount")}
       </Button>
-      <ChoppDialog
-        visible={isModalVisible}
-        onClose={hideModal}
-        onOk={hideModal}
-        {...modalData}
-      />
+      <ChoppDialog visible={isModalVisible} onClose={hideModal} onOk={hideModal} {...modalData} />
     </View>
   );
 };
