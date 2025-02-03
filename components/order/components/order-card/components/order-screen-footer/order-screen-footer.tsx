@@ -19,7 +19,7 @@ export const OrderScreenFooter = ({ order }: Props) => {
   if (order?.orderStatus !== ORDER_STATUS.AWAITING_PAYMENT) return null;
 
   return (
-    <Button style={styles.button} mode="contained" onPress={() => makePayment()}>
+    <Button style={styles.button} mode="contained" onPress={makePayment}>
       {t("makePayment")}
     </Button>
   );
