@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FlatList, StyleSheet } from "react-native";
 import { View } from "react-native";
+import { Modal, Portal } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { ShoppingCartCard, ShoppingCartPriceSection, ShoppingCartTopBar } from "@/components/shopping-cart";
+import { InfoForDeliveryModal } from "@/components/shopping-cart";
 import { ChoppBackButton, ChoppScreenLayout, ChoppThemedText } from "@/shared";
 import { PostShoppingCartDTO, fetchShoppingCart, postShoppingCart } from "@/store/slices/shopping-cart-slice";
 import { AppDispatch, RootState } from "@/store/store";
@@ -14,6 +16,7 @@ export default function ShoppingCart() {
   const [itemIdsToDelete, setItemIdsToDelete] = useState<number[]>([]);
   const [isDeleteMode, setChoose] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
+  const [isVisible, setVisible] = useState(false);
 
   useEffect(() => {
     dispatch(fetchShoppingCart());
@@ -62,6 +65,12 @@ export default function ShoppingCart() {
         chooseAllItems={chooseAllItems}
         deleteChosenItem={deleteChosenItem}
       />
+      <Portal>
+        <Modal visible={isVisible}>
+          <InfoForDeliveryModal setVisible={setVisible} shoppingCart={shoppingCart} />
+        </Modal>
+      </Portal>
+
       <ChoppScreenLayout>
         <View style={{ flex: 1 }}>
           <View style={styles.container}>
@@ -80,7 +89,7 @@ export default function ShoppingCart() {
             />
           </View>
           {shoppingCart.quantity ? (
-            <ShoppingCartPriceSection shoppingCart={shoppingCart} />
+            <ShoppingCartPriceSection setVisible={setVisible} shoppingCart={shoppingCart} />
           ) : (
             <ChoppThemedText style={styles.emptyBasket}>{t("emptyBasket")}</ChoppThemedText>
           )}
