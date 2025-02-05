@@ -1,16 +1,15 @@
 import { useTranslation } from "react-i18next";
 import { View, StyleSheet } from "react-native";
 import { IconButton } from "react-native-paper";
-import { InfoForDeliveryForm } from "../info-for-delivery-form";
+import { OrderAdditionalInfoForm } from "../order-additional-info-form";
 import { ChoppThemedText, useChoppTheme } from "@/shared";
-import { ShoppingCart } from "@/store/slices/shopping-cart-slice";
 
 type Props = {
-  shoppingCart: ShoppingCart;
-  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  totalPrice: number;
+  onClose: () => void;
 };
 
-export const InfoForDeliveryModal = ({ shoppingCart, setVisible }: Props) => {
+export const OrderAdditionalInfoModal = ({ totalPrice, onClose }: Props) => {
   const { t } = useTranslation();
   const { theme } = useChoppTheme();
 
@@ -21,15 +20,15 @@ export const InfoForDeliveryModal = ({ shoppingCart, setVisible }: Props) => {
         icon="close"
         iconColor={theme.colors.primary}
         size={20}
-        onPress={() => setVisible(false)}
+        onPress={onClose}
       />
 
       <ChoppThemedText>
-        {t("inAll")}: {shoppingCart.totalPrice}
+        {t("inAll")}: {totalPrice}
         {t("currency")}
       </ChoppThemedText>
 
-      <InfoForDeliveryForm />
+      <OrderAdditionalInfoForm onClose={onClose} />
     </View>
   );
 };

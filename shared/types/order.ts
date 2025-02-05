@@ -56,4 +56,7 @@ export type Order = {
   items: OrderItem[];
   createdAt: string;
   updatedAt: string;
+  returnUrl: string;
+  comment: string;
+  address: string;
 };

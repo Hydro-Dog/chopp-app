@@ -5,7 +5,7 @@ import { View } from "react-native";
 import { Modal, Portal } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { ShoppingCartCard, ShoppingCartPriceSection, ShoppingCartTopBar } from "@/components/shopping-cart";
-import { InfoForDeliveryModal } from "@/components/shopping-cart";
+import { OrderAdditionalInfoModal } from "@/components/shopping-cart";
 import { ChoppBackButton, ChoppScreenLayout, ChoppThemedText } from "@/shared";
 import { PostShoppingCartDTO, fetchShoppingCart, postShoppingCart } from "@/store/slices/shopping-cart-slice";
 import { AppDispatch, RootState } from "@/store/store";
@@ -16,7 +16,7 @@ export default function ShoppingCart() {
   const [itemIdsToDelete, setItemIdsToDelete] = useState<number[]>([]);
   const [isDeleteMode, setChoose] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
-  const [isVisible, setVisible] = useState(false);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     dispatch(fetchShoppingCart());
@@ -65,9 +65,11 @@ export default function ShoppingCart() {
         chooseAllItems={chooseAllItems}
         deleteChosenItem={deleteChosenItem}
       />
+
+      {/* TODO: вынести модалку в отдельный компонент  */}
       <Portal>
-        <Modal visible={isVisible}>
-          <InfoForDeliveryModal setVisible={setVisible} shoppingCart={shoppingCart} />
+        <Modal visible={isModalVisible}>
+          <OrderAdditionalInfoModal onClose={() => setModalVisible(false)} totalPrice={shoppingCart.totalPrice} />
         </Modal>
       </Portal>
 
@@ -89,7 +91,7 @@ export default function ShoppingCart() {
             />
           </View>
           {shoppingCart.quantity ? (
-            <ShoppingCartPriceSection setVisible={setVisible} shoppingCart={shoppingCart} />
+            <ShoppingCartPriceSection onOrderPressed={() => setModalVisible(true)} shoppingCart={shoppingCart} />
           ) : (
             <ChoppThemedText style={styles.emptyBasket}>{t("emptyBasket")}</ChoppThemedText>
           )}

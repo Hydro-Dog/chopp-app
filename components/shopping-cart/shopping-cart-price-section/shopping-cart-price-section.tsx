@@ -6,10 +6,10 @@ import { ShoppingCart } from "@/store/slices/shopping-cart-slice";
 
 type Props = {
   shoppingCart: ShoppingCart;
-  setVisible: React.Dispatch<React.SetStateAction<boolean>>
+  onOrderPressed: () => void;
 };
 
-export const ShoppingCartPriceSection = ({ shoppingCart, setVisible }: Props) => {
+export const ShoppingCartPriceSection = ({ shoppingCart, onOrderPressed }: Props) => {
   const { t } = useTranslation();
 
   return (
@@ -19,11 +19,11 @@ export const ShoppingCartPriceSection = ({ shoppingCart, setVisible }: Props) =>
           {shoppingCart.totalPrice}
           {t("currency")}
         </ChoppThemedText>
-        <Button style={styles.buyButton} mode="contained" onPress={() => setVisible(true)}>
+        <Button style={styles.buyButton} mode="contained" onPress={onOrderPressed}>
           {t("toOrder")}
         </Button>
       </View>
-      {/* TODO Нужно будет добавить в переводчик, когда будем с Артемом соеденять */}
+      {/* TODO Доделать */}
       <ChoppThemedText style={{ fontSize: 12, textAlign: "center" }}>
         Закажите еще на n рублей, для бесплатной доставки
       </ChoppThemedText>
