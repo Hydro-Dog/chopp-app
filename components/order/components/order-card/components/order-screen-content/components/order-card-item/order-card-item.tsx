@@ -21,7 +21,7 @@ export const OrderCardItem = ({ item }: Props) => {
             {item.quantity} {t("count")}
           </ChoppThemedText>
           <ChoppThemedText>
-            {item.price} {t("currency")}/{t("count")}
+            {item.product.price} {t("currency")}/{t("count")}
           </ChoppThemedText>
         </Card.Content>
       </View>
