@@ -25,6 +25,7 @@ export const OrderHistoryProductCard = ({ item }: Props) => {
     </Card>
   );
 };
+
 const styles = StyleSheet.create({
   card: {
     margin: 5,

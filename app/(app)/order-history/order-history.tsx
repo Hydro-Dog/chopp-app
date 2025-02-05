@@ -14,17 +14,16 @@ import {
   ChoppViewItems,
   ORDER_STATUS,
 } from "@/shared";
-import { ChoppOrderStatusChip } from "@/shared/components/chopp-order-status-chip";
 import { fetchOrders } from "@/store/slices/order-slice";
 import { AppDispatch, RootState } from "@/store/store";
 
 export default function OrderHistory() {
   const { t } = useTranslation();
   const dispatch = useDispatch<AppDispatch>();
-
   const { orders, fetchMyOrdersStatus } = useSelector((state: RootState) => state.orders);
 
   useEffect(() => {
+    //TODO: добавить инфинит сролл
     dispatch(fetchOrders());
   }, []);
 
@@ -59,6 +58,7 @@ export default function OrderHistory() {
                     items={{
                       [t("inAll")]: item.totalPrice + t("currency"),
                       [t("countOfGoods")]: item.quantity + t("count"),
+                      //TODO: Добавить текстовое описание статуса
                       [t("orderComment")]: (
                         <View style={styles.list}>
                           <FlatList
