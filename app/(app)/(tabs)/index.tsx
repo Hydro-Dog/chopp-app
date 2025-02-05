@@ -5,12 +5,11 @@ import { ProductGridItem } from "@/components/main";
 import { TopBar } from "@/components/main/top-bar";
 import { CONFIG } from "@/my-config";
 import { ChoppScreenLayout, useSuperDispatch, ChoppTabs } from "@/shared";
+import { SearchResponse, Pagination, FETCH_STATUS } from "@/shared/types";
 import { fetchCategories } from "@/store/slices/product-category-slice";
 import { fetchProducts, Product } from "@/store/slices/product-slice";
 import { fetchShoppingCart } from "@/store/slices/shopping-cart-slice";
 import { AppDispatch, RootState } from "@/store/store";
-import { SearchResponse, Pagination, FETCH_STATUS } from "@/shared/types";
-import React from "react";
 
 //TODO: Временный лимит нужный для тестов. Потом нужно его увеличить.
 //TODO PROD: поставить лимит в 100

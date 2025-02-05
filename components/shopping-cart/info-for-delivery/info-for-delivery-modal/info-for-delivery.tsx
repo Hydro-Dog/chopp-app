@@ -1,11 +1,8 @@
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { View, StyleSheet, Linking } from "react-native";
-import { Banner, Button, IconButton, Portal } from "react-native-paper";
-import { useBoolean } from "usehooks-ts";
+import { View, StyleSheet } from "react-native";
+import { IconButton } from "react-native-paper";
 import { InfoForDeliveryForm } from "../info-for-delivery-form";
-import { ChoppThemedText, Order, useChoppTheme, useSuperDispatch } from "@/shared";
-import { createOrder } from "@/store/slices/order-slice";
+import { ChoppThemedText, useChoppTheme } from "@/shared";
 import { ShoppingCart } from "@/store/slices/shopping-cart-slice";
 
 type Props = {
@@ -16,27 +13,6 @@ type Props = {
 export const InfoForDeliveryModal = ({ shoppingCart, setVisible }: Props) => {
   const { t } = useTranslation();
   const { theme } = useChoppTheme();
-  const { superDispatch } = useSuperDispatch<Order, unknown>();
-  const { value: isBannerVisible, setTrue: showBanner, setFalse: hideBanner } = useBoolean();
-  const [bannerMessage, setBannerMessage] = useState("");
-
-  const onCommitOrder = () => {
-    superDispatch({
-      action: createOrder(),
-      thenHandler: (order) => {
-        Linking.openURL(order.paymentUrl).catch((err) => console.error("Ошибка открытия ссылки:", err));
-      },
-      catchHandler: (err) => {
-        setBannerMessage(err.message);
-        showBanner();
-      },
-    });
-  };
-
-  const onHideBannerPress = () => {
-    hideBanner();
-    setBannerMessage("");
-  };
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
@@ -48,26 +24,12 @@ export const InfoForDeliveryModal = ({ shoppingCart, setVisible }: Props) => {
         onPress={() => setVisible(false)}
       />
 
-      <InfoForDeliveryForm />
-
       <ChoppThemedText>
         {t("inAll")}: {shoppingCart.totalPrice}
         {t("currency")}
       </ChoppThemedText>
-      <Banner
-        visible={isBannerVisible}
-        actions={[
-          {
-            label: t("ok"),
-            onPress: onHideBannerPress,
-          },
-        ]}
-      >
-        <ChoppThemedText>{bannerMessage}</ChoppThemedText>
-      </Banner>
-      <Button mode="contained" style={styles.saveButton} onPress={onCommitOrder}>
-        {t("makePayment")}
-      </Button>
+
+      <InfoForDeliveryForm />
     </View>
   );
 };
@@ -81,9 +43,5 @@ const styles = StyleSheet.create({
     paddingInline: 10,
     paddingBlock: 20,
     borderRadius: 10,
-  },
-  saveButton: {
-    marginVertical: 10,
-    alignSelf: "flex-end",
   },
 });
