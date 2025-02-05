@@ -1,6 +1,7 @@
 import { Linking } from "react-native";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { CreateOrderDTO } from "./types";
 import { axiosPrivate } from "@/services";
 import { Order, SearchResponse } from "@/shared";
 import { ErrorResponse } from "@/shared/types/response-error";
@@ -55,20 +56,22 @@ export const fetchLastOrder = createAsyncThunk<Order>("/fetchLastOrder", async (
   }
 });
 
-export const createOrder = createAsyncThunk<Order>("/createOrder", async (_, thunkAPI) => {
-  try {
-    const returnUrl = { returnUrl: window.location.href };
-    const response = await axiosPrivate.post<Order>(`/orders`, returnUrl);
+export const createOrder = createAsyncThunk<Order, CreateOrderDTO>(
+  "/createOrder",
+  async ({ returnUrl = window.location.href, comment, address }, thunkAPI) => {
+    try {
+      const response = await axiosPrivate.post<Order>(`/orders`, { returnUrl, comment, address });
 
-    return response.data;
-  } catch (error) {
-    console.log("axios error: ", error);
-    if (axios.isAxiosError(error) && error.response) {
-      return thunkAPI.rejectWithValue(error.response.data as ErrorResponse);
-    } else {
-      return thunkAPI.rejectWithValue({
-        message: "An unknown error occurred",
-      });
+      return response.data;
+    } catch (error) {
+      console.log("axios error: ", error);
+      if (axios.isAxiosError(error) && error.response) {
+        return thunkAPI.rejectWithValue(error.response.data as ErrorResponse);
+      } else {
+        return thunkAPI.rejectWithValue({
+          message: "An unknown error occurred",
+        });
+      }
     }
-  }
-});
+  },
+);
