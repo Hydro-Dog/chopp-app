@@ -1,11 +1,11 @@
 import { View } from "react-native";
 import { Stack } from "expo-router";
+import { CustomTabBar } from "@/components/custom-tab-bar";
 import { useAuthGuard } from "@/hooks/use-auth-guard";
 import { useChoppTheme } from "@/shared";
 
 export default function AppLayout() {
   const { theme } = useChoppTheme();
-
   useAuthGuard();
 
   return (
@@ -16,6 +16,7 @@ export default function AppLayout() {
       }}
     >
       <Stack screenOptions={{ headerShown: false }} />
+      <CustomTabBar />
     </View>
   );
 }

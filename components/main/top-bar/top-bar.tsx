@@ -26,7 +26,7 @@ export const TopBar = ({ setSearchQuery, searchQuery, shoppingCart }: Props) => 
         iconColor={theme.colors.primary}
         style={styles.shoppingCart}
         size={40}
-        onPress={() => router.push("shopping-cart")}
+        onPress={() => router.push("/shopping-cart/shopping-cart")}
       />
     </View>
   );

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -17,7 +17,6 @@ import {
   useChoppTheme,
   ChatMessage,
   useChatsContext,
-  useFilterWsMessages,
   WS_MESSAGE_TYPE,
 } from "@/shared";
 import { wsSend } from "@/store/slices/ws-slice";
