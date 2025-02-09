@@ -34,7 +34,7 @@ export default function TabControlPanel() {
               </View>
             </Card.Content>
             <Card.Actions>
-              <Button style={styles.cardAction} onPress={() => router.push("/order-history/order-history")}>
+              <Button style={styles.cardAction} onPress={() => router.push("/tab-control-panel/order-history")}>
                 {t("open")}
               </Button>
             </Card.Actions>
@@ -47,7 +47,7 @@ export default function TabControlPanel() {
               </ChoppThemedText>
             </Card.Content>
             <Card.Actions>
-              <Button style={styles.cardAction} onPress={() => router.push("/control-panel/profile-settings")}>
+              <Button style={styles.cardAction} onPress={() => router.push("/tab-control-panel/profile-settings")}>
                 {t("setup")}
               </Button>
             </Card.Actions>

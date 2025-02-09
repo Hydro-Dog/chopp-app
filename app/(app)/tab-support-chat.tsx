@@ -13,12 +13,7 @@ import { IconButton, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 import { Chat } from "@/components/chat";
 import useNewIncomingMessageChatHandler from "@/hooks/use-new-incoming-message-chat-handler";
-import {
-  useChoppTheme,
-  ChatMessage,
-  useChatsContext,
-  WS_MESSAGE_TYPE,
-} from "@/shared";
+import { useChoppTheme, ChatMessage, useChatsContext, WS_MESSAGE_TYPE } from "@/shared";
 import { wsSend } from "@/store/slices/ws-slice";
 import { AppDispatch, RootState } from "@/store/store";
 
@@ -81,9 +76,7 @@ export default function TabSupportChat() {
         ref={flatListRef}
         // isTyping={typingStatus?.code === "typingStarted"}
       />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
+      <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <View style={styles.inputContainer}>
             <TextInput
