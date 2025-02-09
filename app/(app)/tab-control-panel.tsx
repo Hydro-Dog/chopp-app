@@ -7,23 +7,12 @@ import { useBoolean } from "usehooks-ts";
 import BankMockNoBgPng from "@/assets/bank-mock-np-bg.png";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
-import {
-  useChoppTheme,
-  ChoppScreenLayout,
-  ChoppIcon,
-  ICON_SIZE,
-  ChoppThemedText,
-  ChoppDialog,
-} from "@/shared";
+import { useChoppTheme, ChoppScreenLayout, ChoppIcon, ICON_SIZE, ChoppThemedText, ChoppDialog } from "@/shared";
 
 export default function TabControlPanel() {
   const { theme } = useChoppTheme();
   const router = useRouter();
-  const {
-    value: isModalVisible,
-    setTrue: showModal,
-    setFalse: hideModal,
-  } = useBoolean();
+  const { value: isModalVisible, setTrue: showModal, setFalse: hideModal } = useBoolean();
 
   const onReplenish = () => {
     showModal();
@@ -37,11 +26,7 @@ export default function TabControlPanel() {
         <View style={styles.row}>
           <Card style={styles.card}>
             <Card.Content>
-              <ChoppIcon
-                size={ICON_SIZE.l}
-                style={styles.cardIcon}
-                name="receipt-outline"
-              />
+              <ChoppIcon size={ICON_SIZE.l} style={styles.cardIcon} name="receipt-outline" />
               <View style={{ display: "flex", flexDirection: "row", gap: 4 }}>
                 <ChoppThemedText style={{ fontSize: 14 }} type="bold">
                   {t("ordersHistory")}
@@ -49,30 +34,20 @@ export default function TabControlPanel() {
               </View>
             </Card.Content>
             <Card.Actions>
-              <Button
-                style={styles.cardAction}
-                onPress={() => router.push("/order-history/order-history")}
-              >
+              <Button style={styles.cardAction} onPress={() => router.push("/tab-control-panel/order-history")}>
                 {t("open")}
               </Button>
             </Card.Actions>
           </Card>
           <Card style={styles.card}>
             <Card.Content>
-              <ChoppIcon
-                size={ICON_SIZE.l}
-                style={styles.cardIcon}
-                name="person-outline"
-              />
+              <ChoppIcon size={ICON_SIZE.l} style={styles.cardIcon} name="person-outline" />
               <ChoppThemedText style={{ fontSize: 14 }} type="bold">
                 {t("profile")}
               </ChoppThemedText>
             </Card.Content>
             <Card.Actions>
-              <Button
-                style={styles.cardAction}
-                onPress={() => router.push("/control-panel/profile-settings")}
-              >
+              <Button style={styles.cardAction} onPress={() => router.push("/tab-control-panel/profile-settings")}>
                 {t("setup")}
               </Button>
             </Card.Actions>
