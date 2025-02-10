@@ -1,6 +1,6 @@
 import React from "react";
-import { StyleSheet, View, Image } from "react-native";
-import { Button, Card } from "react-native-paper";
+import { StyleSheet, View, Image, Dimensions } from "react-native";
+import { Button, Card, Switch } from "react-native-paper";
 import { useRouter } from "expo-router";
 import { t } from "i18next";
 import { useBoolean } from "usehooks-ts";
@@ -8,12 +8,13 @@ import BankMockNoBgPng from "@/assets/bank-mock-np-bg.png";
 import LogoDark from "@/assets/logo-dark.png";
 import LogoLight from "@/assets/logo-light.png";
 import { useChoppTheme, ChoppScreenLayout, ChoppIcon, ICON_SIZE, ChoppThemedText, ChoppDialog } from "@/shared";
+const { width } = Dimensions.get("window");
 
 export default function TabControlPanel() {
   const { theme } = useChoppTheme();
   const router = useRouter();
+  const { isDarkTheme, toggleTheme } = useChoppTheme();
   const { value: isModalVisible, setTrue: showModal, setFalse: hideModal } = useBoolean();
-
   const onReplenish = () => {
     showModal();
   };
@@ -50,6 +51,19 @@ export default function TabControlPanel() {
               <Button style={styles.cardAction} onPress={() => router.push("/tab-control-panel/profile-settings")}>
                 {t("setup")}
               </Button>
+            </Card.Actions>
+          </Card>
+        </View>
+        <View style={styles.row}>
+          <Card style={styles.card}>
+            <Card.Content>
+              <ChoppIcon size={ICON_SIZE.l} style={styles.cardIcon} name="color-palette-outline" />
+              <ChoppThemedText style={{ fontSize: 14 }} type="bold">
+                {t("darkTheme")}
+              </ChoppThemedText>
+            </Card.Content>
+            <Card.Actions>
+              <Switch value={isDarkTheme} onValueChange={toggleTheme} />
             </Card.Actions>
           </Card>
         </View>
@@ -90,7 +104,7 @@ const styles = StyleSheet.create({
   cardsContainer: {
     padding: 12,
     flex: 1,
-    alignItems: "center",
+    alignItems: "flex-start",
     justifyContent: "center",
     gap: 8,
     width: "100%",
@@ -98,6 +112,7 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     height: 160,
+    width: width / 2 - 20,
     flexDirection: "column",
     justifyContent: "space-between",
   },
@@ -115,7 +130,6 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     justifyContent: "space-around",
-    width: "100%",
     marginBottom: 10,
     gap: 16,
   },

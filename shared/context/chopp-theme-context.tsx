@@ -14,6 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemeProvider } from "@react-navigation/native";
 import { THEME } from "../enums/theme";
 import { ChopThemeType } from "../types/chopp-theme-type";
+import { addToStorage, getFromStorage } from "../utils";
 import { DARK_THEME, LIGHT_THEME } from "@/theme/colors";
 
 type ChoppThemeContextType = {
@@ -42,10 +43,22 @@ export const useChoppTheme = () => useContext(ChoppThemeContext);
 export const ChoppThemeProvider = ({ children }: PropsWithChildren<object>) => {
   const [isDarkTheme, setIsDarkTheme] = useState(false);
 
-  const toggleTheme = () => {
-    setIsDarkTheme((val) => !val);
+  const fetchTheme = async () => {
+    const storageTheme = await getFromStorage("theme");
+    setIsDarkTheme(storageTheme === "light" ? false : true);
   };
 
+  useEffect(() => {
+    fetchTheme();
+  }, []);
+
+  const toggleTheme = () => {
+    setIsDarkTheme((val) => {
+      const newTheme = !val;
+      addToStorage("theme", newTheme === false ? "light" : "dark");
+      return newTheme;
+    });
+  };
   const theme = useMemo(
     () => ({
       ...DefaultTheme,
@@ -77,9 +90,7 @@ export const ChoppThemeProvider = ({ children }: PropsWithChildren<object>) => {
   }, [deviceColorScheme]);
 
   return (
-    <ChoppThemeContext.Provider
-      value={{ setIsDarkTheme, isDarkTheme, theme, toggleTheme }}
-    >
+    <ChoppThemeContext.Provider value={{ setIsDarkTheme, isDarkTheme, theme, toggleTheme }}>
       {/* @ts-ignore */}
       <ThemeProvider value={{ ...theme }}>
         <PaperProvider theme={theme}>{children}</PaperProvider>
