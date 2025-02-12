@@ -7,6 +7,7 @@ import { productSlice, ProductsState } from "./slices/product-slice";
 import { shoppingCart, ShoppingCartState } from "./slices/shopping-cart-slice";
 import { userSlice, UserState } from "./slices/user-slice/index";
 import { wsSlice, WsState } from "./slices/ws-slice";
+import { notificationsSlice, NotificationsState } from "./slices/notifications-slice";
 
 export const store = configureStore({
   reducer: {
@@ -17,6 +18,7 @@ export const store = configureStore({
     products: productSlice.reducer,
     categories: productCategorySlice.reducer,
     shoppingCart: shoppingCart.reducer,
+    notifications: notificationsSlice.reducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware().concat(wsMiddleware);
@@ -31,6 +33,7 @@ export type RootState = {
   products: ProductsState;
   categories: CategoryState;
   shoppingCart: ShoppingCartState;
+  notifications: NotificationsState;
 };
 
 export type AppDispatch = typeof store.dispatch;

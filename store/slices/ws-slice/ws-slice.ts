@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { WsMessage } from "@/shared/types/ws-message";
+import { WsMessage } from "@/shared";
 
 export type WsState = {
   wsConnected: boolean;
@@ -22,16 +23,10 @@ export const wsSlice = createSlice({
     setWsError: (state, action: PayloadAction<any>) => {
       state.error = action.payload;
     },
-    wsConnect: (state, action: PayloadAction<{ url: string }>) => {},
-    wsDisconnect: (state, action: PayloadAction<void>) => {},
+    wsConnect: (state, action) => {},
+    wsDisconnect: () => {},
     wsSend: (state, action: PayloadAction<WsMessage>) => {},
   },
 });
 
-export const {
-  setWsConnected,
-  setWsError,
-  wsConnect,
-  wsDisconnect,
-  wsSend,
-} = wsSlice.actions;
+export const { setWsConnected, setWsError, wsConnect, wsDisconnect, wsSend } = wsSlice.actions;
