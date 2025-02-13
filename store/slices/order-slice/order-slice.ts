@@ -33,7 +33,13 @@ const initialState: OrderState = {
 export const orderSlice = createSlice({
   name: "order",
   initialState,
-  reducers: {},
+  reducers: {
+    pushWsNotification: (state, action: PayloadAction<{ payload: Order; type: keyof Order }>) => {
+      if (state.currentOrder) {
+        Object.assign(state.currentOrder, action.payload.payload);
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchOrder.pending, (state) => {
@@ -91,4 +97,4 @@ export const orderSlice = createSlice({
   },
 });
 
-// export const { setLoginStatus, setLogoutStatus } = userSlice.actions;
+export const { pushWsNotification } = orderSlice.actions;

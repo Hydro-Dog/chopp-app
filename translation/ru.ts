@@ -33,6 +33,7 @@ export const ru = {
   paymentSucceeded: "Оплачен",
   pending: "В обработке",
   paymentCanceled: "Оплата отклонена",
+  inDeliveryProcess: "В процессе доставки",
   inProgress: "Готовится",
   IN_DELIVERY_PROCESS: "В процессе доставки",
   DELIVERED: "Доставлен",
