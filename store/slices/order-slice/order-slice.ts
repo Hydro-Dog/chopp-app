@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { createOrder, fetchLastOrder, fetchOrders, fetchOrder } from "./actions";
-import { Order, SearchResponse } from "@/shared/types";
+import { Order, SearchResponse, WS_MESSAGE_TYPE, WsMessage } from "@/shared/types";
 import { FETCH_STATUS } from "@/shared/types/fetch-status";
 import { ErrorResponse } from "@/shared/types/response-error";
 
@@ -34,9 +34,20 @@ export const orderSlice = createSlice({
   name: "order",
   initialState,
   reducers: {
-    pushWsNotification: (state, action: PayloadAction<{ payload: Order; type: keyof Order }>) => {
-      if (state.currentOrder) {
-        Object.assign(state.currentOrder, action.payload.payload);
+    pushWsNotification: (state, action: PayloadAction<WsMessage>) => {
+      try {
+        switch (action.payload?.type) {
+          case WS_MESSAGE_TYPE.ORDER_STATUS:
+            if (state.currentOrder) {
+              Object.assign(state.currentOrder, action.payload.payload);
+            }
+            break;
+          default:
+            console.error(`Нет обработчика для WS cообщения с типом ${action.payload?.type}`);
+            break;
+        }
+      } catch (error) {
+        console.log(error);
       }
     },
   },
