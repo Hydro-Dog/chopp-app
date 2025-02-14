@@ -89,7 +89,7 @@ export const login = createAsyncThunk<
   try {
     const response = await axiosDefault.post<UserAuthorization>(
       `/auth/login`,
-      sanitizedUser(userData),
+      { ...sanitizedUser(userData), context: 'USER'},
     );
     return response.data;
   } catch (error) {
