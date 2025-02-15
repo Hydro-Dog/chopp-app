@@ -2,7 +2,10 @@ import { Middleware } from "@reduxjs/toolkit";
 import io, { type Socket } from "socket.io-client";
 import { pushWsMessage } from "../slices/chat-slice";
 import { pushWsNotification } from "../slices/order-slice";
+import { fetchCurrentUser } from "../slices/user-slice";
 import { wsConnect, setWsConnected, setWsError, wsDisconnect, wsSend } from "../slices/ws-slice";
+import { AppDispatch } from "../store";
+import { CONFIG } from "@/my-config";
 import { STORAGE_KEYS } from "@/shared/enums/storage-keys";
 import { getFromStorage } from "@/shared/utils/async-storage-methods";
 
@@ -56,8 +59,23 @@ export const wsMiddleware: Middleware = (store) => {
           store.dispatch(pushWsNotification(data));
         });
 
-        socket.on("tokenExpired", (data: any) => {
-          console.log("Token expired message:", data);
+        socket.on("tokenExpired", async () => {
+          const dispatch: AppDispatch = store.dispatch;
+
+          try {
+            await dispatch(fetchCurrentUser()).unwrap();
+            dispatch(
+              wsConnect({
+                url: `${CONFIG.wsUrl}`,
+              }),
+            );
+          } catch (error) {
+            console.error(
+              "%c Failed to refresh token, user will be logged out!",
+              "color: red; font-weight: bold; font-size: 14px;",
+              error,
+            );
+          }
         });
 
         break;
