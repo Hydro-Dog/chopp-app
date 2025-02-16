@@ -11,7 +11,7 @@ export type ShoppingCartState = {
 
 const initialState: ShoppingCartState = {
   shoppingCart: { items: [], quantity: 0, totalPrice: 0 },
-  fetchShoppingCartStatus: FETCH_STATUS.IDLE,
+  fetchShoppingCartStatus: "idle", //мне давал ошибку при FETCH_STATUS.IDLE
   fetchShoppingCartError: null,
 };
 

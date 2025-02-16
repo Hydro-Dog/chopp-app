@@ -1,11 +1,13 @@
 import { Middleware } from "@reduxjs/toolkit";
-import { io, Socket } from "socket.io-client";
+import io, { type Socket } from "socket.io-client";
 import { pushWsMessage } from "../slices/chat-slice";
-import { wsConnect, setWsConnected, setWsError, wsDisconnect, wsSend } from "../slices/ws-slice";
-import { getFromStorage } from "@/shared/utils/async-storage-methods";
-import { AppDispatch } from "../store";
+import { pushWsNotification } from "../slices/order-slice";
 import { fetchCurrentUser } from "../slices/user-slice";
+import { wsConnect, setWsConnected, setWsError, wsDisconnect, wsSend } from "../slices/ws-slice";
+import { AppDispatch } from "../store";
 import { CONFIG } from "@/my-config";
+import { STORAGE_KEYS } from "@/shared/enums/storage-keys";
+import { getFromStorage } from "@/shared/utils/async-storage-methods";
 
 type WsAction = {
   type: string;
@@ -14,17 +16,20 @@ type WsAction = {
 
 //@ts-ignore
 export const wsMiddleware: Middleware = (store) => {
-  let socket: Socket | null = null;
+  let socket: typeof Socket | null = null;
 
   return (next) => async (action: WsAction) => {
     switch (action.type) {
       case wsConnect.toString():
         if (socket !== null) {
-          socket.close();
+          socket.disconnect();
         }
+        const accessToken = await getFromStorage(STORAGE_KEYS.ACCESS_TOKEN);
+        if (accessToken == null || accessToken == undefined) {
+          console.error("WS Connection failed due to no access token in Local storage");
 
-        const accessToken = await getFromStorage("accessToken");
-
+          return;
+        }
         socket = io(action.payload.url, {
           transports: ["websocket"], // Используем только WebSocket транспорт
           auth: { accessToken }, // Передача авторизационных данных, если требуется
@@ -35,7 +40,7 @@ export const wsMiddleware: Middleware = (store) => {
           store.dispatch(setWsConnected(true));
         });
 
-        socket.on("connect_error", (error) => {
+        socket.on("connect_error", (error: Error) => {
           console.error("Socket.IO connection error:", error);
           store.dispatch(setWsError(error));
         });
@@ -44,14 +49,14 @@ export const wsMiddleware: Middleware = (store) => {
           console.log("Socket.IO disconnected");
           store.dispatch(setWsConnected(false));
         });
-
-        socket.on("message", (data) => {
+        //TODO Нормально типизировать
+        socket.on("message", (data: any) => {
           console.log("Message received:", data);
           store.dispatch(pushWsMessage(data));
         });
 
-        socket.on("notification", (data) => {
-          // store.dispatch(pushWsNotification(data));
+        socket.on("notification", (data: any) => {
+          store.dispatch(pushWsNotification(data));
         });
 
         socket.on("tokenExpired", async () => {
@@ -65,7 +70,11 @@ export const wsMiddleware: Middleware = (store) => {
               }),
             );
           } catch (error) {
-            console.error('%c Failed to refresh token, user will be logged out!', 'color: red; font-weight: bold; font-size: 14px;', error);
+            console.error(
+              "%c Failed to refresh token, user will be logged out!",
+              "color: red; font-weight: bold; font-size: 14px;",
+              error,
+            );
           }
         });
 
