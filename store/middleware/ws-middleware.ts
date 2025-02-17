@@ -16,7 +16,7 @@ type WsAction = {
 
 //@ts-ignore
 export const wsMiddleware: Middleware = (store) => {
-  let socket: typeof Socket | null = null;
+  let socket: Socket | null = null;
 
   return (next) => async (action: WsAction) => {
     switch (action.type) {
@@ -90,8 +90,9 @@ export const wsMiddleware: Middleware = (store) => {
 
       case wsSend.toString():
         if (socket !== null) {
+          const { type, payload } = action.payload;
           console.log("Sending message via Socket.IO:", action.payload);
-          socket.emit("message", action.payload);
+          socket.emit(type, payload);
         }
         break;
 
