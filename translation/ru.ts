@@ -114,5 +114,9 @@ export const ru = {
     invalidEmail: "Некорректный email",
     mustAccept: "Необходимо принять условия",
   },
+  serverErrors: {
+    userNotFound: "Пользователь не найден",
+    incorrectLoginOrPassword: "Неправильный логин или пароль",
+  },
   typing: "Печатает",
 };

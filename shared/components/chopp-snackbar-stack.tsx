@@ -1,10 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, {
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useState,
-} from "react";
+import React, { createContext, PropsWithChildren, useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { View, Text } from "react-native";
 import { Snackbar } from "react-native-paper";
 import { useChoppTheme } from "../context/chopp-theme-context";
@@ -40,10 +36,9 @@ type ChoppSnackbarProps = {
 
 //TODO: Добиться плавного исчезновения снакбаров для нативности
 export const ChoppSnackbarStack = ({ children }: PropsWithChildren<object>) => {
+  const { t } = useTranslation();
   const { theme } = useChoppTheme();
-  const [snackbarMessages, setSnackbarMessages] = useState<
-    Record<string, ChoppSnackbarProps>
-  >({});
+  const [snackbarMessages, setSnackbarMessages] = useState<Record<string, ChoppSnackbarProps>>({});
 
   //TODO: сделать дефолтный таймер на 3с
   const pushSnackbar = (item: ChoppSnackbarProps) => {
@@ -57,36 +52,35 @@ export const ChoppSnackbarStack = ({ children }: PropsWithChildren<object>) => {
     });
   };
 
-  const snackbarColors: Record<string, { background: string; color: string }> =
-    {
-      [SNACKBAR_VARIANTS.DEFAULT]: {
-        background: theme.colors.primaryContainer,
-        color: theme.colors.onPrimaryContainer,
-      },
-      [SNACKBAR_VARIANTS.INFO]: {
-        background: theme.colors.secondaryContainer,
-        color: theme.colors.onSecondaryContainer,
-      },
-      [SNACKBAR_VARIANTS.ERROR]: {
-        background: theme.colors.errorContainer,
-        color: theme.colors.onErrorContainer,
-      },
-      [SNACKBAR_VARIANTS.WARN]: {
-        background: theme.colors.tertiaryContainer,
-        color: theme.colors.onTertiaryContainer,
-      },
-      [SNACKBAR_VARIANTS.SUCCESS]: {
-        background: theme.colors.successContainer,
-        color: theme.colors.onSuccessContainer,
-      },
-    };
+  const snackbarColors: Record<string, { background: string; color: string }> = {
+    [SNACKBAR_VARIANTS.DEFAULT]: {
+      background: theme.colors.primaryContainer,
+      color: theme.colors.onPrimaryContainer,
+    },
+    [SNACKBAR_VARIANTS.INFO]: {
+      background: theme.colors.secondaryContainer,
+      color: theme.colors.onSecondaryContainer,
+    },
+    [SNACKBAR_VARIANTS.ERROR]: {
+      background: theme.colors.errorContainer,
+      color: theme.colors.onErrorContainer,
+    },
+    [SNACKBAR_VARIANTS.WARN]: {
+      background: theme.colors.tertiaryContainer,
+      color: theme.colors.onTertiaryContainer,
+    },
+    [SNACKBAR_VARIANTS.SUCCESS]: {
+      background: theme.colors.successContainer,
+      color: theme.colors.onSuccessContainer,
+    },
+  };
 
   return (
     <ChoppSnackbarContext.Provider value={{ pushNewNotification: pushSnackbar }}>
       {children}
       <View>
         {Object.values(snackbarMessages)?.map((item, index) => {
-          console.log('item.duration: ', item, item.duration, item.duration || 3000)
+          console.log("item.duration: ", item, item.duration, item.duration || 3000);
           return (
             <Snackbar
               duration={item.duration || 3000}
@@ -101,7 +95,6 @@ export const ChoppSnackbarStack = ({ children }: PropsWithChildren<object>) => {
               action={{
                 textColor: snackbarColors[item.variant].color,
                 label: item?.actionLabel || "╳",
-                // icon: 'close',
                 onPress: () => {
                   if (item?.onActionPress) {
                     item.onActionPress(item);
@@ -111,9 +104,7 @@ export const ChoppSnackbarStack = ({ children }: PropsWithChildren<object>) => {
                 },
               }}
             >
-              <Text style={{ color: snackbarColors[item.variant].color }}>
-                {item.text}
-              </Text>
+              <Text style={{ color: snackbarColors[item.variant].color }}>{t(`serverErrors.${[item.text]}`)}</Text>
             </Snackbar>
           );
         })}
