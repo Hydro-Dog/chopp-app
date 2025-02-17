@@ -6,25 +6,25 @@ export const loginSchema = (t: TFunction<"translation", undefined>, loginType: L
   const zodShape: ZodShape = {
     password: z
       .string()
+      .min(1, t("formErrors.requiredField"))
       .min(8, t("formErrors.minLength", { count: 8 }))
       .max(30, t("formErrors.maxLength", { count: 30 })),
-  }
+  };
 
   if (loginType === LoginType.EMAIL) {
     zodShape.email = z
-    .string()
-    .email(t("formErrors.invalidEmail"))
-    .max(30, t("formErrors.maxLength", { count: 30 }));
+      .string()
+      .min(1, t("formErrors.requiredField"))
+      .email(t("formErrors.invalidEmail"))
+      .max(30, t("formErrors.maxLength", { count: 30 }));
   } else {
     zodShape.phoneNumber = z
-    .string()
-    .regex(
-      /^[78]-(\d{3})-(\d{3})-(\d{2})-(\d{2})$/,
-      t("formErrors.invalidPhoneNumber")
-    );
+      .string()
+      .min(1, t("formErrors.requiredField"))
+      .regex(/^[78]-(\d{3})-(\d{3})-(\d{2})-(\d{2})$/, t("formErrors.invalidPhoneNumber"));
   }
 
   return z.object(zodShape);
-}
+};
 
 export type LoginFormType = z.infer<ReturnType<typeof loginSchema>>;
