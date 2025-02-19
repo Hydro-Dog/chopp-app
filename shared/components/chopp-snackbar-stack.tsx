@@ -36,7 +36,6 @@ type ChoppSnackbarProps = {
 
 //TODO: Добиться плавного исчезновения снакбаров для нативности
 export const ChoppSnackbarStack = ({ children }: PropsWithChildren<object>) => {
-  const { t } = useTranslation();
   const { theme } = useChoppTheme();
   const [snackbarMessages, setSnackbarMessages] = useState<Record<string, ChoppSnackbarProps>>({});
 
