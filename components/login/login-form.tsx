@@ -72,7 +72,7 @@ export const LoginForm = () => {
       pushNewNotification({
         id: String(Math.random()),
         variant: SNACKBAR_VARIANTS.ERROR,
-        text: (error as ErrorResponse).message || JSON.stringify(error as ErrorResponse),
+        text: t(`serverErrors.${(error as ErrorResponse).message}`) || JSON.stringify(error as ErrorResponse),
       });
     }
   };
