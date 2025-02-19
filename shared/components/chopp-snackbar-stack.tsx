@@ -104,7 +104,7 @@ export const ChoppSnackbarStack = ({ children }: PropsWithChildren<object>) => {
                 },
               }}
             >
-              <Text style={{ color: snackbarColors[item.variant].color }}>{t(`serverErrors.${[item.text]}`)}</Text>
+              <Text style={{ color: snackbarColors[item.variant].color }}>{item.text}</Text>
             </Snackbar>
           );
         })}

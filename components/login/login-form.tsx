@@ -8,10 +8,7 @@ import { useRouter } from "expo-router";
 import { useBoolean } from "usehooks-ts";
 import { LoginFormType, loginSchema } from ".";
 import { ChoppFormField } from "@/shared/components/chopp-form-field";
-import {
-  useChoppSnackbar,
-  SNACKBAR_VARIANTS,
-} from "@/shared/components/chopp-snackbar-stack";
+import { useChoppSnackbar, SNACKBAR_VARIANTS } from "@/shared/components/chopp-snackbar-stack";
 import { useAuthContext } from "@/shared/context/auth-context";
 import { useChoppTheme } from "@/shared/context/chopp-theme-context";
 import { FETCH_STATUS } from "@/shared/types/fetch-status";
@@ -28,8 +25,7 @@ export const LoginForm = () => {
   const { theme } = useChoppTheme();
   const { t } = useTranslation();
   const router = useRouter();
-  const { value: passwordVisible, toggle: togglePasswordVisibility } =
-    useBoolean();
+  const { value: passwordVisible, toggle: togglePasswordVisibility } = useBoolean();
   const { loginStatus } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
   const { pushNewNotification } = useChoppSnackbar();
@@ -61,9 +57,7 @@ export const LoginForm = () => {
     try {
       setIsAsyncStorageLoaded?.(false);
 
-      const res = await dispatch(
-        login(data as unknown as UserLoginDTO),
-      ).unwrap();
+      const res = await dispatch(login(data as unknown as UserLoginDTO)).unwrap();
 
       setAuth?.(res);
 
@@ -77,9 +71,7 @@ export const LoginForm = () => {
       pushNewNotification({
         id: String(Math.random()),
         variant: SNACKBAR_VARIANTS.ERROR,
-        text:
-          (error as ErrorResponse).message ||
-          JSON.stringify(error as ErrorResponse),
+        text: t(`serverErrors.${(error as ErrorResponse).message}`) || JSON.stringify(error as ErrorResponse),
       });
     }
   };
@@ -124,10 +116,7 @@ export const LoginForm = () => {
         </ChoppFormField>
       )}
 
-      <ChoppFormField
-        errorMessage={errors.password?.message}
-        styles={{ width: "" }}
-      >
+      <ChoppFormField errorMessage={errors.password?.message} styles={{ width: "" }}>
         <Controller
           control={control}
           name="password"
@@ -164,11 +153,7 @@ export const LoginForm = () => {
         {t("actions.signIn")}
       </Button>
 
-      <Button
-        mode="outlined"
-        style={styles.loginTypeButton}
-        onPress={handleChangeLoginType}
-      >
+      <Button mode="outlined" style={styles.loginTypeButton} onPress={handleChangeLoginType}>
         {isEmailLoginType ? t("actions.byPhoneNumber") : t("actions.byEmail")}
       </Button>
     </View>
