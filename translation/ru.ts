@@ -107,7 +107,7 @@ export const ru = {
     acceptOfferDoc_2: "договор оферты",
   },
   formErrors: {
-    requiredField: "Обязательное для заполнения поле",
+    requiredField: "Обязательное поле",
     emptyText: "Введите текст",
     maxLength: "Превышен лимит символов: {{count}}",
     minLength: "Минимальная длина: {{count}}",
