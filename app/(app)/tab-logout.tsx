@@ -10,8 +10,8 @@ export default function TabLogout() {
   const { theme } = useChoppTheme();
   const { t } = useTranslation();
 
-  const onOk = async () => {
-    await clearTokenStorage();
+  const onOk = () => {
+    clearTokenStorage();
     router.push("/login");
   };
 

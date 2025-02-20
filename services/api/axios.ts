@@ -27,7 +27,7 @@ const refresh = async (setAuth: Dispatch<SetStateAction<AuthType | undefined>>) 
     return response.data.accessToken;
   } catch (error) {
     if ((error as any).status === 401) {
-      await clearTokenStorage();
+      clearTokenStorage();
       setAuth({});
     }
   }
