@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { STORAGE_KEYS } from "../enums/storage-keys";
 
 export const addToStorage = async (key: string, value: string) => {
   try {
@@ -11,6 +12,23 @@ export const addToStorage = async (key: string, value: string) => {
 export const getFromStorage = async (key: string) => {
   try {
     return await AsyncStorage.getItem(key);
+  } catch (error) {
+    console.error("Error retrieving data: ", String(error));
+  }
+};
+
+export const clearFieldStorage = async (key: string) => {
+  try {
+    return await AsyncStorage.removeItem(key);
+  } catch (error) {
+    console.error("Error retrieving data: ", String(error));
+  }
+};
+
+export const removeAuthTokensFromStorage = async () => {
+  try {
+    await clearFieldStorage(STORAGE_KEYS.ACCESS_TOKEN);
+    await clearFieldStorage(STORAGE_KEYS.REFRESH_TOKEN);
   } catch (error) {
     console.error("Error retrieving data: ", String(error));
   }
