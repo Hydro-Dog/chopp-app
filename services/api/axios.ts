@@ -3,7 +3,7 @@ import axios from "axios";
 import { CONFIG } from "@/my-config";
 
 import { AuthType } from "@/shared/context/auth-context";
-import { getFromStorage, addToStorage, clearTokenStorage } from "@/shared/utils/async-storage-methods";
+import { getFromStorage, addToStorage, removeAuthTokensFromStorage } from "@/shared/utils/async-storage-methods";
 
 type FailedQueRequest = {
   resolve: (val: unknown) => void;
@@ -27,7 +27,7 @@ const refresh = async (setAuth: Dispatch<SetStateAction<AuthType | undefined>>) 
     return response.data.accessToken;
   } catch (error) {
     if ((error as any).status === 401) {
-      clearTokenStorage();
+      removeAuthTokensFromStorage();
       setAuth({});
     }
   }

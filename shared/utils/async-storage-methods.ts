@@ -25,7 +25,7 @@ export const clearFieldStorage = async (key: string) => {
   }
 };
 
-export const clearTokenStorage = async () => {
+export const removeAuthTokensFromStorage = async () => {
   try {
     await clearFieldStorage(STORAGE_KEYS.ACCESS_TOKEN);
     await clearFieldStorage(STORAGE_KEYS.REFRESH_TOKEN);

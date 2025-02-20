@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import { Button } from "react-native-paper";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRouter } from "expo-router";
-import { useChoppTheme, clearTokenStorage, ChoppScreenLayout, ChoppThemedText } from "@/shared";
+import { useChoppTheme, removeAuthTokensFromStorage, ChoppScreenLayout, ChoppThemedText } from "@/shared";
 
 export default function TabLogout() {
   const router = useRouter();
@@ -11,7 +11,7 @@ export default function TabLogout() {
   const { t } = useTranslation();
 
   const onOk = () => {
-    clearTokenStorage();
+    removeAuthTokensFromStorage();
     router.push("/login");
   };
 
