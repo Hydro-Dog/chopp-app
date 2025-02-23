@@ -12,7 +12,7 @@ export const fetchProducts = createAsyncThunk<
 >("products/fetchProducts", async ({ categoryId, pageNumber, limit, search, sort, order }, thunkAPI) => {
   try {
     const params = new URLSearchParams({
-      pageNumber: String(pageNumber || 1),
+      page: String(pageNumber || 1),
       limit: String(limit || 10),
       search: search || "",
       sort: sort || "",
