@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
-import { LoginType, ZodShape } from "../../components/login/types";
+import { LoginType, ZodShape } from "../types";
 
 export const useLoginFormSchema = (loginType: LoginType) => {
   const { t } = useTranslation();

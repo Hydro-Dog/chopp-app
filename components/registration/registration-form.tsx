@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { useBoolean } from "usehooks-ts";
 import { z } from "zod";
-import { useRegistrationFormSchema } from "@/shared";
+import { useRegistrationFormSchema } from "./hooks/use-registration-form-schema";
 import ChoppCheckbox from "@/shared/components/chopp-checkbox";
 import { ChoppDialog } from "@/shared/components/chopp-dialog";
 import { ChoppFormField } from "@/shared/components/chopp-form-field";

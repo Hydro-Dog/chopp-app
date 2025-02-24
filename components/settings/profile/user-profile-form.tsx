@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { UpdatePassword } from "./components";
-import { useProfileFormSchema } from "@/shared";
+import { useProfileFormSchema } from "./hooks/use-profile-form-schema";
 import { ChoppFormField } from "@/shared/components/chopp-form-field";
 import { useChoppSnackbar, SNACKBAR_VARIANTS } from "@/shared/components/chopp-snackbar-stack";
 import { FETCH_STATUS } from "@/shared/types/fetch-status";
