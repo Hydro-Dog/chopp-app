@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useBoolean } from "usehooks-ts";
 import { z } from "zod";
-import { usePasswordFormSchema } from "./hooks/use-password-form-schema";
+import { usePasswordFormSchema } from "./hooks";
 import { ChoppFormField } from "@/shared/components/chopp-form-field";
 import { useChoppSnackbar, SNACKBAR_VARIANTS } from "@/shared/components/chopp-snackbar-stack";
 import { useChoppTheme } from "@/shared/context/chopp-theme-context";

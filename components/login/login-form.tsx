@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { useBoolean } from "usehooks-ts";
 import { z } from "zod";
-import { useLoginFormSchema } from "./hooks/use-login-form-schema";
+import { useLoginFormSchema } from "./hooks";
 import { LoginType } from "./types";
 import { ChoppFormField } from "@/shared/components/chopp-form-field";
 import { useChoppSnackbar, SNACKBAR_VARIANTS } from "@/shared/components/chopp-snackbar-stack";

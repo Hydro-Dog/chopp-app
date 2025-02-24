@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useBoolean } from "usehooks-ts";
 import { z } from "zod";
-import { useOrderAdditionalInfoFormSchema } from "./hooks/use-order-additional-info-form-schema";
+import { useOrderAdditionalInfoFormSchema } from "./hooks";
 import { ChoppFormField, ChoppThemedText, Order, useSuperDispatch } from "@/shared";
 import { createOrder } from "@/store/slices/order-slice";
 import { CreateOrderDTO } from "@/store/slices/order-slice/types";
