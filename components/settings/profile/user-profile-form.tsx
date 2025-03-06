@@ -37,7 +37,7 @@ export const UserProfileForm = ({ setViewMode }: Props) => {
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
       fullName: currentUser?.fullName,
-      phoneNumber: currentUser?.phoneNumber,
+      phoneNumber: formatPhoneNumber(currentUser?.phoneNumber),
       email: currentUser?.email,
     },
   });
